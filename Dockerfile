@@ -27,7 +27,7 @@ ENV TZ="America/New_York"
 RUN apt-get -y update \
         && apt-get install -y apt-transport-https gnupg ca-certificates \
         && echo "deb [ arch=amd64 ] http://downloads.skewed.de/apt bionic main" >> /etc/apt/sources.list \
-        && apt-key adv --keyserver keys.openpgp.org --recv-key 612DEFB798507F25 \
+        && apt-key adv --keyserver keyserver.ubuntu.com --recv-key 612DEFB798507F25 \
         && apt-get -y update \
         && apt-get install -y --no-install-recommends \
         build-essential \
