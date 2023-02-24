@@ -9,16 +9,34 @@ ALPHA = [0.1, 0.2, 0.3]
 ITERATIONS = [5, 10, 15]
 # Multihead model only
 NUM_HEADS = [1, 2, 4]
+# SSL only
+LAMBDA = [0.001, 0.01, 0.1, 1, 5, 10, 50, 100, 500, 1000]
 
-Baseline_/NNNodeBaselineBenchmark.h_params = {
-    'alpha' : %ALPHA,
+
+
+
+# GCN setup with AttributeMask
+GCN_AttributeMask_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_AttributeMask_/NNNodeBenchmarkJL.pretext_tasks = [@AttributeMask]
+GCN_AttributeMask_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
 }
 
-# GCN setup
+# GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_/NNNodeBenchmarkJL.pretext_tasks = []
 GCN_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
+    'lambda' : %LAMBDA
 }
 GCN_/NNNodeBenchmarkJL.h_params = {
     'in_channels' : 16,
@@ -27,13 +45,32 @@ GCN_/NNNodeBenchmarkJL.h_params = {
     'dropout' : %DROPOUT,
 }
 
-# GraphSAGE setup
-GraphSAGE_/NNNodeBenchmarkJL.model_class = @GraphSAGE
-GraphSAGE_/NNNodeBenchmarkJL.benchmark_params = {
+
+
+# GraphSage setup with AttributeMask
+GraphSage_AttributeMask_/NNNodeBenchmarkJL.model_class = @GraphSAGE
+GraphSage_AttributeMask_/NNNodeBenchmarkJL.pretext_tasks = [@AttributeMask]
+GraphSage_AttributeMask_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
+    'lambda' : %LAMBDA
 }
-GraphSAGE_/NNNodeBenchmarkJL.h_params = {
+GraphSage_AttributeMask_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+
+# GraphSage setup standard
+GraphSage_/NNNodeBenchmarkJL.model_class = @GraphSAGE
+GraphSage_/NNNodeBenchmarkJL.pretext_tasks = []
+GraphSage_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GraphSage_/NNNodeBenchmarkJL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,

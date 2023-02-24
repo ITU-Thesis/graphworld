@@ -22,7 +22,7 @@ import copy
 import gin
 import logging
 import numpy as np
-import graph_tool.all as gt
+#TODO readd this: import graph_tool.all as gt
 from sklearn.linear_model import LinearRegression
 import sklearn.metrics
 import torch
