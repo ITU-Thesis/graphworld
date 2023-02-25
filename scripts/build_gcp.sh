@@ -13,31 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Kick off a build on GCP.
 #
-# Utilize docker-compose to run beam-pipeline locally in the same environment
-# as the remote workers.
-#
-# This file is for testing the joint learning scheme for SSL methods
-#
+cd ..
+PROJECT_NAME="project"
 BUILD_NAME="graphworld"
-while getopts b: flag
+while getopts p:b: flag
 do
     case "${flag}" in
+        p) PROJECT_NAME=${OPTARG};;
         b) BUILD_NAME=${OPTARG};;
     esac
 done
 
-OUTPUT_PATH="/tmp/mwe"
-
-rm -rf "${OUTPUT_PATH}"
-mkdir -p ${OUTPUT_PATH}
-
-docker-compose run \
-  --entrypoint "python3 /app/beam_benchmark_main.py \
-  --output ${OUTPUT_PATH} \
-  --gin_files /app/configs/SSL_nodeclassification/nodeclassification_mwe_jl.gin \
-  --runner DirectRunner" \
-  ${BUILD_NAME}
-
-
-
+gcloud builds submit --tag gcr.io/${PROJECT_NAME}/${BUILD_NAME} --timeout=3600

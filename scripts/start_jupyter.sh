@@ -12,18 +12,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Build and tag the build image.
-# Same as ./build_local.sh just don't use the cached layers and start from scratch.
-
-PROJECT_NAME="project"
+cd ..
 BUILD_NAME="graphworld"
-while getopts p:b: flag
+while getopts b: flag
 do
     case "${flag}" in
-        p) PROJECT_NAME=${OPTARG};;
         b) BUILD_NAME=${OPTARG};;
     esac
 done
 
-docker build --no-cache . -t ${BUILD_NAME}:latest -t gcr.io/${PROJECT_NAME}/${BUILD_NAME}:latest
+docker run -p 8888:8888 \
+  -v ${PWD}/src:/app \
+  -v /tmp:/tmp \
+  --entrypoint /opt/venv/bin/jupyter \
+  ${BUILD_NAME}:latest \
+  notebook --allow-root --no-browser --port=8888 \
+  --notebook-dir="/app/notebooks" --ip=0.0.0.0

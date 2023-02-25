@@ -13,15 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Build and tag the build image.
-PROJECT_NAME="project"
+#
+# Utilize docker-compose to run beam-pipeline locally in the same environment
+# as the remote workers.
+#
+cd ..
 BUILD_NAME="graphworld"
-while getopts p:b: flag
+while getopts b: flag
 do
     case "${flag}" in
-        p) PROJECT_NAME=${OPTARG};;
         b) BUILD_NAME=${OPTARG};;
     esac
 done
 
-docker build . -t ${BUILD_NAME}:latest -t gcr.io/${PROJECT_NAME}/${BUILD_NAME}:latest
+OUTPUT_PATH="/tmp/mwe"
+
+rm -rf "${OUTPUT_PATH}"
+mkdir -p ${OUTPUT_PATH}
+
+docker-compose run \
+  --entrypoint "python3 /app/beam_benchmark_main.py \
+  --output ${OUTPUT_PATH} \
+  --gin_files /app/configs/nodeclassification_mwe.gin \
+  --runner DirectRunner" \
+  ${BUILD_NAME}
+
+
+
