@@ -28,4 +28,4 @@ NodeRegressionBeamHandler.benchmarker_wrappers = [
   @Transformer_/NodeRegressionBenchmark,
 ]
 
-include 'app/configs/noderegression_model_tuning.gin'
+include '/app/configs/noderegression_model_tuning.gin'
