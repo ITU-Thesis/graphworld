@@ -43,10 +43,10 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                           self._model_classes,
                           self._h_params,
                           self._pretext_tasks):
-      if pretext_tasks is None:
-        print(f'Running {benchmarker_class} and model f{model_class}')
-      else:
+      if len(pretext_tasks):
         print(f'Running {benchmarker_class} and model f{model_class} with pretext tasks: {pretext_tasks}')
+      else:
+        print(f'Running {benchmarker_class} and model f{model_class}')
 
       num_possible_configs = ComputeNumPossibleConfigs(benchmark_params, h_params)
       num_tuning_rounds = min(num_possible_configs, self._num_tuning_rounds)

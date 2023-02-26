@@ -7,16 +7,24 @@ import gin
 
 
 class BasicPretextTask:
-    def __init__(self, data, encoder, idx_train):
+    def __init__(self, data, encoder, train_mask, **kwargs):
         self.data = data.clone()
         self.encoder = encoder
-        self.idx_train = idx_train
+        self.train_mask = train_mask
         self.decoder = None
 
     # Override this function to return the pretext task loss
     # The embeddings for the downstream task is given, to be used
     # when the input graph is the same for downstream/pretext tasks
     def make_loss(self, embeddings):
+        raise NotImplementedError
+    
+    # Override this function to return a  list of strings of the hyperparameters
+    # used by this task. This is needed because the pretext tasks and GNN encoder
+    # uses the same dictionary for hyper params, and the GNN models cannot handle the
+    # new parameters.
+    @staticmethod
+    def used_hparams():
         raise NotImplementedError
 
 
@@ -29,12 +37,12 @@ class BasicPretextTask:
 # ------------- Feature generation ------------- #
 @gin.configurable
 class AttributeMask(BasicPretextTask):
-    def __init__(self, data, encoder, idx_train, mask_ratio=0.1):
-        super().__init__(data, encoder, idx_train)
+    def __init__(self, mask_ratio=0.1, **kwargs):
+        super().__init__(**kwargs)
 
         # Mask subset of unlabeled nodes
         all = np.arange(self.data.x.shape[0])
-        unlabeled = all[~idx_train]
+        unlabeled = all[~self.train_mask]
         perm = np.random.permutation(unlabeled)
         self.masked_nodes = perm[: int(len(perm)*mask_ratio)]
 
@@ -48,8 +56,8 @@ class AttributeMask(BasicPretextTask):
             self.pseudo_labels = pca.fit_transform(self.pseudo_labels)
         self.pseudo_labels = torch.FloatTensor(self.pseudo_labels[self.masked_nodes]).float()
 
-        # Specify decoder
-        self.decoder = Linear(encoder.out_channels, self.pseudo_labels.shape[1])
+        # Specify pretext decoder
+        self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
     def make_loss(self, embeddings):
@@ -57,6 +65,10 @@ class AttributeMask(BasicPretextTask):
         y_hat = (self.decoder(z[self.masked_nodes]))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
         return loss
+    
+    @staticmethod
+    def used_hparams():
+        return ["mask_ratio"]
 
 
 # ------------- Structure generation ------------- #

@@ -11,6 +11,7 @@ ITERATIONS = [5, 10, 15]
 NUM_HEADS = [1, 2, 4]
 # SSL only
 LAMBDA = [0.001, 0.01, 0.1, 1, 5, 10, 50, 100, 500, 1000]
+MASK_RATIO = [0.1, 0.2, 0.3]
 
 
 
@@ -28,6 +29,7 @@ GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
+    'mask_ratio' : %MASK_RATIO
 }
 
 # GCN setup standard
@@ -60,6 +62,7 @@ GraphSage_AttributeMask_/NNNodeBenchmarkJL.h_params = {
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
+    'mask_ratio' : %MASK_RATIO
 }
 
 # GraphSage setup standard

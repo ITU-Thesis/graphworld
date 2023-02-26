@@ -26,6 +26,7 @@ from sklearn.linear_model import LinearRegression
 import sklearn.metrics
 import torch
 from torch.nn import Linear
+import copy
 
 from ..models.models import PyGBasicGraphModel
 from ..beam.benchmarker import Benchmarker, BenchmarkerWrapper
@@ -36,17 +37,33 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
   def __init__(self, generator_config, model_class, benchmark_params, h_params, pretext_tasks):
     super(NNNodeBenchmarker, self).__init__(generator_config, model_class, benchmark_params, h_params)
     self._epochs = benchmark_params['epochs']
-    self._lambda = benchmark_params['lambda']
     self._lr = benchmark_params['lr']
-
     self._downstream_decoder = Linear(h_params['hidden_channels'], h_params['out_channels'])
-    h_params['out_channels'] = h_params['hidden_channels'] # Set out=hidden for the graph encoder
-    self._encoder = model_class(**h_params)
+
+    # pretext_tasks, names and weights
     self._pretext_tasks = pretext_tasks
+    self._lambda = benchmark_params['lambda'] # Same weight for all pretext tasks
     self._pretext_task_names = [pt.__name__ for pt in pretext_tasks] if pretext_tasks is not None else ''
     self._pretext_task_names = "-".join(self._pretext_task_names)
 
- 
+    # Encoder end pretext models both have hparams in the same dict
+    # The available graph encoders cannot handle unknown params, so we
+    # need to remove them. 
+    # We copy since tuning and logging neeeds access to the original values
+    self._pretext_h_params = copy.deepcopy(h_params)
+    self._encoder_h_params = copy.deepcopy(h_params)
+
+    # Remove pretext hparams from encoder params, and also modify encoder output dim
+    self._encoder_h_params['out_channels'] = self._encoder_h_params['hidden_channels'] # Set out=hidden for the graph encoder
+    for hp_list in [pt.used_hparams() for pt in pretext_tasks]:
+      for hp in hp_list:
+        self._encoder_h_params.pop(hp, None) # delete pretext hparams
+    self._encoder = model_class(**self._encoder_h_params)
+    
+    # Give encoder instantiation to pretext tasks, 
+    # so they can run modified inputs through the encoder
+    self._pretext_h_params['encoder'] = self._encoder 
+
     self._criterion = torch.nn.CrossEntropyLoss()
     self._train_mask = None
     self._val_mask = None
@@ -121,10 +138,12 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
             tuning_metric_is_loss: bool):
 
     # Setup pretext tasks and parameters
+    self._pretext_h_params['data'] = data
+    self._pretext_h_params['train_mask'] = self._train_mask
     self._pretext_models = []
     params = list(self._encoder.parameters()) + list(self._downstream_decoder.parameters())
     for pt in self._pretext_tasks:
-      pt_model = pt(data, self._encoder, self._train_mask)
+      pt_model = pt(**self._pretext_h_params) # Init pretext with hparams
       self._pretext_models += [pt_model]
       params += list(pt_model.decoder.parameters())
     
