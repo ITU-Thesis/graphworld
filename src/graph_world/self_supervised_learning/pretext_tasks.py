@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from __types import *
 
 class BasicPretextTask(ABC):
-    def __init__(self, data, encoder, train_mask):
+    def __init__(self, data, encoder, train_mask, **kwargs): # **kwargs is needed
         self.data = data.clone()
         self.encoder = encoder
         self.train_mask = train_mask
