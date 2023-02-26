@@ -28,6 +28,7 @@ import copy
 from graph_world.models.basic_gnn import BasicGNN
 from graph_world.self_supervised_learning.pretext_tasks import BasicPretextTask
 from typing import TypedDict, Type, Union
+import inspect
 
 
 from ..beam.benchmarker import BenchmarkerWrapper
@@ -70,11 +71,15 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     self._pretext_h_params = copy.deepcopy(h_params)
     self._encoder_h_params = copy.deepcopy(h_params)
 
-    # Remove pretext hparams from encoder params, and also modify encoder output dim
-    self._encoder_h_params['out_channels'] = self._encoder_h_params['hidden_channels'] # Set out=hidden for the graph encoder
-    for hp_list in [pt.used_hparams() for pt in pretext_tasks]:
-      for hp in hp_list:
-        self._encoder_h_params.pop(hp, None) # delete pretext hparams
+    # Remove pretext hparams from encoder params
+    for pt in pretext_tasks:
+      parameters = inspect.signature(pt.__init__).parameters 
+      for k,v in parameters.items():
+          if k not in ['self', 'args', 'kwargs']:
+            self._encoder_h_params.pop(k, None) # delete pretext hparams from encoder
+
+    # Modify encoder output dim and instantiate encoder
+    self._encoder_h_params['out_channels'] = self._encoder_h_params['hidden_channels']
     self._encoder = model_class(**self._encoder_h_params)
     
     # Give encoder instantiation to pretext tasks, 

@@ -13,9 +13,9 @@ NodeClassificationBeamHandlerSSL.ktuning = 5
 
 NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
   @GCN_AttributeMask_/NNNodeBenchmarkJL,
-  @GCN_/NNNodeBenchmarkJL,
-  #@GraphSage_AttributeMask_/NNNodeBenchmarkJL,
-  #@GraphSage_/NNNodeBenchmarkJL,
+  @GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
+  @GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
+  @GCN_/NNNodeBenchmarkJL
 ]
 
 include '/app/configs/SSL_nodeclassification/mwe/nodeclassification_model_tuning_mwe_jl.gin'
