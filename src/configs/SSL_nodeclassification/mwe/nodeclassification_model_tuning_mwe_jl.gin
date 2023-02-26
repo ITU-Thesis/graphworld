@@ -9,9 +9,14 @@ ALPHA = [0.1, 0.2, 0.3]
 ITERATIONS = [5, 10, 15]
 # Multihead model only
 NUM_HEADS = [1, 2, 4]
+
 # SSL only
 LAMBDA = [0.001, 0.01, 0.1, 1, 5, 10, 50, 100, 500, 1000]
 MASK_RATIO = [0.1, 0.2, 0.3]
+FEATURE_CORRUPTION_RATIO = [0.1, 0.2, 0.3, 0.4, 0.5]
+PARTIAL_FEATURE_RECONSTRUCTION = [True, False]
+EMBEDDING_CORRUPTION_RATIO = [0.1, 0.2, 0.3, 0.4, 0.5]
+PARTIAL_EMBEDDING_RECONSTRUCTION = [True, False]
 
 
 
@@ -29,8 +34,48 @@ GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
-    'mask_ratio' : %MASK_RATIO
+    'node_mask_ratio' : %MASK_RATIO
 }
+
+
+
+# GCN setup with CorruptedFeaturesReconstruction
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@CorruptedFeaturesReconstruction]
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'feature_corruption_ratio' : %FEATURE_CORRUPTION_RATIO,
+    'partial_feature_reconstruction' : %PARTIAL_FEATURE_RECONSTRUCTION
+}
+
+
+
+# GCN setup with CorruptedEmbeddingsReconstruction
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@CorruptedEmbeddingsReconstruction]
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'embedding_corruption_ratio' : %EMBEDDING_CORRUPTION_RATIO,
+    'partial_embedding_reconstruction' : %PARTIAL_EMBEDDING_RECONSTRUCTION
+}
+
+
 
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
@@ -41,39 +86,6 @@ GCN_/NNNodeBenchmarkJL.benchmark_params = {
     'lambda' : %LAMBDA
 }
 GCN_/NNNodeBenchmarkJL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-}
-
-
-
-# GraphSage setup with AttributeMask
-GraphSage_AttributeMask_/NNNodeBenchmarkJL.model_class = @GraphSAGE
-GraphSage_AttributeMask_/NNNodeBenchmarkJL.pretext_tasks = [@AttributeMask]
-GraphSage_AttributeMask_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
-    'lr': %LR,
-    'lambda' : %LAMBDA
-}
-GraphSage_AttributeMask_/NNNodeBenchmarkJL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'mask_ratio' : %MASK_RATIO
-}
-
-# GraphSage setup standard
-GraphSage_/NNNodeBenchmarkJL.model_class = @GraphSAGE
-GraphSage_/NNNodeBenchmarkJL.pretext_tasks = []
-GraphSage_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
-    'lr': %LR,
-    'lambda' : %LAMBDA
-}
-GraphSage_/NNNodeBenchmarkJL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
