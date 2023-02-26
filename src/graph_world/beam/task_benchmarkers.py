@@ -14,5 +14,5 @@
 from ..graphregression.benchmarker import *
 from ..linkprediction.benchmarker import *
 from ..nodeclassification.benchmarker import *
-from ..nodeclassification.benchmarker_jl import *
+from ..self_supervised_learning.benchmarker_jl import *
 from ..noderegression.benchmarker import *

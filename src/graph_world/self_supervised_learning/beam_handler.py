@@ -162,9 +162,9 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
                tuning_metric_is_loss=False, ktrain=5, ktuning=5,
                save_tuning_results=False):
     super().__init__(benchmarker_wrappers, generator_wrapper,
-               num_tuning_rounds=1, tuning_metric='',
-               tuning_metric_is_loss=False, ktrain=5, ktuning=5,
-               save_tuning_results=False)
+               num_tuning_rounds=num_tuning_rounds, tuning_metric=tuning_metric,
+               tuning_metric_is_loss=tuning_metric_is_loss, ktrain=ktrain, ktuning=ktuning,
+               save_tuning_results=save_tuning_results)
 
     self._benchmark_par_do = BenchmarkGNNParDoSSL(
         benchmarker_wrappers, num_tuning_rounds, tuning_metric,

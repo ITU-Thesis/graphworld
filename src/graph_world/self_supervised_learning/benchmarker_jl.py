@@ -29,8 +29,8 @@ from torch.nn import Linear
 
 from ..models.models import PyGBasicGraphModel
 from ..beam.benchmarker import Benchmarker, BenchmarkerWrapper
-from .benchmarker import NNNodeBenchmarker
-from  ..self_supervised_learning import *
+from ..nodeclassification.benchmarker import NNNodeBenchmarker
+from  . import *
 
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
   def __init__(self, generator_config, model_class, benchmark_params, h_params, pretext_tasks):

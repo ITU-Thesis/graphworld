@@ -35,7 +35,7 @@ mkdir -p ${OUTPUT_PATH}
 docker-compose run \
   --entrypoint "python3 /app/beam_benchmark_main.py \
   --output ${OUTPUT_PATH} \
-  --gin_files /app/configs/SSL_nodeclassification/nodeclassification_mwe_jl.gin \
+  --gin_files /app/configs/SSL_nodeclassification/mwe/nodeclassification_mwe_jl.gin \
   --runner DirectRunner" \
   ${BUILD_NAME}
 
