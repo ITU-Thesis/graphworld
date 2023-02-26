@@ -28,4 +28,4 @@ NodeClassificationBeamHandler.benchmarker_wrappers = [
   @Baseline_/NNNodeBaselineBenchmark,
 ]
 
-include 'app/configs/nodeclassification_model_tuning.gin'
+include '/app/configs/nodeclassification_model_tuning.gin'

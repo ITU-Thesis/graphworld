@@ -1,4 +1,4 @@
-include 'app/configs/common_hparams/nodeclassification.gin'
+include '/app/configs/common_hparams/nodeclassification.gin'
 
 enumerate_configs.hidden_channel_values = %HIDDEN_CHANNELS
 enumerate_configs.weight_decay_values = [1e-5]

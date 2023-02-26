@@ -17,6 +17,7 @@
 # Utilize docker-compose to run beam-pipeline locally in the same environment
 # as the remote workers.
 #
+cd ..
 BUILD_NAME="graphworld"
 DATASET_NAME="cora"
 PROJECT_NAME="project"

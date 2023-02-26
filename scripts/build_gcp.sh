@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Build and tag the build image.
+# Kick off a build on GCP.
+#
+cd ..
 PROJECT_NAME="project"
 BUILD_NAME="graphworld"
 while getopts p:b: flag
@@ -24,4 +26,4 @@ do
     esac
 done
 
-docker build . -t ${BUILD_NAME}:latest -t gcr.io/${PROJECT_NAME}/${BUILD_NAME}:latest
+gcloud builds submit --tag gcr.io/${PROJECT_NAME}/${BUILD_NAME} --timeout=3600

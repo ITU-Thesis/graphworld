@@ -1,4 +1,4 @@
-include 'app/configs/nodeclassification.gin'
+include '/app/configs/nodeclassification.gin'
 
 GeneratorBeamHandlerWrapper.nsamples = 5
 NodeClassificationBeamHandler.num_tuning_rounds = 1

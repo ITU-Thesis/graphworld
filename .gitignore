@@ -1,3 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
+
+
+# Distribution / packaging
+.Python
+env/
+bin/
+.vscode/
+
+# Unit test / coverage reports
+.coverage

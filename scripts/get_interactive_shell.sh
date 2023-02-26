@@ -12,18 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+cd ..
 BUILD_NAME="graphworld"
-while getopts b: flag
-do
-    case "${flag}" in
-        b) BUILD_NAME=${OPTARG};;
-    esac
-done
 
-docker run -p 8888:8888 \
-  -v ${PWD}/src:/app \
-  -v /tmp:/tmp \
-  --entrypoint /opt/venv/bin/jupyter \
-  ${BUILD_NAME}:latest \
-  notebook --allow-root --no-browser --port=8888 \
-  --notebook-dir="/app/notebooks" --ip=0.0.0.0
+docker-compose run --entrypoint /bin/bash ${BUILD_NAME}

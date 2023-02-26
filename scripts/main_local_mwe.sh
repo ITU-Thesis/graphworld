@@ -17,28 +17,26 @@
 # Utilize docker-compose to run beam-pipeline locally in the same environment
 # as the remote workers.
 #
+cd ..
 BUILD_NAME="graphworld"
-TASK="nodeclassification"
-GENERATOR="sbm"
-while getopts b:t:g: flag
+while getopts b: flag
 do
     case "${flag}" in
         b) BUILD_NAME=${OPTARG};;
-        t) TASK=${OPTARG};;
-        g) GENERATOR=${OPTARG};;
     esac
 done
 
-OUTPUT_PATH="/tmp/${TASK}/${GENERATOR}"
+OUTPUT_PATH="/tmp/mwe"
 
 rm -rf "${OUTPUT_PATH}"
 mkdir -p ${OUTPUT_PATH}
 
-ENTRYPOINT="python3 /app/beam_benchmark_main.py \
-  --runner DirectRunner \
-  --gin_files /app/configs/${TASK}_test.gin /app/configs/${TASK}_generators/${GENERATOR}/default_setup.gin \
-  --output "${OUTPUT_PATH}""
+docker-compose run \
+  --entrypoint "python3 /app/beam_benchmark_main.py \
+  --output ${OUTPUT_PATH} \
+  --gin_files /app/configs/nodeclassification_mwe.gin \
+  --runner DirectRunner" \
+  ${BUILD_NAME}
 
-echo ${ENTRYPOINT}
 
-docker-compose run --entrypoint "${ENTRYPOINT}" ${BUILD_NAME}
+

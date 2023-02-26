@@ -1,4 +1,4 @@
-include 'app/configs/noderegression_generators/sbm/default_param_ranges.gin'
+include '/app/configs/noderegression_generators/sbm/default_param_ranges.gin'
 
 NodeRegressionBeamHandler.generator_wrapper = @SbmGeneratorWrapper()
 

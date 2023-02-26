@@ -1,7 +1,7 @@
-include 'app/configs/graphregression_generators/substructure/default_param_ranges.gin'
+include '/app/configs/graphregression_generators/substructure/default_param_ranges.gin'
 
 # Include if you are running "marginal" GraphWorld, otherwise comment out.
-include 'app/configs/graphregression_generators/substructure/default_param_values.gin'
+include '/app/configs/graphregression_generators/substructure/default_param_values.gin'
 
 GraphRegressionBeamHandler.generator_wrapper = @SubstructureGeneratorWrapper()
 
@@ -20,4 +20,4 @@ SubstructureGeneratorWrapper.substruct = %Substructure.TAILED_TRIANGLE_GRAPH
 SubstructureGeneratorWrapper.normalize_target = True
 
 # Include this file if you are running GraphWorld in Mode 2.
-include 'app/configs/graphregression_generators/substructure/optimal_model_hparams.gin'
+include '/app/configs/graphregression_generators/substructure/optimal_model_hparams.gin'

@@ -25,4 +25,4 @@ GraphRegressionBeamHandler.benchmarker_wrappers = [
   @Transformer_/NNGraphBenchmark,
 ]
 
-include 'app/configs/graphregression_model_tuning.gin'
+include '/app/configs/graphregression_model_tuning.gin'
