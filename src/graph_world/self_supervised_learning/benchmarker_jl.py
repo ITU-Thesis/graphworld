@@ -20,21 +20,38 @@ There are currently 3 pieces required for each model:
 """
 import copy
 import gin
-import logging
 import numpy as np
-from sklearn.linear_model import LinearRegression
 import sklearn.metrics
 import torch
 from torch.nn import Linear
 import copy
+from graph_world.models.basic_gnn import BasicGNN
+from graph_world.self_supervised_learning.pretext_tasks import BasicPretextTask
+from typing import TypedDict, Type, Union
 
-from ..models.models import PyGBasicGraphModel
-from ..beam.benchmarker import Benchmarker, BenchmarkerWrapper
+
+from ..beam.benchmarker import BenchmarkerWrapper
 from ..nodeclassification.benchmarker import NNNodeBenchmarker
 from  . import *
+from torch_geometric.data import Data, Dataset
 
+
+
+class EvaluationMetrics(TypedDict):
+    accuracy: float
+    f1_micro: float
+    f1_macro: float
+    rocauc_ovr: float
+    rocauc_ovr: float
+    logloss: float
+    
+
+InputGraph = Union[Data, Dataset]
+
+    
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
-  def __init__(self, generator_config, model_class, benchmark_params, h_params, pretext_tasks):
+  def __init__(self, generator_config : dict, model_class : BasicGNN, benchmark_params : dict, h_params : dict, 
+               pretext_tasks : list[BasicPretextTask]):
     super(NNNodeBenchmarker, self).__init__(generator_config, model_class, benchmark_params, h_params)
     self._epochs = benchmark_params['epochs']
     self._lr = benchmark_params['lr']
@@ -73,7 +90,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     return self._pretext_task_names
 
 
-  def train_step(self, data):
+  def train_step(self, data : InputGraph):
     self._encoder.train()
     self._downstream_decoder.train()
     [pm.decoder.train() for pm in self._pretext_models]
@@ -95,7 +112,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     return loss
 
 
-  def test(self, data, test_on_val=False):
+  def test(self, data : InputGraph, test_on_val : bool = False) -> EvaluationMetrics:
     self._encoder.eval()
     self._downstream_decoder.eval()
     [pm.decoder.eval() for pm in self._pretext_models]
@@ -117,7 +134,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     correct_onehot = np.zeros((len(correct), n_classes))
     correct_onehot[np.arange(correct.shape[0]), correct] = 1
 
-    results = {
+    results : EvaluationMetrics = {
         'accuracy': sklearn.metrics.accuracy_score(correct, pred_best),
         'f1_micro': sklearn.metrics.f1_score(correct, pred_best,
                                                   average='micro'),
@@ -129,13 +146,12 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
         'rocauc_ovo': sklearn.metrics.roc_auc_score(correct_onehot,
                                                          pred_onehot,
                                                          multi_class='ovo'),
-        'logloss': sklearn.metrics.log_loss(correct, pred)}
+        'logloss': sklearn.metrics.log_loss(correct, pred)
+    }
     return results
 
 
-  def train(self, data,
-            tuning_metric: str,
-            tuning_metric_is_loss: bool):
+  def train(self, data : InputGraph, tuning_metric: str, tuning_metric_is_loss: bool):
 
     # Setup pretext tasks and parameters
     self._pretext_h_params['data'] = data
@@ -156,7 +172,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     best_val_metric = np.inf if tuning_metric_is_loss else -np.inf
     test_metrics = None
     best_val_metrics = None
-    for i in range(self._epochs):
+    for _ in range(self._epochs):
       losses.append(float(self.train_step(data)))
       val_metrics = self.test(data, test_on_val=True)
       if ((tuning_metric_is_loss and val_metrics[tuning_metric] < best_val_metric) or
@@ -170,15 +186,16 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
 
 @gin.configurable
 class NNNodeBenchmarkJL(BenchmarkerWrapper):
-  def __init__(self, model_class=None, benchmark_params=None, h_params=None, pretext_tasks=None):
+  def __init__(self, model_class : BasicGNN = None, benchmark_params : dict = None, h_params : dict = None, 
+    pretext_tasks : list[BasicPretextTask] = None):
     super().__init__(model_class, benchmark_params, h_params)
     self._pretext_tasks = pretext_tasks
 
-  def GetBenchmarker(self):
+  def GetBenchmarker(self) -> NNNodeBenchmarkerJL:
     return NNNodeBenchmarkerJL(self._model_class, self._benchmark_params, self._h_params, self._pretext_tasks)
 
-  def GetBenchmarkerClass(self):
+  def GetBenchmarkerClass(self) -> Type[NNNodeBenchmarkerJL]:
     return NNNodeBenchmarkerJL
 
-  def GetPretextTasks(self):
+  def GetPretextTasks(self) -> list[BasicPretextTask]:
     return self._pretext_tasks
