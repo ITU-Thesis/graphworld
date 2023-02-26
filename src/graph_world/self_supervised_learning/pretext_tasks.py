@@ -4,11 +4,12 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import gin
-import inspect
+from abc import ABC, abstractclassmethod
+from dataclasses import dataclass
+from __types import *
 
-
-class BasicPretextTask:
-    def __init__(self, data, encoder, train_mask, **kwargs):
+class BasicPretextTask(ABC):
+    def __init__(self, data, encoder, train_mask):
         self.data = data.clone()
         self.encoder = encoder
         self.train_mask = train_mask
@@ -17,8 +18,9 @@ class BasicPretextTask:
     # Override this function to return the pretext task loss
     # The embeddings for the downstream task is given, to be used
     # when the input graph is the same for downstream/pretext tasks
+    @abstractclassmethod
     def make_loss(self, embeddings):
-        raise NotImplementedError
+        pass
 
 
 

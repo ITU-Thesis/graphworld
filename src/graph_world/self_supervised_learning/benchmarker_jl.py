@@ -27,27 +27,17 @@ from torch.nn import Linear
 import copy
 from graph_world.models.basic_gnn import BasicGNN
 from graph_world.self_supervised_learning.pretext_tasks import BasicPretextTask
-from typing import TypedDict, Type, Union
+from typing import Type
 import inspect
 
 
 from ..beam.benchmarker import BenchmarkerWrapper
 from ..nodeclassification.benchmarker import NNNodeBenchmarker
 from  . import *
-from torch_geometric.data import Data, Dataset
+from __types import *
 
 
 
-class EvaluationMetrics(TypedDict):
-    accuracy: float
-    f1_micro: float
-    f1_macro: float
-    rocauc_ovr: float
-    rocauc_ovr: float
-    logloss: float
-    
-
-InputGraph = Union[Data, Dataset]
 
     
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
