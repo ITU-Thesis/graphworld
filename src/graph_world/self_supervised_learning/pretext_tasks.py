@@ -5,11 +5,12 @@ import torch
 import torch.nn.functional as F
 import gin
 from abc import ABC, abstractclassmethod
-from dataclasses import dataclass
 from .__types import *
 from torch.nn import Module
 from torch import Tensor
 from sklearn.cluster import KMeans
+import pymetis
+from torch_geometric.utils.convert import to_scipy_sparse_matrix
 
 class BasicPretextTask(ABC):
     def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, **kwargs): # **kwargs is needed
@@ -195,3 +196,26 @@ class NodeClusteringWithAlignment(BasicPretextTask):
     def make_loss(self, embeddings : Tensor) -> float:
         y_hat = self.decoder(embeddings)
         return self.loss(input=y_hat[~self.train_mask], target=self.pseudo_labels[~self.train_mask])
+
+
+@gin.configurable
+class GraphPartition(BasicPretextTask):
+    def __init__(self, n_parts : int, **kwargs):
+        super().__init__(**kwargs)
+        sparse_matrix = to_scipy_sparse_matrix(self.data.edge_index)
+        node_num = sparse_matrix.shape[0]
+        adj_list = [[] for _ in range(node_num)]
+        for i, j in zip(sparse_matrix.row, sparse_matrix.col):
+            if i == j:
+                continue
+            adj_list[i].append(j)
+
+        _, ss_labels =  pymetis.part_graph(adjacency=adj_list, nparts=n_parts)
+
+        self.pseudo_labels = torch.tensor(ss_labels, dtype=torch.int64)
+        self.decoder = Linear(self.encoder.out_channels, n_parts)
+        self.loss = torch.nn.CrossEntropyLoss()
+    
+    def make_loss(self, embeddings: Tensor) -> float:
+        y_hat = self.decoder(embeddings)
+        return self.loss(input=y_hat, target=self.pseudo_labels)
