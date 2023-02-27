@@ -172,14 +172,14 @@ class NodeClusteringWithAlignment(BasicPretextTask):
         kmeans = KMeans(n_clusters=n_clusters, random_state=random_state).fit(X)
 
         # Step 4: Perform alignment mechanism
-        # See https://arxiv.org/pdf/1902.11038.pdf
+        # See https://arxiv.org/pdf/1902.11038.pdf and 
+        # https://github.com/Junseok0207/M3S_Pytorch/blob/master/models/M3S.py for code implementaiton.
         # 1) Compute its centroids
         # 2) Find cluster closest to the centroid computed in step 1
         # 3) Assign all unlabeled nodes to that closest cluster.
         for cn in range(n_clusters):
-            # v_l - Note this both includes the labeled and unlabeled according to the train_mask.
-            #       But the original authors implemented it like this.
-            centroids_unlabeled = X[kmeans.labels_ == cn].mean(axis=0)
+            # v_l
+            centroids_unlabeled = X[torch.logical_and(torch.tensor(kmeans.labels_ == cn), ~train_mask)].mean(axis=0)
 
             # Equation 5
             label_for_cluster = np.linalg.norm(centroids_labeled - centroids_unlabeled, axis=1).argmin()
