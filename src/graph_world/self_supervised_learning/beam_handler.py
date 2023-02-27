@@ -43,10 +43,10 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                           self._model_classes,
                           self._h_params,
                           self._pretext_tasks):
-      if pretext_tasks is None:
-        print(f'Running {benchmarker_class} and model f{model_class}')
-      else:
+      if len(pretext_tasks):
         print(f'Running {benchmarker_class} and model f{model_class} with pretext tasks: {pretext_tasks}')
+      else:
+        print(f'Running {benchmarker_class} and model f{model_class}')
 
       num_possible_configs = ComputeNumPossibleConfigs(benchmark_params, h_params)
       num_tuning_rounds = min(num_possible_configs, self._num_tuning_rounds)
@@ -162,9 +162,9 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
                tuning_metric_is_loss=False, ktrain=5, ktuning=5,
                save_tuning_results=False):
     super().__init__(benchmarker_wrappers, generator_wrapper,
-               num_tuning_rounds=1, tuning_metric='',
-               tuning_metric_is_loss=False, ktrain=5, ktuning=5,
-               save_tuning_results=False)
+               num_tuning_rounds=num_tuning_rounds, tuning_metric=tuning_metric,
+               tuning_metric_is_loss=tuning_metric_is_loss, ktrain=ktrain, ktuning=ktuning,
+               save_tuning_results=save_tuning_results)
 
     self._benchmark_par_do = BenchmarkGNNParDoSSL(
         benchmarker_wrappers, num_tuning_rounds, tuning_metric,

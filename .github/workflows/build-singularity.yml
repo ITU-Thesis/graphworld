@@ -1,0 +1,42 @@
+name: Build and Push Singularity Image
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build . -t graphworld:latest
+          docker save graphworld:latest -o output/graphworld-image.tar
+
+      - name: Build Singularity Image
+        run: |
+          singularity build graphworld.sif docker-archive://output/graphworld-image.tar
+
+#       - name: Commit Singularity Image
+#         uses: EndBug/add-and-commit@v7
+#         with:
+#           author_name: Your Name
+#           author_email: your_email@example.com
+#           message: "Add Singularity image"
+#           add: "graphworld.sif"
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Push changes
+#         uses: ad-m/github-push-action@v0.6.0
+#         with:
+#           branch: main
+#           force: true
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
