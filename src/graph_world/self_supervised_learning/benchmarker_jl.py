@@ -34,7 +34,7 @@ import inspect
 from ..beam.benchmarker import BenchmarkerWrapper
 from ..nodeclassification.benchmarker import NNNodeBenchmarker
 from  . import *
-from .__types import *
+from .pretext_tasks.__types import *
 
 
 
