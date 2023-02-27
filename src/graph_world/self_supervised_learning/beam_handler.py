@@ -110,9 +110,13 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           benchmarker_out = benchmarker.Benchmark(element,
                                                   tuning_metric=self._tuning_metric,
                                                   tuning_metric_is_loss=self._tuning_metric_is_loss)
-          configs.append((benchmark_params_sample, h_params_sample, pretext_tasks))
-          val_metrics_list.append(benchmarker_out['val_metrics'])
-          test_metrics_list.append(benchmarker_out['test_metrics'])
+          # Only append metrics if the tuning round has not been skipped.
+          # It will be skipped in cases of exceptions during Train(), and there is going
+          # to be exceptions if the val/test split only has 1 class (because of ROCAUC metric)
+          if not benchmarker_out["skipped"]:
+            configs.append((benchmark_params_sample, h_params_sample))
+            val_metrics_list.append(benchmarker_out['val_metrics'])
+            test_metrics_list.append(benchmarker_out['test_metrics'])
 
         val_scores = [metrics[self._tuning_metric] for metrics in val_metrics_list]
         test_scores = [metrics[self._tuning_metric] for metrics in test_metrics_list]

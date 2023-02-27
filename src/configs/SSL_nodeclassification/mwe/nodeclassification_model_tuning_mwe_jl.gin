@@ -3,7 +3,7 @@ LR = [0.01, 0.001, 0.0001]
 HIDDEN_CHANNELS = [4, 8, 16]
 NUM_LAYERS = [1, 2, 3, 4]
 DROPOUT = [0, 0, 0, 0.3, 0.5, 0.8] # a hack to make dropout equiprobable
-EPOCHS = 50
+EPOCHS = 100
 # GNN only
 ALPHA = [0.1, 0.2, 0.3]
 ITERATIONS = [5, 10, 15]
@@ -11,13 +11,14 @@ ITERATIONS = [5, 10, 15]
 NUM_HEADS = [1, 2, 4]
 
 # SSL only
-LAMBDA = [0.001, 0.01, 0.1, 1, 5, 10, 50, 100, 500, 1000]
+LAMBDA = [0.001, 0.01, 0.1, 1, 10]
 MASK_RATIO = [0.1, 0.2, 0.3]
 FEATURE_CORRUPTION_RATIO = [0.1, 0.2, 0.3, 0.4, 0.5]
 PARTIAL_FEATURE_RECONSTRUCTION = [True, False]
 EMBEDDING_CORRUPTION_RATIO = [0.1, 0.2, 0.3, 0.4, 0.5]
 PARTIAL_EMBEDDING_RECONSTRUCTION = [True, False]
-
+DISCRIMINATOR_LR = [0.001, 0.003]
+DISCRIMINATOR_EPOCHS = [5, 10]
 
 
 
@@ -90,6 +91,75 @@ GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT
+}
+
+
+
+# GCN setup with GAE
+GCN_GAE_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_GAE_/NNNodeBenchmarkJL.pretext_tasks = [@GAE]
+GCN_GAE_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_GAE_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
+# GCN setup with VGAE
+GCN_VGAE_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_VGAE_/NNNodeBenchmarkJL.pretext_tasks = [@VGAE]
+GCN_VGAE_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_VGAE_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
+# GCN setup with ARGA
+GCN_ARGA_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_ARGA_/NNNodeBenchmarkJL.pretext_tasks = [@ARGA]
+GCN_ARGA_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_ARGA_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'discriminator_lr' : %DISCRIMINATOR_LR,
+    'discriminator_epochs' : %DISCRIMINATOR_EPOCHS
+}
+
+
+# GCN setup with ARGVA
+GCN_ARGVA_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_ARGVA_/NNNodeBenchmarkJL.pretext_tasks = [@ARGVA]
+GCN_ARGVA_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_ARGVA_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'discriminator_lr' : %DISCRIMINATOR_LR,
+    'discriminator_epochs' : %DISCRIMINATOR_EPOCHS
 }
 
 

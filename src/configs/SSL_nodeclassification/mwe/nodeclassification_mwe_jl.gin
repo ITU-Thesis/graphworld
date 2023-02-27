@@ -16,7 +16,13 @@ NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
   @GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
   @GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
   @GCN_AutoEncoding_/NNNodeBenchmarkJL,
-  @GCN_/NNNodeBenchmarkJL
+  @GCN_GAE_/NNNodeBenchmarkJL,
+  @GCN_VGAE_/NNNodeBenchmarkJL,
+  @GCN_ARGA_/NNNodeBenchmarkJL,
+  @GCN_ARGVA_/NNNodeBenchmarkJL,
+
+  @GCN_/NNNodeBenchmarkJL,
+
 ]
 
 include '/app/configs/SSL_nodeclassification/mwe/nodeclassification_model_tuning_mwe_jl.gin'

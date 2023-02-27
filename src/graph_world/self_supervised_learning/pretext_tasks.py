@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from .__types import *
 from torch.nn import Module
 from torch import Tensor
+import torch_geometric.nn.models.autoencoder as pyg_autoencoder
 
 class BasicPretextTask(ABC):
     def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, **kwargs): # **kwargs is needed
@@ -137,9 +138,140 @@ class AutoEncoding(BasicPretextTask):
 
 
 
-
-
 # ------------- Structure generation ------------- #
+@gin.configurable
+class GAE(BasicPretextTask):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.pygGAE = pyg_autoencoder.GAE(self.encoder) # Default decoder is InnerProduct
+        self.decoder = self.pygGAE.decoder # Needed for optimizer to pull parameters
+
+    # Uses PyG implementation for loss, with negative sampling for non-edges
+    def make_loss(self, embeddings : Tensor) -> float:
+        return self.pygGAE.recon_loss(embeddings, self.data.edge_index)
+
+@gin.configurable
+class VGAE(BasicPretextTask):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.pygVGAE = pyg_autoencoder.VGAE(self.encoder)
+
+        # Transform encoder output to two separate heads for mu and std
+        self.muTransform = Linear(self.encoder.out_channels, self.encoder.out_channels)
+        self.stdTransform = Linear(self.encoder.out_channels, self.encoder.out_channels)
+
+        # Allows all weights/parameters to be pulled from the decoder variable
+        self.decoder = torch.nn.ModuleList(
+            [self.muTransform,
+            self.stdTransform,
+            self.pygVGAE.decoder]
+        )
+    
+    def make_loss(self, embeddings : Tensor) -> float:
+        # Get variational embedding
+        mu, logstd = self.muTransform(embeddings), self.stdTransform(embeddings)
+        logstd = logstd.clamp(max=pyg_autoencoder.MAX_LOGSTD)
+        variational_embedding = self.pygVGAE.reparametrize(mu, logstd)
+
+        # Compute loss
+        recon_loss = self.pygVGAE.recon_loss(variational_embedding, self.data.edge_index)
+        kl_loss = self.pygVGAE.kl_loss(mu, logstd)
+        return recon_loss + (1/self.data.num_nodes) * kl_loss
+    
+
+@gin.configurable
+class ARGA(BasicPretextTask):
+    def __init__(self, discriminator_lr : float = 0.001, 
+                 discriminator_epochs : int = 5, **kwargs):
+        super().__init__(**kwargs)
+
+        # Construct discriminator equal to PyG example
+        # https://colab.research.google.com/github/AntonioLonga/PytorchGeometricTutorial/blob/main/Tutorial7/Tutorial7.ipynb#scrollTo=s4mjQFYZviGx
+        self.discriminator = torch.nn.Sequential(
+            torch.nn.Linear(self.encoder.out_channels, 2*self.encoder.out_channels),
+            torch.nn.ReLU(),
+            torch.nn.Linear(2*self.encoder.out_channels, 2*self.encoder.out_channels),
+            torch.nn.ReLU(),
+            torch.nn.Linear(2*self.encoder.out_channels, 1)
+        )
+
+        # Get ARGA implementation from PyG
+        self.pygARGA = pyg_autoencoder.ARGA(self.encoder, self.discriminator) # Default decoder is InnerProduct
+        self.decoder = self.pygARGA.decoder
+
+        # Discriminator params
+        self.discriminator_optimizer = torch.optim.Adam(self.discriminator.parameters(), discriminator_lr)
+        self.discriminator_epochs = discriminator_epochs
+
+    def make_loss(self, embeddings : Tensor) -> float:
+        # In each pretext epoch, we train the discriminator with its own optimizer
+        for _ in range(self.discriminator_epochs):
+            self.discriminator.train()
+            self.discriminator_optimizer.zero_grad()
+            discriminator_loss = self.pygARGA.discriminator_loss(embeddings)
+            discriminator_loss.backward(retain_graph=True)
+            self.discriminator_optimizer.step()
+
+        # Then we return the reconstruction loss regularized by the discriminator
+        recon_loss = self.pygARGA.recon_loss(embeddings, self.data.edge_index)
+        reg_loss = self.pygARGA.reg_loss(embeddings)
+        return recon_loss + reg_loss
+    
+
+@gin.configurable
+class ARGVA(BasicPretextTask):
+    def __init__(self, discriminator_lr : float = 0.001, 
+                 discriminator_epochs : int = 5, **kwargs):
+        super().__init__(**kwargs)
+
+        # Construct discriminator equal to PyG example
+        # https://colab.research.google.com/github/AntonioLonga/PytorchGeometricTutorial/blob/main/Tutorial7/Tutorial7.ipynb#scrollTo=s4mjQFYZviGx
+        self.discriminator = torch.nn.Sequential(
+            torch.nn.Linear(self.encoder.out_channels, 2*self.encoder.out_channels),
+            torch.nn.ReLU(),
+            torch.nn.Linear(2*self.encoder.out_channels, 2*self.encoder.out_channels),
+            torch.nn.ReLU(),
+            torch.nn.Linear(2*self.encoder.out_channels, 1)
+        )
+
+        # Transform encoder output to two separate heads for mu and std
+        self.muTransform = Linear(self.encoder.out_channels, self.encoder.out_channels)
+        self.stdTransform = Linear(self.encoder.out_channels, self.encoder.out_channels)
+
+        # Get ARGVA implementation from PyG
+        self.pygARGVA = pyg_autoencoder.ARGVA(self.encoder, self.discriminator) # Default decoder is InnerProduct
+
+        # Allows all weights/parameters to be pulled from the decoder variable
+        self.decoder = torch.nn.ModuleList(
+            [self.muTransform,
+            self.stdTransform,
+            self.pygARGVA.decoder]
+        )
+
+        # Discriminator params
+        self.discriminator_optimizer = torch.optim.Adam(self.discriminator.parameters(), discriminator_lr)
+        self.discriminator_epochs = discriminator_epochs
+
+    def make_loss(self, embeddings : Tensor) -> float:
+        # Get variational embedding
+        mu, logstd = self.muTransform(embeddings), self.stdTransform(embeddings)
+        logstd = logstd.clamp(max=pyg_autoencoder.MAX_LOGSTD)
+        variational_embedding = self.pygARGVA.reparametrize(mu, logstd)
+
+        # In each pretext epoch, we train the discriminator with its own optimizer
+        for _ in range(self.discriminator_epochs):
+            self.discriminator.train()
+            self.discriminator_optimizer.zero_grad()
+            discriminator_loss = self.pygARGVA.discriminator_loss(variational_embedding)
+            discriminator_loss.backward(retain_graph=True)
+            self.discriminator_optimizer.step()
+
+        # Then we return the reconstruction loss regularized by the discriminator and kl divergence
+        recon_loss = self.pygARGVA.recon_loss(variational_embedding, self.data.edge_index)
+        reg_loss = self.pygARGVA.reg_loss(variational_embedding)
+        kl_loss = self.pygARGVA.kl_loss(mu, logstd)
+        return recon_loss + (1/self.data.num_nodes) * kl_loss + reg_loss
+
 
 
 # ==================================================== #
