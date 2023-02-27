@@ -13,6 +13,7 @@ pycairo
 seaborn
 ujson
 scikit-learn
+pymetis
 
 
 
