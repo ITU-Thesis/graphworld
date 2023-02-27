@@ -1,4 +1,4 @@
-from ..__types import *
+from .__types import *
 from abc import ABC, abstractclassmethod
 from torch.nn import Module
 from torch import Tensor
