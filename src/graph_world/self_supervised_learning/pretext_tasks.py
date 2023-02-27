@@ -7,9 +7,11 @@ import gin
 from abc import ABC, abstractclassmethod
 from dataclasses import dataclass
 from .__types import *
+from torch.nn import Module
+from torch import Tensor
 
 class BasicPretextTask(ABC):
-    def __init__(self, data, encoder, train_mask, **kwargs): # **kwargs is needed
+    def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, **kwargs): # **kwargs is needed
         self.data = data.clone()
         self.encoder = encoder
         self.train_mask = train_mask
@@ -19,7 +21,7 @@ class BasicPretextTask(ABC):
     # The embeddings for the downstream task is given, to be used
     # when the input graph is the same for downstream/pretext tasks
     @abstractclassmethod
-    def make_loss(self, embeddings):
+    def make_loss(self, embeddings : Tensor) -> float:
         pass
 
 
@@ -31,7 +33,7 @@ class BasicPretextTask(ABC):
 # ------------- Feature generation ------------- #
 @gin.configurable
 class AttributeMask(BasicPretextTask):
-    def __init__(self, node_mask_ratio=0.1, **kwargs):
+    def __init__(self, node_mask_ratio : float = 0.1, **kwargs):
         super().__init__(**kwargs)
 
         # Crea mask of subset of unlabeled nodes
@@ -54,7 +56,7 @@ class AttributeMask(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
-    def make_loss(self, embeddings):
+    def make_loss(self, embeddings : Tensor) -> float:
         z = self.encoder(self.data.x, self.data.edge_index)
         y_hat = (self.decoder(z[self.masked_nodes]))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
@@ -63,8 +65,8 @@ class AttributeMask(BasicPretextTask):
 
 @gin.configurable
 class CorruptedFeaturesReconstruction(BasicPretextTask):
-    def __init__(self, feature_corruption_ratio = 0.1, 
-                 partial_feature_reconstruction=True, **kwargs):
+    def __init__(self, feature_corruption_ratio : float = 0.1, 
+                 partial_feature_reconstruction : bool =True, **kwargs):
         super().__init__(**kwargs)
 
         # Create Mask of subset of feature columns
@@ -84,7 +86,7 @@ class CorruptedFeaturesReconstruction(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
-    def make_loss(self, embeddings):
+    def make_loss(self, embeddings : Tensor) -> float:
         z = self.encoder(self.data.x, self.data.edge_index)
         y_hat = (self.decoder(z))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
@@ -93,8 +95,8 @@ class CorruptedFeaturesReconstruction(BasicPretextTask):
 
 @gin.configurable
 class CorruptedEmbeddingsReconstruction(BasicPretextTask):
-    def __init__(self, embedding_corruption_ratio = 0.1, 
-                 partial_embedding_reconstruction=True, **kwargs):
+    def __init__(self, embedding_corruption_ratio : float = 0.1, 
+                 partial_embedding_reconstruction : bool = True, **kwargs):
         super().__init__(**kwargs)
 
         self.partial_embedding_reconstruction = partial_embedding_reconstruction
@@ -111,7 +113,7 @@ class CorruptedEmbeddingsReconstruction(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, out)
 
     # Mask embeddings and reconstruct with decoder
-    def make_loss(self, embeddings):
+    def make_loss(self, embeddings : Tensor) -> float:
         masked_embeddings = torch.matmul(embeddings, self.mask)
         y_hat = (self.decoder(masked_embeddings))
         if self.partial_embedding_reconstruction:
