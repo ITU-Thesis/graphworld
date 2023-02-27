@@ -27,14 +27,14 @@ from torch.nn import Linear
 import copy
 from graph_world.models.basic_gnn import BasicGNN
 from graph_world.self_supervised_learning.pretext_tasks import BasicPretextTask
-from typing import Type
+from typing import Type, List
 import inspect
 
 
 from ..beam.benchmarker import BenchmarkerWrapper
 from ..nodeclassification.benchmarker import NNNodeBenchmarker
 from  . import *
-from __types import *
+from .__types import *
 
 
 
@@ -42,7 +42,7 @@ from __types import *
     
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
   def __init__(self, generator_config : dict, model_class : BasicGNN, benchmark_params : dict, h_params : dict, 
-               pretext_tasks : list[BasicPretextTask]):
+               pretext_tasks : List[BasicPretextTask]):
     super(NNNodeBenchmarker, self).__init__(generator_config, model_class, benchmark_params, h_params)
     self._epochs = benchmark_params['epochs']
     self._lr = benchmark_params['lr']
@@ -182,7 +182,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
 @gin.configurable
 class NNNodeBenchmarkJL(BenchmarkerWrapper):
   def __init__(self, model_class : BasicGNN = None, benchmark_params : dict = None, h_params : dict = None, 
-    pretext_tasks : list[BasicPretextTask] = None):
+    pretext_tasks : List[BasicPretextTask] = None):
     super().__init__(model_class, benchmark_params, h_params)
     self._pretext_tasks = pretext_tasks
 
@@ -192,5 +192,5 @@ class NNNodeBenchmarkJL(BenchmarkerWrapper):
   def GetBenchmarkerClass(self) -> Type[NNNodeBenchmarkerJL]:
     return NNNodeBenchmarkerJL
 
-  def GetPretextTasks(self) -> list[BasicPretextTask]:
+  def GetPretextTasks(self) -> List[BasicPretextTask]:
     return self._pretext_tasks

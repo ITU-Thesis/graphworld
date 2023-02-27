@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import gin
 from abc import ABC, abstractclassmethod
 from dataclasses import dataclass
-from __types import *
+from .__types import *
 
 class BasicPretextTask(ABC):
     def __init__(self, data, encoder, train_mask, **kwargs): # **kwargs is needed
