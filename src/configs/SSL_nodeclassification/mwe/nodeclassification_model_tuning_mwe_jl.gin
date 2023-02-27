@@ -92,6 +92,22 @@ GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
     'dropout' : %DROPOUT
 }
 
+# GCN setup with NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.pretext_tasks = [@NodeClusteringWithAlignment]
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'n_clusters': 200
+}
+
 
 
 # GCN setup standard
