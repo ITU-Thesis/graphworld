@@ -1,5 +1,7 @@
 import graph_world.models.basic_gnn
-import graph_world.self_supervised_learning.pretext_tasks
+import graph_world.self_supervised_learning.pretext_tasks.auxiliary_property_based
+import graph_world.self_supervised_learning.pretext_tasks.contrastive_based
+import graph_world.self_supervised_learning.pretext_tasks.generation_based
 import graph_world.self_supervised_learning.beam_handler
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()

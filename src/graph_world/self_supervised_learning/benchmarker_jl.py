@@ -26,7 +26,7 @@ import torch
 from torch.nn import Linear
 import copy
 from graph_world.models.basic_gnn import BasicGNN
-from graph_world.self_supervised_learning.pretext_tasks import BasicPretextTask
+from graph_world.self_supervised_learning.pretext_tasks.basic_pretext_task import BasicPretextTask
 from typing import Type, List
 import inspect
 
