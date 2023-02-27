@@ -192,8 +192,6 @@ class NodeClusteringWithAlignment(BasicPretextTask):
         self.loss = torch.nn.CrossEntropyLoss()
 
 
-
-    # Directly reconstruct input features from embedding
     def make_loss(self, embeddings : Tensor) -> float:
         y_hat = self.decoder(embeddings)
-        return self.loss(input=y_hat, target=self.pseudo_labels)
+        return self.loss(input=y_hat[~self.train_mask], target=self.pseudo_labels[~self.train_mask])
