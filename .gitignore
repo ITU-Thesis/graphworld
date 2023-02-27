@@ -12,3 +12,10 @@ bin/
 
 # Unit test / coverage reports
 .coverage
+
+# Docker & Singularity images
+*.sif
+*.tar
+
+# Output
+out/
