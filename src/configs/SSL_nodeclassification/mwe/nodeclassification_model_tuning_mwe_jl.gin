@@ -77,6 +77,23 @@ GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 
 
+# GCN setup with AutoEncoding
+GCN_AutoEncoding_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_AutoEncoding_/NNNodeBenchmarkJL.pretext_tasks = [@AutoEncoding]
+GCN_AutoEncoding_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
+
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
 GCN_/NNNodeBenchmarkJL.pretext_tasks = []

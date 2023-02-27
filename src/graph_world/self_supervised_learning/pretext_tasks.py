@@ -121,6 +121,19 @@ class CorruptedEmbeddingsReconstruction(BasicPretextTask):
         else:
             pseudo_labels = embeddings
         return F.mse_loss(y_hat, pseudo_labels, reduction='mean')
+    
+
+@gin.configurable
+class AutoEncoding(BasicPretextTask):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.decoder = Linear(self.encoder.out_channels, self.data.x.shape[1])
+        self.pseudo_labels = self.data.x
+
+    # Directly reconstruct input features from embedding
+    def make_loss(self, embeddings : Tensor) -> float:
+        y_hat = self.decoder(embeddings)
+        return F.mse_loss(y_hat, self.pseudo_labels)
 
 
 

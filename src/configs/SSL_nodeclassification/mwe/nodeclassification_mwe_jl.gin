@@ -15,6 +15,7 @@ NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
   @GCN_AttributeMask_/NNNodeBenchmarkJL,
   @GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
   @GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
+  @GCN_AutoEncoding_/NNNodeBenchmarkJL,
   @GCN_/NNNodeBenchmarkJL
 ]
 
