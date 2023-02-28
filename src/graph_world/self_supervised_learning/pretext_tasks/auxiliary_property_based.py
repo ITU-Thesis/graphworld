@@ -2,7 +2,7 @@ from torch.nn import Linear
 import numpy as np
 import torch
 import gin
-from ..__types import *
+from .__types import *
 from torch import Tensor
 from sklearn.cluster import KMeans
 import pymetis
