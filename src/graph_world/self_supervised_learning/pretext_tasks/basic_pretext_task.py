@@ -9,7 +9,7 @@ class BasicPretextTask(ABC):
         self.data = data.clone()
         self.encoder = encoder
         self.train_mask = train_mask
-        self.decoder = None
+        self.decoder = Module()
 
     # Override this function to return the pretext task loss
     # The embeddings for the downstream task is given, to be used

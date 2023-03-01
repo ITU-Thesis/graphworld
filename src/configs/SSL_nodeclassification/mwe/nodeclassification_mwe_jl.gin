@@ -5,23 +5,24 @@ import graph_world.self_supervised_learning.pretext_tasks.generation_based
 import graph_world.self_supervised_learning.beam_handler
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
-GeneratorBeamHandlerWrapper.nsamples = 50
+GeneratorBeamHandlerWrapper.nsamples = 10
 
-NodeClassificationBeamHandlerSSL.num_tuning_rounds = 20
+NodeClassificationBeamHandlerSSL.num_tuning_rounds = 1
 NodeClassificationBeamHandlerSSL.save_tuning_results = False
 NodeClassificationBeamHandlerSSL.tuning_metric = "rocauc_ovr"
 NodeClassificationBeamHandlerSSL.ktrain = 5
 NodeClassificationBeamHandlerSSL.ktuning = 5
 
 NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
-  @GCN_AttributeMask_/NNNodeBenchmarkJL,
-  @GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
-  @GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
-  @GCN_AutoEncoding_/NNNodeBenchmarkJL,
-  @GCN_GAE_/NNNodeBenchmarkJL,
-  @GCN_VGAE_/NNNodeBenchmarkJL,
-  @GCN_ARGA_/NNNodeBenchmarkJL,
-  @GCN_ARGVA_/NNNodeBenchmarkJL,
+  #@GCN_AttributeMask_/NNNodeBenchmarkJL,
+  #@GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
+  #@GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
+  #@GCN_AutoEncoding_/NNNodeBenchmarkJL,
+  #@GCN_GAE_/NNNodeBenchmarkJL,
+  #@GCN_VGAE_/NNNodeBenchmarkJL,
+  #@GCN_ARGA_/NNNodeBenchmarkJL,
+  #@GCN_ARGVA_/NNNodeBenchmarkJL,
+  @SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL,
 
   @GCN_/NNNodeBenchmarkJL,
 

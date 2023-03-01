@@ -8,6 +8,7 @@ from .__types import *
 from torch import Tensor
 import torch_geometric.nn.models.autoencoder as pyg_autoencoder
 from .basic_pretext_task import BasicPretextTask
+from ...models.basic_gnn import SuperGAT
 
 # ------------- Feature generation ------------- #
 @gin.configurable
@@ -249,3 +250,18 @@ class ARGVA(BasicPretextTask):
         reg_loss = self.pygARGVA.reg_loss(variational_embedding)
         kl_loss = self.pygARGVA.kl_loss(mu, logstd)
         return recon_loss + (1/self.data.num_nodes) * kl_loss + reg_loss
+    
+
+# Include wrapper for superGAT here, since the superGAT model in /models does not use pretext loss
+@gin.configurable
+class SuperGATSSL(BasicPretextTask):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        assert isinstance(self.encoder, SuperGAT) # force encoder to be of type superGAT
+
+    # Sum the attention loss for each layer as specified in the superGAT paper
+    # Note that the official PyG example does not compute the sum, but just takes the loss from the last layer
+    def make_loss(self, embedding: Tensor) -> float:
+        attention_loss_list = [l.get_attention_loss() for l in self.encoder.convs]
+        return sum(attention_loss_list)
+        

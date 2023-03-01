@@ -195,6 +195,22 @@ GCN_ARGVA_/NNNodeBenchmarkJL.h_params = {
 }
 
 
+# superGAT with attention losses
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.model_class = @SuperGAT
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.pretext_tasks = [@SuperGATSSL]
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
 
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
