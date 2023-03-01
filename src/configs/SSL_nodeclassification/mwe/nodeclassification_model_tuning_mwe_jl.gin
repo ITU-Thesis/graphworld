@@ -211,6 +211,21 @@ SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.h_params = {
 }
 
 
+# GCN with denoising link reconstruction
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@DenoisingLinkReconstruction]
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
 
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN

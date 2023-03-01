@@ -1,4 +1,4 @@
-from torch.nn import Linear
+from torch.nn import Linear, Bilinear
 from sklearn.decomposition import PCA
 import numpy as np
 import torch
@@ -9,6 +9,8 @@ from torch import Tensor
 import torch_geometric.nn.models.autoencoder as pyg_autoencoder
 from .basic_pretext_task import BasicPretextTask
 from ...models.basic_gnn import SuperGAT
+from torch_geometric.utils import negative_sampling
+from ..decoders import NTNDecoder
 
 # ------------- Feature generation ------------- #
 @gin.configurable
@@ -16,7 +18,7 @@ class AttributeMask(BasicPretextTask):
     def __init__(self, node_mask_ratio : float = 0.1, **kwargs):
         super().__init__(**kwargs)
 
-        # Crea mask of subset of unlabeled nodes
+        # Create mask of subset of unlabeled nodes
         all = np.arange(self.data.x.shape[0])
         unlabeled = all[~self.train_mask]
         perm = np.random.permutation(unlabeled)
@@ -264,4 +266,49 @@ class SuperGATSSL(BasicPretextTask):
     def make_loss(self, embedding: Tensor) -> float:
         attention_loss_list = [l.get_attention_loss() for l in self.encoder.convs]
         return sum(attention_loss_list)
+    
+
+@gin.configurable
+class DenoisingLinkReconstruction(BasicPretextTask):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Create mask to remove 20% edges
+        perm = np.random.permutation(np.arange(self.data.edge_index.shape[1]))
+        remove_edges = perm[: int(len(perm)*0.2)]
+        edge_mask = torch.ones(self.data.edge_index.shape[1], dtype=torch.bool)
+        edge_mask[remove_edges] = 0
+
+        # Sample 20% negative edges
+        self.neg_edge_index = negative_sampling(self.data.edge_index, num_neg_samples =int(len(perm)*0.2))
+
+        # Remove 20% of positive edges
+        self.removed_edges = self.data.edge_index[:, ~edge_mask]
+        self.data.x.edge_index = self.data.edge_index[:, edge_mask]
+
+        # Create NTN decoder (simplified)
+        out = self.encoder.out_channels
+        self.ntn = NTNDecoder(out, out, 4)
+        self.classifier = Linear(4, 1)
+        self.decoder = torch.nn.ModuleList([self.ntn, self.classifier])
+
+
+    # Compute BCE loss of predicting edges for masked edges and negative sampled edges
+    # Note that this loss computation is similar to the reconstruction loss of PyG GAE
+    # - Difference: Different decoder (NTN) and loss is focused around masks
+    def make_loss(self, embedding: Tensor) -> float:
+        # Run masked input through encoder instead of using the embedding
+        z = self.encoder(self.data.x, self.data.edge_index)
+
+        # Compute loss for masked edges
+        pos_decode_embed = self.ntn(z, self.removed_edges)
+        pos_predict = torch.sigmoid(self.classifier(pos_decode_embed))
+        pos_loss = -torch.log(pos_predict).mean()
+
+        # Compute loss for negative sampled edges
+        neg_decode_embed = self.ntn(z, self.neg_edge_index)
+        neg_predict = torch.sigmoid(self.classifier(neg_decode_embed))
+        neg_loss = -torch.log(1 - neg_predict).mean()
+        
+        return pos_loss + neg_loss
         
