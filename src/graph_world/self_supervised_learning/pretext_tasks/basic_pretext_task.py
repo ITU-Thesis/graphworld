@@ -1,7 +1,7 @@
 from .__types import *
 from abc import ABC, abstractclassmethod
 from torch.nn import Module
-from torch import Tensor
+from torch import Tensor, FloatTensor, DoubleTensor
 
 
 class BasicPretextTask(ABC):
@@ -15,6 +15,6 @@ class BasicPretextTask(ABC):
     # The embeddings for the downstream task is given, to be used
     # when the input graph is the same for downstream/pretext tasks
     @abstractclassmethod
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor) -> Union[FloatTensor, DoubleTensor]:
         pass
 

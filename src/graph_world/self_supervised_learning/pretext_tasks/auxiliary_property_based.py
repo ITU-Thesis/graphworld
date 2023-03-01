@@ -67,7 +67,7 @@ class NodeClusteringWithAlignment(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, num_classes)
         self.loss = torch.nn.CrossEntropyLoss()
 
-    def make_loss(self, embeddings: Tensor) -> float:
+    def make_loss(self, embeddings):
         y_hat = self.decoder(embeddings)
         return self.loss(input=y_hat[~self.train_mask], target=self.pseudo_labels[~self.train_mask])
 
@@ -90,7 +90,7 @@ class GraphPartition(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, n_parts)
         self.loss = torch.nn.CrossEntropyLoss()
 
-    def make_loss(self, embeddings: Tensor) -> float:
+    def make_loss(self, embeddings):
         y_hat = self.decoder(embeddings)
         return self.loss(input=y_hat, target=self.pseudo_labels)
 
@@ -102,6 +102,9 @@ class CentralityScore_(Enum):
     SUBGRAPH = 3
 
 class AbstractCentralityScore(BasicPretextTask, ABC):
+    '''
+    Abstract class for computing centrality scores proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    '''
     def __init__(self, centrality_score: CentralityScore_, **kwargs):
         super().__init__(**kwargs)
         if centrality_score == CentralityScore_.EIGENVECTOR_CENTRALITY:
@@ -135,34 +138,85 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
                     rank_order[i, j] = 1.0
         self.rank_order = rank_order
 
-    def make_loss(self, embeddings: Tensor) -> float:
+    def make_loss(self, embeddings):
         predicted_centrality_score = self.decoder(embeddings)
+        
+        # Outer subtraction followed by element-wise sigmoid
         predicted_rank_order = torch.sigmoid(
             predicted_centrality_score.reshape(-1, 1) - predicted_centrality_score
         )
         R, R_hat = self.rank_order, predicted_rank_order
-        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).sum()
+        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).sum() # Elementwise CE loss followed by sum
         return loss
 
 @gin.configurable
 class EigenvectorCentrality(AbstractCentralityScore):
+    '''
+    Proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    Time complexity: O(|V|^3) where V is the vertices.
+    '''
     def __init__(self, **kwargs):
         super().__init__(CentralityScore_.EIGENVECTOR_CENTRALITY, **kwargs)
 
 
 @gin.configurable
 class BetweennessCentrality(AbstractCentralityScore):
+    '''
+    Proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    Time complexity: O(|V| * |E|) where V and E is the vertices and edges respectively.
+    '''
     def __init__(self, **kwargs):
         super().__init__(CentralityScore_.BETWEENNESS, **kwargs)
 
 
 @gin.configurable
 class ClosenessCentrality(AbstractCentralityScore):
+    '''
+    Proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    Time complexity: O(|V| * |E|) where V and E is the vertices and edges respectively.
+    '''
     def __init__(self, **kwargs):
         super().__init__(CentralityScore_.CLOSENESS, **kwargs)
 
 
 @gin.configurable
 class SubgraphCentrality(AbstractCentralityScore):
+    '''
+    Proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    Time complexity: O(|V|^4) where V is the vertices.
+    '''
     def __init__(self, **kwargs):
         super().__init__(CentralityScore_.SUBGRAPH, **kwargs)
+
+
+class CentralityScore(BasicPretextTask):
+
+    class Decoder(nn.Module):
+        def __init__(self, centrality_scores : list[AbstractCentralityScore], **kwargs):
+            super().__init__()
+            self.centrality_scores = centrality_scores
+
+        def forward(self, x):
+            l = []
+            for s in self.centrality_scores:
+                l += s.forward(x)
+                pass
+            return torch.stack([*map(lambda m: m.forward(x), self.centrality_scores)], dim=1)
+
+    '''
+    Proposed in https://arxiv.org/pdf/1905.13728.pdf.
+    '''
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
+        self.centrality_scores = [
+            EigenvectorCentrality(**kwargs),
+            BetweennessCentrality(**kwargs),
+            ClosenessCentrality(**kwargs),
+            SubgraphCentrality(**kwargs)
+        ]
+        self.decoder = CentralityScore.Decoder(centrality_scores=self.centrality_scores)
+
+    def make_loss(self, embeddings):
+        loss = sum(map(lambda m: m.make_loss(embeddings), self.centrality_scores))
+        return loss
