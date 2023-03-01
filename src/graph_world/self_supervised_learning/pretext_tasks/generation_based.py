@@ -10,7 +10,7 @@ import torch_geometric.nn.models.autoencoder as pyg_autoencoder
 from .basic_pretext_task import BasicPretextTask
 from ...models.basic_gnn import SuperGAT
 from torch_geometric.utils import negative_sampling
-from ..decoders import NTNDecoder
+from ..layers import NeuralTensorLayer
 
 # ------------- Feature generation ------------- #
 @gin.configurable
@@ -270,6 +270,15 @@ class SuperGATSSL(BasicPretextTask):
 
 @gin.configurable
 class DenoisingLinkReconstruction(BasicPretextTask):
+
+    class Decoder(torch.nn.Module):
+        def __init__(self, ntn : NeuralTensorLayer, classifier : torch.nn.Module):
+            super().__init__()
+            self.decoder = torch.nn.ModuleList([ntn, classifier])
+
+        def forward(self, z: Tensor, edge_index: Tensor):
+            return self.decoder.forward(z[edge_index[0], z[edge_index[1]]])
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -288,9 +297,9 @@ class DenoisingLinkReconstruction(BasicPretextTask):
 
         # Create NTN decoder (simplified)
         out = self.encoder.out_channels
-        self.ntn = NTNDecoder(out, out, 4)
+        self.ntn = NeuralTensorLayer(out, out, 4)
         self.classifier = Linear(4, 1)
-        self.decoder = torch.nn.ModuleList([self.ntn, self.classifier])
+        self.decoder = DenoisingLinkReconstruction.Decoder(ntn=self.ntn, classifier=self.classifier)
 
 
     # Compute BCE loss of predicting edges for masked edges and negative sampled edges
@@ -301,12 +310,12 @@ class DenoisingLinkReconstruction(BasicPretextTask):
         z = self.encoder(self.data.x, self.data.edge_index)
 
         # Compute loss for masked edges
-        pos_decode_embed = self.ntn(z, self.removed_edges)
+        pos_decode_embed = self.ntn(z[self.removed_edges[0]], z[self.removed_edges[1]])
         pos_predict = torch.sigmoid(self.classifier(pos_decode_embed))
         pos_loss = -torch.log(pos_predict).mean()
 
         # Compute loss for negative sampled edges
-        neg_decode_embed = self.ntn(z, self.neg_edge_index)
+        neg_decode_embed = self.ntn(z[self.removed_edges[0]], z[self.removed_edges[1]])
         neg_predict = torch.sigmoid(self.classifier(neg_decode_embed))
         neg_loss = -torch.log(1 - neg_predict).mean()
         
