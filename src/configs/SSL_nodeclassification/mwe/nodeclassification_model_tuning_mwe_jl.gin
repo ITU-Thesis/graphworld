@@ -228,6 +228,23 @@ GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
 }
 
 
+# GCN with denoising link reconstruction
+GCN_EdgeMask_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_EdgeMask_/NNNodeBenchmarkJL.pretext_tasks = [@EdgeMask]
+GCN_EdgeMask_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_EdgeMask_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'edge_mask_ratio' : %MASK_RATIO
+}
+
+
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
 GCN_/NNNodeBenchmarkJL.pretext_tasks = []

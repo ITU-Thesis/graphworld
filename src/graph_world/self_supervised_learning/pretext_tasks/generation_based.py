@@ -313,3 +313,26 @@ class DenoisingLinkReconstruction(BasicPretextTask):
         
         return pos_loss + neg_loss
         
+
+
+# Same as DenoisingLinkReconstruction but different decoder
+# This decoder just examines the absolute differences between pairwise embeddings
+@gin.configurable
+class EdgeMask(DenoisingLinkReconstruction):
+    def __init__(self, edge_mask_ratio : float = 0.2, **kwargs):
+        super().__init__(edge_mask_ratio, **kwargs)
+        self.decoder = Linear(self.encoder.out_channels, 1)
+
+    def make_loss(self, embedding: Tensor):
+        # Run masked input through encoder instead of using the embedding
+        z = self.encoder(self.data.x, self.data.edge_index)
+
+        # Compute loss for masked edges
+        pos_predict = torch.sigmoid(self.decoder(torch.abs(z[self.removed_edges[0] - self.removed_edges[1]])))
+        pos_loss = -torch.log(pos_predict).mean()
+
+        # Compute loss for negative sampled edges
+        neg_predict = torch.sigmoid(self.decoder(torch.abs(z[self.neg_edge_index[0] - self.neg_edge_index[1]])))
+        neg_loss = -torch.log(1 - neg_predict).mean()
+        
+        return pos_loss + neg_loss
