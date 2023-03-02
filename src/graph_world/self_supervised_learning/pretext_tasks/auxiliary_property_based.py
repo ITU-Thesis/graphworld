@@ -198,11 +198,7 @@ class CentralityScore(BasicPretextTask):
             self.centrality_scores = centrality_scores
 
         def forward(self, x):
-            l = []
-            for s in self.centrality_scores:
-                l += s.forward(x)
-                pass
-            return torch.stack([*map(lambda m: m.forward(x), self.centrality_scores)], dim=1)
+            return torch.stack([*map(lambda m: m.decoder.forward(x), self.centrality_scores)], dim=1).squeeze()
 
     '''
     Proposed in https://arxiv.org/pdf/1905.13728.pdf.
