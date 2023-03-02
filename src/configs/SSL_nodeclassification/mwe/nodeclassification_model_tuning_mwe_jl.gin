@@ -223,7 +223,8 @@ GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT
+    'dropout' : %DROPOUT,
+    'edge_mask_ratio' : %MASK_RATIO
 }
 
 

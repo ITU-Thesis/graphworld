@@ -13,6 +13,7 @@ from torch_geometric.utils.convert import to_networkx
 import networkx as nx
 from abc import ABC
 from torch import nn
+from typing import List
 
 # ==================================================== #
 # ============= Auxiliary property-based ============= #
@@ -192,7 +193,7 @@ class SubgraphCentrality(AbstractCentralityScore):
 class CentralityScore(BasicPretextTask):
 
     class Decoder(nn.Module):
-        def __init__(self, centrality_scores : list[AbstractCentralityScore], **kwargs):
+        def __init__(self, centrality_scores : List[AbstractCentralityScore], **kwargs):
             super().__init__()
             self.centrality_scores = centrality_scores
 

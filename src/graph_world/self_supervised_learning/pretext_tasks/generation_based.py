@@ -38,7 +38,7 @@ class AttributeMask(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         z = self.encoder(self.data.x, self.data.edge_index)
         y_hat = (self.decoder(z[self.masked_nodes]))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
@@ -68,7 +68,7 @@ class CorruptedFeaturesReconstruction(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         z = self.encoder(self.data.x, self.data.edge_index)
         y_hat = (self.decoder(z))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
@@ -95,7 +95,7 @@ class CorruptedEmbeddingsReconstruction(BasicPretextTask):
         self.decoder = Linear(self.encoder.out_channels, out)
 
     # Mask embeddings and reconstruct with decoder
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         masked_embeddings = torch.matmul(embeddings, self.mask)
         y_hat = (self.decoder(masked_embeddings))
         if self.partial_embedding_reconstruction:
@@ -113,7 +113,7 @@ class AutoEncoding(BasicPretextTask):
         self.pseudo_labels = self.data.x
 
     # Directly reconstruct input features from embedding
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         y_hat = self.decoder(embeddings)
         return F.mse_loss(y_hat, self.pseudo_labels)
 
@@ -148,7 +148,7 @@ class VGAE(BasicPretextTask):
             self.pygVGAE.decoder]
         )
     
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         # Get variational embedding
         mu, logstd = self.muTransform(embeddings), self.stdTransform(embeddings)
         logstd = logstd.clamp(max=pyg_autoencoder.MAX_LOGSTD)
@@ -184,7 +184,7 @@ class ARGA(BasicPretextTask):
         self.discriminator_optimizer = torch.optim.Adam(self.discriminator.parameters(), discriminator_lr)
         self.discriminator_epochs = discriminator_epochs
 
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         # In each pretext epoch, we train the discriminator with its own optimizer
         for _ in range(self.discriminator_epochs):
             self.discriminator.train()
@@ -233,7 +233,7 @@ class ARGVA(BasicPretextTask):
         self.discriminator_optimizer = torch.optim.Adam(self.discriminator.parameters(), discriminator_lr)
         self.discriminator_epochs = discriminator_epochs
 
-    def make_loss(self, embeddings : Tensor) -> float:
+    def make_loss(self, embeddings : Tensor):
         # Get variational embedding
         mu, logstd = self.muTransform(embeddings), self.stdTransform(embeddings)
         logstd = logstd.clamp(max=pyg_autoencoder.MAX_LOGSTD)
@@ -263,7 +263,7 @@ class SuperGATSSL(BasicPretextTask):
 
     # Sum the attention loss for each layer as specified in the superGAT paper
     # Note that the official PyG example does not compute the sum, but just takes the loss from the last layer
-    def make_loss(self, embedding: Tensor) -> float:
+    def make_loss(self, embedding: Tensor):
         attention_loss_list = [l.get_attention_loss() for l in self.encoder.convs]
         return sum(attention_loss_list)
     
@@ -271,27 +271,19 @@ class SuperGATSSL(BasicPretextTask):
 @gin.configurable
 class DenoisingLinkReconstruction(BasicPretextTask):
 
-    class Decoder(torch.nn.Module):
-        def __init__(self, ntn : NeuralTensorLayer, classifier : torch.nn.Module):
-            super().__init__()
-            self.decoder = torch.nn.ModuleList([ntn, classifier])
-
-        def forward(self, z: Tensor, edge_index: Tensor):
-            return self.decoder.forward(z[edge_index[0], z[edge_index[1]]])
-
-    def __init__(self, **kwargs):
+    def __init__(self, edge_mask_ratio : float = 0.2, **kwargs):
         super().__init__(**kwargs)
 
-        # Create mask to remove 20% edges
+        # Create mask to remove edges
         perm = np.random.permutation(np.arange(self.data.edge_index.shape[1]))
-        remove_edges = perm[: int(len(perm)*0.2)]
+        remove_edges = perm[: int(len(perm)*edge_mask_ratio)]
         edge_mask = torch.ones(self.data.edge_index.shape[1], dtype=torch.bool)
         edge_mask[remove_edges] = 0
 
-        # Sample 20% negative edges
-        self.neg_edge_index = negative_sampling(self.data.edge_index, num_neg_samples =int(len(perm)*0.2))
+        # Sample negative edges
+        self.neg_edge_index = negative_sampling(self.data.edge_index, num_neg_samples =int(len(perm)*edge_mask_ratio))
 
-        # Remove 20% of positive edges
+        # Remove of positive edges
         self.removed_edges = self.data.edge_index[:, ~edge_mask]
         self.data.x.edge_index = self.data.edge_index[:, edge_mask]
 
@@ -299,13 +291,13 @@ class DenoisingLinkReconstruction(BasicPretextTask):
         out = self.encoder.out_channels
         self.ntn = NeuralTensorLayer(out, out, 4)
         self.classifier = Linear(4, 1)
-        self.decoder = DenoisingLinkReconstruction.Decoder(ntn=self.ntn, classifier=self.classifier)
+        self.decoder = torch.nn.ModuleList([self.ntn, self.classifier])
 
 
     # Compute BCE loss of predicting edges for masked edges and negative sampled edges
     # Note that this loss computation is similar to the reconstruction loss of PyG GAE
     # - Difference: Different decoder (NTN) and loss is focused around masks
-    def make_loss(self, embedding: Tensor) -> float:
+    def make_loss(self, embedding: Tensor):
         # Run masked input through encoder instead of using the embedding
         z = self.encoder(self.data.x, self.data.edge_index)
 
@@ -315,7 +307,7 @@ class DenoisingLinkReconstruction(BasicPretextTask):
         pos_loss = -torch.log(pos_predict).mean()
 
         # Compute loss for negative sampled edges
-        neg_decode_embed = self.ntn(z[self.removed_edges[0]], z[self.removed_edges[1]])
+        neg_decode_embed = self.ntn(z[self.neg_edge_index[0]], z[self.neg_edge_index[1]])
         neg_predict = torch.sigmoid(self.classifier(neg_decode_embed))
         neg_loss = -torch.log(1 - neg_predict).mean()
         
