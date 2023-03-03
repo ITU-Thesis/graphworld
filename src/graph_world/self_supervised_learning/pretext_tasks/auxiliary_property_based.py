@@ -232,16 +232,14 @@ class S2GRL(BasicPretextTask):
     According to the paper reduction is always sum, but this might make the model improve more towards
     hubs / nodes in highly dense neighbourhoods.
     '''
-    def __init__(self, shortest_path_cutoff : int, N_classes : int, reduction : str = 'sum', **kwargs):
+    def __init__(self, shortest_path_cutoff : int, N_classes : int, **kwargs):
         super().__init__(**kwargs)
         assert shortest_path_cutoff > 0
 
         self.N_classes = N_classes
         in_channel = self.encoder.out_channels
 
-        # Notice this might improve the model more towards hubs / nodes in highly dense neighbourhoods
-        self.reduction = reduction
-        self.loss = nn.CrossEntropyLoss(reduction=reduction)
+        self.loss = nn.CrossEntropyLoss(reduction='mean')
         self.decoder = nn.Sequential(
                 Linear(in_channel, in_channel // 2),
                 nn.ReLU(),
@@ -297,7 +295,6 @@ class S2GRL(BasicPretextTask):
             loss = self.loss(input=encoded, target=pseudo_labels)
             total_loss += loss
         
-        if self.reduction == 'mean':
-            total_loss /= len(self.shortest_paths.items())
+        total_loss /= len(self.shortest_paths.items())
         return total_loss
 
