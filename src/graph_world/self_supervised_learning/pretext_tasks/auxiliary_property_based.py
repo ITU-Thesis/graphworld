@@ -14,6 +14,8 @@ import networkx as nx
 from abc import ABC
 from torch import nn
 from typing import List
+from torch_geometric.utils.undirected import is_undirected
+from networkx import all_pairs_shortest_path_length
 
 # ==================================================== #
 # ============= Auxiliary property-based ============= #
@@ -108,6 +110,7 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
     '''
     def __init__(self, centrality_score: CentralityScore_, **kwargs):
         super().__init__(**kwargs)
+        assert is_undirected(edge_index=self.data.edge_index)
         if centrality_score == CentralityScore_.EIGENVECTOR_CENTRALITY:
             self.centrality_score_fn = nx.eigenvector_centrality
         elif centrality_score == CentralityScore_.BETWEENNESS:
@@ -217,3 +220,84 @@ class CentralityScore(BasicPretextTask):
     def make_loss(self, embeddings):
         loss = sum(map(lambda m: m.make_loss(embeddings), self.centrality_scores))
         return loss
+
+
+
+class S2GRL(BasicPretextTask):
+    '''
+    Implementation of S2GRL from:
+        Peng, Zhen, et al. "Self-supervised graph representation learning via global context prediction."
+
+    It implements the "small-world" merge policy as used in their experiments described in table 6.
+    According to the paper reduction is always sum, but this might make the model improve more towards
+    hubs / nodes in highly dense neighbourhoods.
+    '''
+    def __init__(self, shortest_path_cutoff : int, N_classes : int, reduction : str = 'sum', **kwargs):
+        super().__init__(**kwargs)
+        assert shortest_path_cutoff > 0
+
+        self.N_classes = N_classes
+        in_channel = self.encoder.out_channels
+
+        # Notice this might improve the model more towards hubs / nodes in highly dense neighbourhoods
+        self.reduction = reduction
+        self.loss = nn.CrossEntropyLoss(reduction=reduction)
+        self.decoder = nn.Sequential(
+                Linear(in_channel, in_channel // 2),
+                nn.ReLU(),
+                Linear(in_channel // 2, self.N_classes),
+                nn.Sigmoid()
+        )
+        self.__shortest_paths = None
+        
+
+
+    @property
+    def shortest_paths(self) -> Dict[int, Dict[int, int]]:
+        '''
+        Outer dict:     Source node v_i --> k-hop neighbours
+        Inner dicts:    Target node v_j --> distance between v_i and v_j (symmetric)
+        '''
+        if self.__shortest_paths is None:
+            G = to_networkx(self.data)
+            self.__shortest_paths = { i: {} for i in range(G.number_of_nodes())}
+
+            # 1) Find shortest paths
+            # 2) Remove paths of length 0 (path v_i --> v_i)
+            # 3) Smallworld merge policy
+            shortest_paths = all_pairs_shortest_path_length(G, cutoff=self.N_classes)
+            shortest_paths = map(lambda v_i: (v_i[0], filter(lambda neighbours: neighbours[1] > 0, v_i[1].items())), shortest_paths)
+            shortest_paths = map(lambda v_i: (v_i[0], map(lambda neighbours: (neighbours[0], max(neighbours[1], self.N_classes)), v_i[1])), shortest_paths)
+            self.__shortest_paths = { v_i: dict(v_j) for v_i, v_j in shortest_paths}
+            
+        return self.__shortest_paths
+    
+    @property
+    def pseudo_labels(self):
+        return self.shortest_paths
+
+    
+    def make_loss(self, embeddings : Tensor):
+        total_loss = torch.tensor(0, dtype=torch.float64)
+        for source, targets in self.shortest_paths.items():
+            v_i = embeddings[source]
+
+            # Distance i maps to class i - 1.
+            distances = torch.tensor([*targets.values()]) - 1
+            pseudo_labels = torch.nn.functional.one_hot(distances, num_classes=self.N_classes).to(torch.float64)
+
+            # Select embeddings of neighbours
+            neighbour_indices = torch.tensor([*targets.keys()])
+            neighbour_embeddings = embeddings[neighbour_indices]
+            assert pseudo_labels.shape[0] == neighbour_embeddings.shape[0]
+
+            # Calculate interactions
+            distances = (v_i - neighbour_embeddings).abs()
+            encoded = self.decoder(distances)
+            loss = self.loss(input=encoded, target=pseudo_labels)
+            total_loss += loss
+        
+        if self.reduction == 'mean':
+            total_loss /= len(self.shortest_paths.items())
+        return total_loss
+
