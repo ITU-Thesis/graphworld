@@ -25,7 +25,8 @@ NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
   #@SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL,
   #@GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL,
   #@GCN_EdgeMask_/NNNodeBenchmarkJL,
-  @GCN_GRACE_/NNNodeBenchmarkJL,
+  #@GCN_GRACE_/NNNodeBenchmarkJL,
+  @GCN_GCA_/NNNodeBenchmarkJL,
   @GCN_/NNNodeBenchmarkJL,
 
 ]

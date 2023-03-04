@@ -266,6 +266,27 @@ GCN_GRACE_/NNNodeBenchmarkJL.h_params = {
 }
 
 
+# GCN with GCA
+GCN_GCA_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_GCA_/NNNodeBenchmarkJL.pretext_tasks = [@GCA]
+GCN_GCA_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_GCA_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'tau' : %TAU,
+    'edge_mask_ratio1' : %MASK_RATIO,
+    'edge_mask_ratio2' : %MASK_RATIO,
+    'feature_mask_ratio1' : %MASK_RATIO, 
+    'feature_mask_ratio2' : %MASK_RATIO
+}
+
+
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
 GCN_/NNNodeBenchmarkJL.pretext_tasks = []
