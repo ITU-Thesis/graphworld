@@ -320,14 +320,16 @@ class PairwiseAttrSim(BasicPretextTask):
         # Index (i, j) is cos(x[i], x[j])
         similarities = torch.tensor(cosine_similarity(X))
 
-        # inf_mask:     Lower triangular (including diagonal) is ∞
-        # inf_mask_neg: Lower triangular (including diagonal) is -∞
+        # Mask redundant similarities (i,j)=(j,i) by multipliying by 2 and -2 - 
+        # cosine support is [-1, 1].
+        # inf_mask:     Lower triangular (including diagonal) is 2
+        # inf_mask_neg: Lower triangular (including diagonal) is -2
         ones = torch.ones((similarities.shape))
-        inf_mask = (ones * np.inf).tril() + ones
-        inf_mask_neg = (ones * -np.inf).tril() + ones
+        redundant_mask = (ones * 2).tril() + ones
+        redundant_mask_neg = (ones * -2).tril() + ones
 
-        self.T_s = self.get_top_k_node_pairs(similarities * inf_mask_neg, largest=True) # Highest similarity
-        self.T_d = self.get_top_k_node_pairs(similarities * inf_mask, largest=False)    # Lowest similarity
+        self.T_s = self.get_top_k_node_pairs(similarities * redundant_mask_neg, largest=True) # Highest similarity
+        self.T_d = self.get_top_k_node_pairs(similarities * redundant_mask, largest=False)    # Lowest similarity
         
         highest_similarities = similarities[self.T_s[:, 0], self.T_s[:, 1]]
         smallest_similarities = similarities[self.T_d[:, 0], self.T_d[:, 1]]
