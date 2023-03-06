@@ -175,6 +175,7 @@ class BGRL(BasicPretextTask):
             Linear(out, out), torch.nn.PReLU(),
             Linear(out, out)
         )
+        self.decoder = self.student_predictor # Make predictor optimizable
 
     # Same as in GRACE
     def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
