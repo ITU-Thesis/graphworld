@@ -74,7 +74,11 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     
     # Give encoder instantiation to pretext tasks, 
     # so they can run modified inputs through the encoder
-    self._pretext_h_params['encoder'] = self._encoder 
+    self._pretext_h_params['encoder'] = self._encoder
+    
+    # Give number of epochs the pretext task will run for
+    # For joint learning this is the same as epochs
+    self._pretext_h_params['epochs'] = self._epochs
 
     self._criterion = torch.nn.CrossEntropyLoss()
     self._train_mask = None

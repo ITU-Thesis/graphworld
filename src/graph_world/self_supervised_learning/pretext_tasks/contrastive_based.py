@@ -12,6 +12,8 @@ from ...models.basic_gnn import SuperGAT
 from torch_geometric.utils import negative_sampling, dropout_adj, degree
 from ..layers import NeuralTensorLayer
 from typing import Tuple
+import copy
+from .utils import EMA, init_weights
 
 # Based on https://github.com/CRIPAC-DIG/GRACE
 @gin.configurable
@@ -139,3 +141,89 @@ class GCA(GRACE):
         features = self.drop_features(f_mask_ratio=f_mask_ratio, threshold=0.7)
         return features, edge_index
 
+
+# Based on https://github.com/Namkyeong/BGRL_Pytorch
+@gin.configurable
+class BGRL(BasicPretextTask):
+    def __init__(self, 
+                 edge_mask_ratio1 : float = 0.2,
+                 edge_mask_ratio2 : float = 0.2,
+                 feature_mask_ratio1 : float = 0.2, 
+                 feature_mask_ratio2 : float = 0.2,
+                 **kwargs):
+        super().__init__(**kwargs)
+        
+        # Augmentation params
+        self.edge_mask_ratio1 = edge_mask_ratio1
+        self.edge_mask_ratio2 = edge_mask_ratio2
+        self.feature_mask_ratio1 = feature_mask_ratio1
+        self.feature_mask_ratio2 = feature_mask_ratio2
+
+        # Create student and teacher encoder
+        # No gradients are needed for teacher as EMA is used
+        # We also initialize the teacher with different weights than the student
+        self.student_encoder = self.encoder
+        self.teacher_encoder = copy.deepcopy(self.student_encoder)
+        for p in self.teacher_encoder.parameters():
+            p.requires_grad = False
+        self.teacher_ema_updater = EMA(0.99, self.epochs) # Fix initial decay to 0.99 similar to authors
+        self.teacher_encoder.apply(init_weights)
+
+        # Create predictor for student -> teacher
+        out = self.encoder.out_channels
+        self.student_predictor = torch.nn.Sequential(
+            Linear(out, out), torch.nn.PReLU(),
+            Linear(out, out)
+        )
+        self.decoder = self.student_predictor # Make predictor optimizable
+
+    # Same as in GRACE
+    def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
+        edge_index, _ = dropout_adj(self.data.edge_index, p=e_mask_ratio)
+        f_mask = torch.empty((self.data.x.shape[1], )).uniform_(0,1) < f_mask_ratio 
+        features = self.data.x.clone()
+        features[:, f_mask] = 0
+        return features, edge_index
+    
+    # BOYE loss
+    def loss_fn(self, x, y):
+        x = F.normalize(x, dim=-1, p=2)
+        y = F.normalize(y, dim=-1, p=2)
+        return 2 - 2 * (x * y).sum(dim=-1)
+
+    def make_loss(self, embeddings: Tensor):
+        # Generate two views
+        features1, edge_index1 = self.generate_view(self.feature_mask_ratio1, self.edge_mask_ratio1)
+        features2, edge_index2 = self.generate_view(self.feature_mask_ratio2, self.edge_mask_ratio2)
+
+        # Produce student embeddings
+        v1_student = self.student_encoder(features1, edge_index1)
+        v2_student = self.student_encoder(features2, edge_index2)
+
+        # Produce teacher embeddings
+        with torch.no_grad():
+            v1_teacher = self.teacher_encoder(features1, edge_index1)
+            v2_teacher = self.teacher_encoder(features2, edge_index2)
+
+        # Predict teacher embeddings from student embeddings
+        v1_pred = self.student_predictor(v1_student)
+        v2_pred = self.student_predictor(v2_student)
+
+        # Update teacher encoder params
+        # We update the teacher before the student rather than after
+        # - This fits our interface better, as the benchmarker updates the student
+        # - The order should not matter
+        for current_params, ma_params in zip(self.student_encoder.parameters(), self.teacher_encoder.parameters()):
+            old_weight, up_weight = ma_params.data, current_params.data
+            ma_params.data = self.teacher_ema_updater.update_average(old_weight, up_weight)
+
+        # Compute loss for predictions
+        # The returned loss updates the student encoder
+        # Note that predictions from view 1 are for view 2 and vice versa
+        loss1 = self.loss_fn(v1_pred, v2_teacher.detach())
+        loss2 = self.loss_fn(v2_pred, v1_teacher.detach())
+        loss = loss1 + loss2
+        return loss.mean()
+
+
+        
