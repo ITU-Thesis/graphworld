@@ -5,9 +5,10 @@ from torch import Tensor, FloatTensor, DoubleTensor
 
 
 class BasicPretextTask(ABC):
-    def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, **kwargs): # **kwargs is needed
+    def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, epochs : int, **kwargs): # **kwargs is needed
         self.data = data.clone()
         self.encoder = encoder
+        self.epochs = epochs # How many epochs make_loss can be expected to be called
         self.train_mask = train_mask
         self.decoder = Module()
 

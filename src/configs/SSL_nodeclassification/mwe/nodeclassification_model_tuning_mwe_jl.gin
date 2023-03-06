@@ -22,7 +22,6 @@ DISCRIMINATOR_EPOCHS = [5, 10]
 TAU = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 
-
 # GCN setup with AttributeMask
 GCN_AttributeMask_/NNNodeBenchmarkJL.model_class = @GCN
 GCN_AttributeMask_/NNNodeBenchmarkJL.pretext_tasks = [@AttributeMask]
@@ -280,6 +279,26 @@ GCN_GCA_/NNNodeBenchmarkJL.h_params = {
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
     'tau' : %TAU,
+    'edge_mask_ratio1' : %MASK_RATIO,
+    'edge_mask_ratio2' : %MASK_RATIO,
+    'feature_mask_ratio1' : %MASK_RATIO, 
+    'feature_mask_ratio2' : %MASK_RATIO
+}
+
+
+# GCN with BGRL
+GCN_BGRL_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_BGRL_/NNNodeBenchmarkJL.pretext_tasks = [@BGRL]
+GCN_BGRL_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_BGRL_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
     'edge_mask_ratio1' : %MASK_RATIO,
     'edge_mask_ratio2' : %MASK_RATIO,
     'feature_mask_ratio1' : %MASK_RATIO, 
