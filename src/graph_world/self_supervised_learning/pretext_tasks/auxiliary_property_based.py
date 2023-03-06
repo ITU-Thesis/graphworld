@@ -16,8 +16,8 @@ from torch import nn
 from typing import List
 from torch_geometric.utils.undirected import is_undirected
 from networkx import all_pairs_shortest_path_length
-from sklearn.metrics.pairwise import cosine_similarity
 from ..tensor_utils import get_top_k_indices
+from torchmetrics.functional import pairwise_cosine_similarity
 
 # ==================================================== #
 # ============= Auxiliary property-based ============= #
@@ -318,7 +318,8 @@ class PairwiseAttrSim(BasicPretextTask):
         X = self.data.x[self.null_mask]
 
         # Index (i, j) is cos(x[i], x[j])
-        similarities = torch.tensor(cosine_similarity(X))
+
+        similarities = pairwise_cosine_similarity(X)
 
         # Mask redundant similarities (i,j)=(j,i) by multipliying by 2 and -2 - 
         # cosine support is [-1, 1].
