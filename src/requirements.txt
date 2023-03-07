@@ -15,4 +15,5 @@ ujson
 scikit-learn
 pymetis
 torchmetrics
+numba
 

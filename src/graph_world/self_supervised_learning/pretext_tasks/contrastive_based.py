@@ -13,8 +13,9 @@ from torch_geometric.utils import negative_sampling, dropout_adj, degree
 from ..layers import NeuralTensorLayer
 from typing import Tuple
 import copy
-from .utils import EMA, init_weights
+from .utils import EMA, init_weights, pad_views
 from abc import ABC, abstractclassmethod
+from torch_geometric.transforms import GDC, LocalDegreeProfile
 
 # Based on https://github.com/CRIPAC-DIG/GRACE
 @gin.configurable
@@ -242,6 +243,104 @@ class BGRL(AbstractSiameseBYOL):
         features1[:, f_mask1] = 0
         features2[:, f_mask2] = 0
         return features1, edge_index1, features2, edge_index2
+    
+# Abstract class - does not override generate_views
+# This class modifies the expected embeddings used by the graph encoder
+# Extensions of this class are the augmentation variatns of SelfGNN 
+class SelfGNN(AbstractSiameseBYOL):
+    # Concat embeddings of the two views
+    def get_downstream_embeddings(self) -> Tensor:
+        # Generate two views
+        features1, edge_index1, features2, edge_index2 = self.generate_views()
+
+        # Produce student embeddings
+        v1_student = self.student_encoder(features1, edge_index1)
+        v2_student = self.student_encoder(features2, edge_index2)
+        return torch.cat([v1_student, v2_student], dim=1)#.detach()
+
+    # Because of concat the output dim might change
+    def get_downstream_embeddings_size(self) -> int:
+        return self.encoder.out_channels * 2
+    
+
+# SelfGNN variant that uses node feature split
+@gin.configurable
+class SelfGNNSplit(SelfGNN):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Generate cached views once
+        # We randomly split features in two parts
+        # As a simplification we mask splitted features as 0 rather than removing them
+        # - Makes it so the encoder input dim does not have to change
+        perm = torch.randperm(self.data.x.shape[1])
+        x = self.data.x.clone()
+        x = x[:, perm]
+        size = x.shape[1] // 2
+        self.features1 = x.clone()
+        self.features2 = x.clone()
+        self.features1[:, :size] = 0
+        self.features2[:, size:] = 0
+    
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        return self.features1, self.data.edge_index, self.features2, self.data.edge_index
+    
+
+# SelfGNN variant that uses PPR
+@gin.configurable
+class SelfGNNPPR(SelfGNN):
+    def __init__(self, alpha : float = 0.15, **kwargs):
+        super().__init__(**kwargs)
+        # Generate cached views once
+        # We keep one view as the original graph, and augment the other based on sparsified PPR edges
+        # The paper fixes alpha, we vary it as a hyperparameter
+        
+        # GDC assumes edge_attr stores edge weights
+        # To avoid issues where this is not the case from the generated graphs we set the edge_attr to None
+        data2 = self.data.clone()
+        data2.edge_attr = None
+        self.data2 = GDC(diffusion_kwargs={'alpha': alpha, 'method': 'ppr'}, 
+                       sparsification_kwargs={'method':'threshold', 'avg_degree': 30})(data2)
+    
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    
+
+
+# SelfGNN variant that replaces the features of 1 view with LocalDegreeProfile
+@gin.configurable
+class SelfGNNLDP(SelfGNN):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Generate cached views once
+        # We keep one view as the original graph, and augment the other to be LDP of dim=5
+        # - feaure dims need to match, so LDP features are padded with 0
+        data2 = self.data.clone()
+        data2.x = None
+        data2.num_nodes = self.data.num_nodes
+        self.data2 = LocalDegreeProfile()(data2)
+        pad_views(self.data, self.data2)
+    
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    
+
+# SelfGNN variant that zscore standardizes the features of 1 view
+@gin.configurable
+class SelfGNNStandard(SelfGNN):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Generate cached views once
+        # We keep one view as the original graph, and augment the other be a zscore standardization
+        self.data2 = self.data.clone()
+        x = self.data2.x
+        mean, std = x.mean(dim=0), x.std(dim=0)
+        self.data2.x = (x - mean) / (std + 10e-7)
+    
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    
+
+
 
 
         

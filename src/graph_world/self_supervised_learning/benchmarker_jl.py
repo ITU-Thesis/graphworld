@@ -26,7 +26,7 @@ import torch
 from torch.nn import Linear
 import copy
 from graph_world.models.basic_gnn import BasicGNN
-from graph_world.self_supervised_learning.pretext_tasks.basic_pretext_task import BasicPretextTask
+from graph_world.self_supervised_learning.pretext_tasks.basic_pretext_task import BasicPretextTask, IndentityPretextTask
 from typing import Type, List
 import inspect
 
@@ -49,7 +49,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     self.downstream_out = h_params['out_channels']
 
     # pretext_tasks, names and weights
-    self._pretext_task = pretext_task
+    self._pretext_task = pretext_task if pretext_task is not None else IndentityPretextTask
     self._lambda = benchmark_params['lambda'] # Weight for summing loss of pretext task
     self._pretext_task_name = pretext_task.__name__ if pretext_task is not None else ""
 

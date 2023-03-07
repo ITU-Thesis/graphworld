@@ -20,6 +20,7 @@ PARTIAL_EMBEDDING_RECONSTRUCTION = [True, False]
 DISCRIMINATOR_LR = [0.001, 0.003]
 DISCRIMINATOR_EPOCHS = [5, 10]
 TAU = [0.1, 0.3, 0.5, 0.7, 0.9]
+PPR_ALPHA = [0.15, 0.3, 0.6, 0.85]
 
 
 # GCN setup with AttributeMask
@@ -304,6 +305,71 @@ GCN_BGRL_/NNNodeBenchmarkJL.h_params = {
     'feature_mask_ratio1' : %MASK_RATIO, 
     'feature_mask_ratio2' : %MASK_RATIO
 }
+
+# GCN with SelfGNNSplit
+GCN_SelfGNNSplit_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_SelfGNNSplit_/NNNodeBenchmarkJL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_SelfGNNSplit_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
+# GCN with SelfGNNPPR
+GCN_SelfGNNPPR_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_SelfGNNPPR_/NNNodeBenchmarkJL.pretext_task = @SelfGNNPPR
+GCN_SelfGNNPPR_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_SelfGNNPPR_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'alpha' : %PPR_ALPHA
+}
+
+
+# GCN with SelfGNNLDP
+GCN_SelfGNNLDP_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_SelfGNNLDP_/NNNodeBenchmarkJL.pretext_task = @SelfGNNLDP
+GCN_SelfGNNLDP_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_SelfGNNLDP_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
+
+# GCN with SelfGNNStandard
+GCN_SelfGNNStandard_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_SelfGNNStandard_/NNNodeBenchmarkJL.pretext_task = @SelfGNNStandard
+GCN_SelfGNNStandard_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_SelfGNNStandard_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT
+}
+
 
 
 # GCN setup standard

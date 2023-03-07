@@ -30,4 +30,9 @@ class BasicPretextTask(ABC):
     # - For example in some siamese networks where embeddings are concatted
     def get_downstream_embeddings_size(self) -> int:
         return self.encoder.out_channels
+    
 
+# Used if there is no pretext task or it is set to None
+class IndentityPretextTask(BasicPretextTask):
+    def make_loss(self, embeddings : Tensor) -> Union[FloatTensor, DoubleTensor]:
+        return 0
