@@ -14,6 +14,7 @@ from ..layers import NeuralTensorLayer
 from typing import Tuple
 import copy
 from .utils import EMA, init_weights
+from abc import ABC, abstractclassmethod
 
 # Based on https://github.com/CRIPAC-DIG/GRACE
 @gin.configurable
@@ -143,22 +144,11 @@ class GCA(GRACE):
 
 
 # Based on https://github.com/Namkyeong/BGRL_Pytorch
-@gin.configurable
-class BGRL(BasicPretextTask):
-    def __init__(self, 
-                 edge_mask_ratio1 : float = 0.2,
-                 edge_mask_ratio2 : float = 0.2,
-                 feature_mask_ratio1 : float = 0.2, 
-                 feature_mask_ratio2 : float = 0.2,
-                 **kwargs):
+# and https://github.com/zekarias-tilahun/SelfGNN
+# This class implements the siamese architecture avoiding negative samples
+class AbstractSiameseBYOL(BasicPretextTask, ABC):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
-        # Augmentation params
-        self.edge_mask_ratio1 = edge_mask_ratio1
-        self.edge_mask_ratio2 = edge_mask_ratio2
-        self.feature_mask_ratio1 = feature_mask_ratio1
-        self.feature_mask_ratio2 = feature_mask_ratio2
-
         # Create student and teacher encoder
         # No gradients are needed for teacher as EMA is used
         # We also initialize the teacher with different weights than the student
@@ -166,7 +156,7 @@ class BGRL(BasicPretextTask):
         self.teacher_encoder = copy.deepcopy(self.student_encoder)
         for p in self.teacher_encoder.parameters():
             p.requires_grad = False
-        self.teacher_ema_updater = EMA(0.99, self.epochs) # Fix initial decay to 0.99 similar to authors
+        self.teacher_ema_updater = EMA(0.99, self.epochs) # Fix initial decay to 0.99
         self.teacher_encoder.apply(init_weights)
 
         # Create predictor for student -> teacher
@@ -177,24 +167,21 @@ class BGRL(BasicPretextTask):
         )
         self.decoder = self.student_predictor # Make predictor optimizable
 
-    # Same as in GRACE
-    def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
-        edge_index, _ = dropout_adj(self.data.edge_index, p=e_mask_ratio)
-        f_mask = torch.empty((self.data.x.shape[1], )).uniform_(0,1) < f_mask_ratio 
-        features = self.data.x.clone()
-        features[:, f_mask] = 0
-        return features, edge_index
-    
-    # BOYE loss
     def loss_fn(self, x, y):
         x = F.normalize(x, dim=-1, p=2)
         y = F.normalize(y, dim=-1, p=2)
         return 2 - 2 * (x * y).sum(dim=-1)
 
+    # Override this function to generate 2 views.
+    # should return tuple of (features1, edge_index1, features2, edge_index2)
+    @abstractclassmethod
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        pass
+
+
     def make_loss(self, embeddings: Tensor):
         # Generate two views
-        features1, edge_index1 = self.generate_view(self.feature_mask_ratio1, self.edge_mask_ratio1)
-        features2, edge_index2 = self.generate_view(self.feature_mask_ratio2, self.edge_mask_ratio2)
+        features1, edge_index1, features2, edge_index2 = self.generate_views()
 
         # Produce student embeddings
         v1_student = self.student_encoder(features1, edge_index1)
@@ -224,6 +211,37 @@ class BGRL(BasicPretextTask):
         loss2 = self.loss_fn(v2_pred, v1_teacher.detach())
         loss = loss1 + loss2
         return loss.mean()
+
+@gin.configurable
+class BGRL(AbstractSiameseBYOL):
+    def __init__(self, 
+                 edge_mask_ratio1 : float = 0.2,
+                 edge_mask_ratio2 : float = 0.2,
+                 feature_mask_ratio1 : float = 0.2, 
+                 feature_mask_ratio2 : float = 0.2,
+                 **kwargs):
+        super().__init__(**kwargs)
+        
+        # Augmentation params
+        self.edge_mask_ratio1 = edge_mask_ratio1
+        self.edge_mask_ratio2 = edge_mask_ratio2
+        self.feature_mask_ratio1 = feature_mask_ratio1
+        self.feature_mask_ratio2 = feature_mask_ratio2
+
+    # EM an NFM
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
+        edge_index1, _ = dropout_adj(self.data.edge_index, p=self.edge_mask_ratio1)
+        edge_index2, _ = dropout_adj(self.data.edge_index, p=self.edge_mask_ratio2)
+
+        f_mask1 = torch.empty((self.data.x.shape[1], )).uniform_(0,1) < self.feature_mask_ratio1 
+        f_mask2 = torch.empty((self.data.x.shape[1], )).uniform_(0,1) < self.feature_mask_ratio2 
+
+        features1 = self.data.x.clone()
+        features2 = self.data.x.clone()
+
+        features1[:, f_mask1] = 0
+        features2[:, f_mask2] = 0
+        return features1, edge_index1, features2, edge_index2
 
 
         
