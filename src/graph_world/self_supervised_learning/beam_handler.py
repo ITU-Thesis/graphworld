@@ -16,7 +16,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                tuning_metric_is_loss=False, save_tuning_results=False):
     super().__init__(benchmarker_wrappers, num_tuning_rounds, tuning_metric,
                tuning_metric_is_loss, save_tuning_results)
-    self._pretext_tasks = [benchmarker_wrapper().GetPretextTasks() for
+    self._pretext_task = [benchmarker_wrapper().GetPretextTask() for
                            benchmarker_wrapper in benchmarker_wrappers]
 
   def process(self, element):
@@ -38,13 +38,13 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
          benchmark_params,
          model_class,
          h_params,
-         pretext_tasks) in zip(self._benchmarker_classes,
+         pretext_task) in zip(self._benchmarker_classes,
                           self._benchmark_params,
                           self._model_classes,
                           self._h_params,
-                          self._pretext_tasks):
-      if len(pretext_tasks):
-        print(f'Running {benchmarker_class} and model f{model_class} with pretext tasks: {pretext_tasks}')
+                          self._pretext_task):
+      if pretext_task is not None:
+        print(f'Running {benchmarker_class} and model f{model_class} with pretext task: {pretext_task}')
       else:
         print(f'Running {benchmarker_class} and model f{model_class}')
 
@@ -58,7 +58,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                                         model_class,
                                         benchmark_params_sample,
                                         h_params_sample,
-                                        pretext_tasks)
+                                        pretext_task)
         benchmarker_out = benchmarker.Benchmark(element,
                                                 tuning_metric=self._tuning_metric,
                                                 tuning_metric_is_loss=self._tuning_metric_is_loss)
@@ -106,7 +106,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                                           model_class,
                                           benchmark_params_sample,
                                           h_params_sample,
-                                          pretext_tasks)
+                                          pretext_task)
           benchmarker_out = benchmarker.Benchmark(element,
                                                   tuning_metric=self._tuning_metric,
                                                   tuning_metric_is_loss=self._tuning_metric_is_loss)
@@ -123,11 +123,11 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           best_tuning_round = np.argmax(val_scores)
         benchmark_params_sample, h_params_sample = configs[best_tuning_round]
 
-        output_data['%s_%s_num_tuning_rounds' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskNames())] = num_tuning_rounds
+        output_data['%s_%s_num_tuning_rounds' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName())] = num_tuning_rounds
         if self._save_tuning_results:
-          output_data['%s_%s_configs' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskNames())] = configs
-          output_data['%s_%s_val_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskNames())] = val_scores
-          output_data['%s_%s_test_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskNames())] = test_scores
+          output_data['%s_%s_configs' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName())] = configs
+          output_data['%s_%s_val_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName())] = val_scores
+          output_data['%s_%s_test_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName())] = test_scores
 
         val_metrics = val_metrics_list[best_tuning_round]
         test_metrics = test_metrics_list[best_tuning_round]
@@ -135,18 +135,18 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
       # Return benchmark data for next beam stage.
 
       for key, value in val_metrics.items():
-        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskNames()}_val_{key}'] = value
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_val_{key}'] = value
       for key, value in test_metrics.items():
-        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskNames()}_test_{key}'] = value
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_test_{key}'] = value
 
 
       if benchmark_params_sample is not None:
         for key, value in benchmark_params_sample.items():
-          output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskNames()}_train_{key}'] = value
+          output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_train_{key}'] = value
 
       if h_params_sample is not None:
         for key, value in h_params_sample.items():
-          output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskNames()}_model_{key}'] = value
+          output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_model_{key}'] = value
 
     yield json.dumps(output_data)
 

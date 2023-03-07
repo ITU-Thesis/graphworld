@@ -42,17 +42,16 @@ from .pretext_tasks.__types import *
     
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
   def __init__(self, generator_config : dict, model_class : BasicGNN, benchmark_params : dict, h_params : dict, 
-               pretext_tasks : List[BasicPretextTask]):
+               pretext_task : BasicPretextTask):
     super(NNNodeBenchmarker, self).__init__(generator_config, model_class, benchmark_params, h_params)
     self._epochs = benchmark_params['epochs']
     self._lr = benchmark_params['lr']
-    self._downstream_decoder = Linear(h_params['hidden_channels'], h_params['out_channels'])
+    self.downstream_out = h_params['out_channels']
 
     # pretext_tasks, names and weights
-    self._pretext_tasks = pretext_tasks
-    self._lambda = benchmark_params['lambda'] # Same weight for all pretext tasks
-    self._pretext_task_names = [pt.__name__ for pt in pretext_tasks] if pretext_tasks is not None else ''
-    self._pretext_task_names = "-".join(self._pretext_task_names)
+    self._pretext_task = pretext_task
+    self._lambda = benchmark_params['lambda'] # Weight for summing loss of pretext task
+    self._pretext_task_name = pretext_task.__name__ if pretext_task is not None else ""
 
     # Encoder end pretext models both have hparams in the same dict
     # The available graph encoders cannot handle unknown params, so we
@@ -62,11 +61,10 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     self._encoder_h_params = copy.deepcopy(h_params)
 
     # Remove pretext hparams from encoder params
-    for pt in pretext_tasks:
-      parameters = inspect.signature(pt.__init__).parameters 
-      for k,v in parameters.items():
-          if k not in ['self', 'args', 'kwargs']:
-            self._encoder_h_params.pop(k, None) # delete pretext hparams from encoder
+    parameters = inspect.signature(pretext_task.__init__).parameters 
+    for k,v in parameters.items():
+        if k not in ['self', 'args', 'kwargs']:
+          self._encoder_h_params.pop(k, None) # delete pretext hparams from encoder
 
     # Modify encoder output dim and instantiate encoder
     self._encoder_h_params['out_channels'] = self._encoder_h_params['hidden_channels']
@@ -85,25 +83,24 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     self._val_mask = None
     self._test_mask = None
 
-  def GetPretextTaskNames(self):
-    return self._pretext_task_names
+  def GetPretextTaskName(self):
+    return self._pretext_task_name
 
 
   def train_step(self, data : InputGraph):
     self._encoder.train()
     self._downstream_decoder.train()
-    [pm.decoder.train() for pm in self._pretext_models]
+    self._pretext_model.decoder.train()
     self._optimizer.zero_grad()  # Clear gradients.
 
     # Compute downstream loss
-    embeddings = self._encoder(data.x, data.edge_index) # get embeddings
+    embeddings = self._pretext_model.get_downstream_embeddings() 
     downstream_out = self._downstream_decoder(embeddings) # downstream predictions
     loss = self._criterion(downstream_out[self._train_mask],
                            data.y[self._train_mask])
 
-    # Add pretext losses
-    for pm in self._pretext_models:
-      loss += self._lambda * pm.make_loss(embeddings)
+    # Add pretext loss
+    loss += self._lambda * self._pretext_model.make_loss(embeddings)
     
     # Update parameters
     loss.backward()
@@ -114,8 +111,10 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
   def test(self, data : InputGraph, test_on_val : bool = False) -> EvaluationMetrics:
     self._encoder.eval()
     self._downstream_decoder.eval()
-    [pm.decoder.eval() for pm in self._pretext_models]
-    out = self._downstream_decoder(self._encoder(data.x, data.edge_index))
+    self._pretext_model.decoder.eval()
+
+    embeddings = self._pretext_model.get_downstream_embeddings()
+    out = self._downstream_decoder(embeddings)
     if test_on_val:
       pred = out[self._val_mask].detach().numpy()
     else:
@@ -152,16 +151,18 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
 
   def train(self, data : InputGraph, tuning_metric: str, tuning_metric_is_loss: bool):
 
-    # Setup pretext tasks and parameters
+    # Setup pretext task
     self._pretext_h_params['data'] = data
     self._pretext_h_params['train_mask'] = self._train_mask
-    self._pretext_models = []
-    params = list(self._encoder.parameters()) + list(self._downstream_decoder.parameters())
-    for pt in self._pretext_tasks:
-      pt_model = pt(**self._pretext_h_params) # Init pretext with hparams
-      self._pretext_models += [pt_model]
-      params += list(pt_model.decoder.parameters())
+    self._pretext_model = self._pretext_task(**self._pretext_h_params) # init pretext with hparams
     
+    # setup downstream decoder
+    self._downstream_decoder = Linear(self._pretext_model.get_downstream_embeddings_size(), self.downstream_out)
+
+    # Setup optimizer
+    params = list(self._encoder.parameters())
+    params += list(self._downstream_decoder.parameters())
+    params += list(self._pretext_model.decoder.parameters())
     self._optimizer = torch.optim.Adam(params,
                                     lr=self._lr,
                                     weight_decay=5e-4)
@@ -186,15 +187,15 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
 @gin.configurable
 class NNNodeBenchmarkJL(BenchmarkerWrapper):
   def __init__(self, model_class : BasicGNN = None, benchmark_params : dict = None, h_params : dict = None, 
-    pretext_tasks : List[BasicPretextTask] = None):
+    pretext_task : BasicPretextTask = None):
     super().__init__(model_class, benchmark_params, h_params)
-    self._pretext_tasks = pretext_tasks
+    self._pretext_task = pretext_task
 
   def GetBenchmarker(self) -> NNNodeBenchmarkerJL:
-    return NNNodeBenchmarkerJL(self._model_class, self._benchmark_params, self._h_params, self._pretext_tasks)
+    return NNNodeBenchmarkerJL(self._model_class, self._benchmark_params, self._h_params, self._pretext_task)
 
   def GetBenchmarkerClass(self) -> Type[NNNodeBenchmarkerJL]:
     return NNNodeBenchmarkerJL
 
-  def GetPretextTasks(self) -> List[BasicPretextTask]:
-    return self._pretext_tasks
+  def GetPretextTask(self) -> BasicPretextTask:
+    return self._pretext_task

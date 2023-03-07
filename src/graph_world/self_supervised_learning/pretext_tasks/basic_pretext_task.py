@@ -19,3 +19,15 @@ class BasicPretextTask(ABC):
     def make_loss(self, embeddings : Tensor) -> Union[FloatTensor, DoubleTensor]:
         pass
 
+    # Override this method if the embeddings from the downstream task
+    # does not take the original raw data as input
+    # - For example in some URL based methods, augmentations are expected even for the downstream task
+    def get_downstream_embeddings(self) -> Tensor:
+        return self.encoder(self.data.x, self.data.edge_index)
+    
+    # Override this method if the embedding size does not match
+    # the output of the graph encoder.
+    # - For example in some siamese networks where embeddings are concatted
+    def get_downstream_embeddings_size(self) -> int:
+        return self.encoder.out_channels
+

@@ -24,7 +24,7 @@ TAU = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 # GCN setup with AttributeMask
 GCN_AttributeMask_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_AttributeMask_/NNNodeBenchmarkJL.pretext_tasks = [@AttributeMask]
+GCN_AttributeMask_/NNNodeBenchmarkJL.pretext_task = @AttributeMask
 GCN_AttributeMask_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -42,7 +42,7 @@ GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with CorruptedFeaturesReconstruction
 GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@CorruptedFeaturesReconstruction]
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.pretext_task = @CorruptedFeaturesReconstruction
 GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -61,7 +61,7 @@ GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with CorruptedEmbeddingsReconstruction
 GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@CorruptedEmbeddingsReconstruction]
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.pretext_task = @CorruptedEmbeddingsReconstruction
 GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -80,7 +80,7 @@ GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with AutoEncoding
 GCN_AutoEncoding_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_AutoEncoding_/NNNodeBenchmarkJL.pretext_tasks = [@AutoEncoding]
+GCN_AutoEncoding_/NNNodeBenchmarkJL.pretext_task = @AutoEncoding
 GCN_AutoEncoding_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -95,7 +95,7 @@ GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with NodeClusteringWithAlignment
 GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.pretext_tasks = [@NodeClusteringWithAlignment]
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.pretext_task = @NodeClusteringWithAlignment
 GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -112,7 +112,7 @@ GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with NodeClusteringWithAlignment
 GCN_GraphPartition_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GraphPartition_/NNNodeBenchmarkJL.pretext_tasks = [@GraphPartition]
+GCN_GraphPartition_/NNNodeBenchmarkJL.pretext_task = @GraphPartition
 GCN_GraphPartition_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -129,7 +129,7 @@ GCN_GraphPartition_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with GAE
 GCN_GAE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GAE_/NNNodeBenchmarkJL.pretext_tasks = [@GAE]
+GCN_GAE_/NNNodeBenchmarkJL.pretext_task = @GAE
 GCN_GAE_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -145,7 +145,7 @@ GCN_GAE_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with VGAE
 GCN_VGAE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_VGAE_/NNNodeBenchmarkJL.pretext_tasks = [@VGAE]
+GCN_VGAE_/NNNodeBenchmarkJL.pretext_task = @VGAE
 GCN_VGAE_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -161,7 +161,7 @@ GCN_VGAE_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with ARGA
 GCN_ARGA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_ARGA_/NNNodeBenchmarkJL.pretext_tasks = [@ARGA]
+GCN_ARGA_/NNNodeBenchmarkJL.pretext_task = @ARGA
 GCN_ARGA_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -179,7 +179,7 @@ GCN_ARGA_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup with ARGVA
 GCN_ARGVA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_ARGVA_/NNNodeBenchmarkJL.pretext_tasks = [@ARGVA]
+GCN_ARGVA_/NNNodeBenchmarkJL.pretext_task = @ARGVA
 GCN_ARGVA_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -197,7 +197,7 @@ GCN_ARGVA_/NNNodeBenchmarkJL.h_params = {
 
 # superGAT with attention losses
 SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.model_class = @SuperGAT
-SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.pretext_tasks = [@SuperGATSSL]
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.pretext_task = @SuperGATSSL
 SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -213,7 +213,7 @@ SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.h_params = {
 
 # GCN with denoising link reconstruction
 GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.pretext_tasks = [@DenoisingLinkReconstruction]
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.pretext_task = @DenoisingLinkReconstruction
 GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -230,7 +230,7 @@ GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 # GCN with denoising link reconstruction
 GCN_EdgeMask_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_EdgeMask_/NNNodeBenchmarkJL.pretext_tasks = [@EdgeMask]
+GCN_EdgeMask_/NNNodeBenchmarkJL.pretext_task = @EdgeMask
 GCN_EdgeMask_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -246,7 +246,7 @@ GCN_EdgeMask_/NNNodeBenchmarkJL.h_params = {
 
 # GCN with GRACE
 GCN_GRACE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GRACE_/NNNodeBenchmarkJL.pretext_tasks = [@GRACE]
+GCN_GRACE_/NNNodeBenchmarkJL.pretext_task = @GRACE
 GCN_GRACE_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -267,7 +267,7 @@ GCN_GRACE_/NNNodeBenchmarkJL.h_params = {
 
 # GCN with GCA
 GCN_GCA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GCA_/NNNodeBenchmarkJL.pretext_tasks = [@GCA]
+GCN_GCA_/NNNodeBenchmarkJL.pretext_task = @GCA
 GCN_GCA_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -288,7 +288,7 @@ GCN_GCA_/NNNodeBenchmarkJL.h_params = {
 
 # GCN with BGRL
 GCN_BGRL_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_BGRL_/NNNodeBenchmarkJL.pretext_tasks = [@BGRL]
+GCN_BGRL_/NNNodeBenchmarkJL.pretext_task = @BGRL
 GCN_BGRL_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
@@ -308,7 +308,7 @@ GCN_BGRL_/NNNodeBenchmarkJL.h_params = {
 
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_/NNNodeBenchmarkJL.pretext_tasks = []
+GCN_/NNNodeBenchmarkJL.pretext_task = None
 GCN_/NNNodeBenchmarkJL.benchmark_params = {
     'epochs' : %EPOCHS,
     'lr': %LR,
