@@ -16,4 +16,4 @@ scikit-learn
 pymetis
 torchmetrics
 numba
-
+torch-ppr

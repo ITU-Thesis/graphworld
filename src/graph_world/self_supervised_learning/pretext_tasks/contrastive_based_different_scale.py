@@ -9,6 +9,9 @@ from ..augmentation import node_feature_shuffle
 from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
+from torch_geometric.utils import to_dense_adj
+from torch_ppr import personalized_page_rank
+from torch_geometric.utils import subgraph
 
 @gin.configurable
 class DeepGraphInfomax(BasicPretextTask):
@@ -110,3 +113,39 @@ class GraphInfoClust(BasicPretextTask):
         cluster_loss = jensen_shannon_loss(positive_instance=positive_score, negative_instance=negative_score)
 
         return self.alpha * dgi_loss + (1 - self.alpha) * cluster_loss       
+
+
+class SUBG_CON(BasicPretextTask):
+    '''
+    Proposed by:
+        Jiao, Yizhu, m.fl. “Sub-graph Contrast for Scalable Self-Supervised Graph Representation Learning”. arXiv preprint arXiv:2009.10273, 2020.
+    '''
+    def __init__(self, alpha : float, k: int, **kwargs):
+        assert alpha >= 0. and alpha <= 1.
+        assert k > 0
+
+        N = self.data.num_nodes
+        S = personalized_page_rank(edge_index=self.data.edge_index, alpha=alpha)
+        S_top_k = S.topk(k=k, dim=1).indices
+        default_mask = torch.ones(N, dtype=torch.bool)
+        def readout(H_i : Tensor): return H_i.mean(dim=0)
+
+        self.H = [] * N
+        self.S = [] * N
+
+        for i in range(N):
+            i_indices = S_top_k[i, :]
+            X_mask = default_mask.clone()[i_indices] = False
+            
+            subgraph_x = self.data.x.clone()
+            subgraph_x[X_mask, :] = 0.
+            subgraph_edges, *_ = subgraph(i_indices, edge_index=self.data.edge_index, num_nodes=k, return_edge_mask=False)
+            
+            H_i = self.encoder(subgraph_x, subgraph_edges)
+            
+            self.H[i] = H_i[i, :]
+            self.S[i] = H_i.mean(dim=1)
+
+
+    def make_loss(self, **kwargs):
+        pass

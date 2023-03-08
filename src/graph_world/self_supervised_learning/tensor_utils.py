@@ -23,7 +23,7 @@ def get_top_k_indices(input: Tensor, k : int, largest : bool = True) -> Union[Te
     assert input.dim() == 2
     N_cols = input.shape[1]
     
-    top_k_indices = input.view(-1).topk(k=k, largest=largest).indices
+    top_k_indices = input.reshape(-1).topk(k=k, largest=largest).indices
     
     row = torch.div(top_k_indices, N_cols, rounding_mode='floor')
     col = top_k_indices % N_cols
