@@ -371,6 +371,23 @@ GCN_SelfGNNStandard_/NNNodeBenchmarkJL.h_params = {
 }
 
 
+# GCN with G-BT
+GCN_GBT_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_GBT_/NNNodeBenchmarkJL.pretext_task = @GBT
+GCN_GBT_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_GBT_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'edge_mask_ratio' : %MASK_RATIO,
+    'feature_mask_ratio' : %MASK_RATIO
+}
+
 
 # GCN setup standard
 GCN_/NNNodeBenchmarkJL.model_class = @GCN

@@ -341,6 +341,62 @@ class SelfGNNStandard(SelfGNN):
     
 
 
+# The G-BT method that uses Barlow Twins loss
+# Based on https://github.com/pbielak/graph-barlow-twins
+@gin.configurable
+class GBT(BasicPretextTask):
+    def __init__(self, 
+                 edge_mask_ratio : float = 0.2,
+                 feature_mask_ratio : float = 0.2,
+                 **kwargs):
+        super().__init__(**kwargs)
+        self.edge_mask_ratio =  edge_mask_ratio
+        self.feature_mask_ratio = feature_mask_ratio
+   
+   # EM and NFM (same as in GRACE)
+    def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
+        edge_index, _ = dropout_adj(self.data.edge_index, p=e_mask_ratio)
+        f_mask = torch.empty((self.data.x.shape[1], )).uniform_(0,1) < f_mask_ratio 
+        features = self.data.x.clone()
+        features[:, f_mask] = 0
+        return features, edge_index
+    
+    def barlow_twins_loss(self, z1: Tensor, z2: Tensor) -> Tensor:
+        EPS = 1e-15
+        batch_size = z1.size(0)
+        feature_dim = z1.size(1)
+        _lambda = 1 / feature_dim
+
+        # Apply batch normalization
+        z1_norm = (z1 - z1.mean(dim=0)) / (z1.std(dim=0) + EPS)
+        z2_norm = (z2 - z2.mean(dim=0)) / (z2.std(dim=0) + EPS)
+
+        # Cross-correlation matrix
+        c = (z1_norm.T @ z2_norm) / batch_size
+
+        # Loss function
+        off_diagonal_mask = ~torch.eye(feature_dim).bool()
+        loss = (
+            (1 - c.diagonal()).pow(2).sum()
+            + _lambda * c[off_diagonal_mask].pow(2).sum()
+        )
+        return loss
+    
+    def make_loss(self, embeddings: Tensor):
+        # Generate the two views (same masking ratios)
+        features1, edge_index1 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
+        features2, edge_index2 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
+
+        # Compute embeddings of both views
+        z1 = self.encoder(features1, edge_index1)
+        z2 = self.encoder(features2, edge_index2)
+
+        # Compute Barlow Twins loss
+        return self.barlow_twins_loss(z1, z2)
+
+    
+
+
 
 
         
