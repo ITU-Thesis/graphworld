@@ -20,7 +20,8 @@ PARTIAL_EMBEDDING_RECONSTRUCTION = [True, False]
 DISCRIMINATOR_LR = [0.001, 0.003]
 DISCRIMINATOR_EPOCHS = [5, 10]
 TAU = [0.1, 0.3, 0.5, 0.7, 0.9]
-PPR_ALPHA = [0.15, 0.3, 0.6, 0.85]
+PPR_ALPHA = [0.15, 0.3, 0.45, 0.6, 0.85]
+BALANCE_FACTOR = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 
 # GCN setup with AttributeMask
@@ -386,6 +387,26 @@ GCN_GBT_/NNNodeBenchmarkJL.h_params = {
     'dropout' : %DROPOUT,
     'edge_mask_ratio' : %MASK_RATIO,
     'feature_mask_ratio' : %MASK_RATIO
+}
+
+
+# GCN with MERIT
+GCN_MERIT_/NNNodeBenchmarkJL.model_class = @GCN
+GCN_MERIT_/NNNodeBenchmarkJL.pretext_task = @MERIT
+GCN_MERIT_/NNNodeBenchmarkJL.benchmark_params = {
+    'epochs' : %EPOCHS,
+    'lr': %LR,
+    'lambda' : %LAMBDA
+}
+GCN_MERIT_/NNNodeBenchmarkJL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'edge_modification_ratio' : %MASK_RATIO,
+    'feature_mask_ratio' : %MASK_RATIO,
+    'beta' : %BALANCE_FACTOR,
+    'alpha' : %PPR_ALPHA
 }
 
 

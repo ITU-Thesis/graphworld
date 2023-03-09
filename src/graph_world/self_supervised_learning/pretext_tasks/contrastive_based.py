@@ -9,11 +9,12 @@ from torch import Tensor
 import torch_geometric.nn.models.autoencoder as pyg_autoencoder
 from .basic_pretext_task import BasicPretextTask
 from ...models.basic_gnn import SuperGAT
-from torch_geometric.utils import negative_sampling, dropout_adj, degree
+from torch_geometric.utils import negative_sampling, dropout_adj, degree, subgraph
+from .pyg_compatability_utils import add_random_edge
 from ..layers import NeuralTensorLayer
 from typing import Tuple
 import copy
-from .utils import EMA, init_weights, pad_views
+from .utils import EMA, init_weights, pad_views, compute_InfoNCE_loss
 from abc import ABC, abstractclassmethod
 from torch_geometric.transforms import GDC, LocalDegreeProfile
 
@@ -60,17 +61,6 @@ class GRACE(BasicPretextTask):
         z = F.elu(self.fc1(z))
         return self.fc2(z)
     
-    def compute_InfoNCE_loss(self, z1: Tensor, z2: Tensor):
-        z1 = F.normalize(z1)
-        z2 = F.normalize(z2)
-
-        refl_sim = torch.exp(torch.mm(z1, z1.t()) / self.tau) # inter-view
-        between_sim = torch.exp(torch.mm(z1, z2.t()) / self.tau) # intra-view
-
-        return -torch.log(
-            between_sim.diag() / (refl_sim.sum(1) + between_sim.sum(1) - refl_sim.diag())
-        )
-    
     def make_loss(self, embeddings: Tensor):
         # Generate the two views
         features1, edge_index1 = self.generate_view(self.feature_mask_ratio1, self.edge_mask_ratio1)
@@ -85,8 +75,8 @@ class GRACE(BasicPretextTask):
         h2 = self.decoder_projection(z2)
 
         # Compute loss
-        l1 = self.compute_InfoNCE_loss(h1, h2)
-        l2 = self.compute_InfoNCE_loss(h2, h1)
+        l1 = compute_InfoNCE_loss(h1, h2, self.tau)
+        l2 = compute_InfoNCE_loss(h2, h1, self.tau)
         return ((l1 + l2) * 0.5).mean()
     
 
@@ -168,30 +158,41 @@ class AbstractSiameseBYOL(BasicPretextTask, ABC):
         )
         self.decoder = self.student_predictor # Make predictor optimizable
 
-    def loss_fn(self, x, y):
-        x = F.normalize(x, dim=-1, p=2)
-        y = F.normalize(y, dim=-1, p=2)
-        return 2 - 2 * (x * y).sum(dim=-1)
-
     # Override this function to generate 2 views.
     # should return tuple of (features1, edge_index1, features2, edge_index2)
     @abstractclassmethod
     def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
         pass
 
+    def loss_fn(self, x, y):
+        x = F.normalize(x, dim=-1, p=2)
+        y = F.normalize(y, dim=-1, p=2)
+        return 2 - 2 * (x * y).sum(dim=-1)
+
+    # Compute loss for predictions
+    # The returned loss updates the student encoder
+    # Note that predictions from view 1 are for view 2 and vice versa
+    def compute_loss(self, v1_teacher, v2_teacher, v1_pred, v2_pred):
+        loss1 = self.loss_fn(v1_pred, v2_teacher.detach())
+        loss2 = self.loss_fn(v2_pred, v1_teacher.detach())
+        loss = loss1 + loss2
+        return loss.mean()
 
     def make_loss(self, embeddings: Tensor):
+        # @TODO Bertram, fix edge_weight interface everywhere
+        # - Some methods use it, set default to 1 and let them override it.
+        # - Also make generate_views return data object instead
         # Generate two views
-        features1, edge_index1, features2, edge_index2 = self.generate_views()
+        features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(features1, edge_index1)
-        v2_student = self.student_encoder(features2, edge_index2)
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
 
         # Produce teacher embeddings
         with torch.no_grad():
-            v1_teacher = self.teacher_encoder(features1, edge_index1)
-            v2_teacher = self.teacher_encoder(features2, edge_index2)
+            v1_teacher = self.teacher_encoder(features1, edge_index1, edge_weights1)
+            v2_teacher = self.teacher_encoder(features2, edge_index2, edge_weights2)
 
         # Predict teacher embeddings from student embeddings
         v1_pred = self.student_predictor(v1_student)
@@ -205,13 +206,7 @@ class AbstractSiameseBYOL(BasicPretextTask, ABC):
             old_weight, up_weight = ma_params.data, current_params.data
             ma_params.data = self.teacher_ema_updater.update_average(old_weight, up_weight)
 
-        # Compute loss for predictions
-        # The returned loss updates the student encoder
-        # Note that predictions from view 1 are for view 2 and vice versa
-        loss1 = self.loss_fn(v1_pred, v2_teacher.detach())
-        loss2 = self.loss_fn(v2_pred, v1_teacher.detach())
-        loss = loss1 + loss2
-        return loss.mean()
+        return self.compute_loss(v1_teacher, v2_teacher, v1_pred, v2_pred)
 
 @gin.configurable
 class BGRL(AbstractSiameseBYOL):
@@ -242,7 +237,7 @@ class BGRL(AbstractSiameseBYOL):
 
         features1[:, f_mask1] = 0
         features2[:, f_mask2] = 0
-        return features1, edge_index1, features2, edge_index2
+        return features1, edge_index1, None, features2, edge_index2, None
     
 # Abstract class - does not override generate_views
 # This class modifies the expected embeddings used by the graph encoder
@@ -251,11 +246,11 @@ class SelfGNN(AbstractSiameseBYOL):
     # Concat embeddings of the two views
     def get_downstream_embeddings(self) -> Tensor:
         # Generate two views
-        features1, edge_index1, features2, edge_index2 = self.generate_views()
+        features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(features1, edge_index1)
-        v2_student = self.student_encoder(features2, edge_index2)
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
         return torch.cat([v1_student, v2_student], dim=1)#.detach()
 
     # Because of concat the output dim might change
@@ -281,8 +276,8 @@ class SelfGNNSplit(SelfGNN):
         self.features1[:, :size] = 0
         self.features2[:, size:] = 0
     
-    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
-        return self.features1, self.data.edge_index, self.features2, self.data.edge_index
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        return self.features1, self.data.edge_index, None, self.features2, self.data.edge_index, None
     
 
 # SelfGNN variant that uses PPR
@@ -301,8 +296,8 @@ class SelfGNNPPR(SelfGNN):
         self.data2 = GDC(diffusion_kwargs={'alpha': alpha, 'method': 'ppr'}, 
                        sparsification_kwargs={'method':'threshold', 'avg_degree': 30})(data2)
     
-    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
-        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, None, self.data2.x, self.data2.edge_index, self.data2.edge_attr
     
 
 
@@ -320,8 +315,8 @@ class SelfGNNLDP(SelfGNN):
         self.data2 = LocalDegreeProfile()(data2)
         pad_views(self.data, self.data2)
     
-    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
-        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, None, self.data2.x, self.data2.edge_index, None
     
 
 # SelfGNN variant that zscore standardizes the features of 1 view
@@ -336,8 +331,8 @@ class SelfGNNStandard(SelfGNN):
         mean, std = x.mean(dim=0), x.std(dim=0)
         self.data2.x = (x - mean) / (std + 10e-7)
     
-    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
-        return self.data.x, self.data.edge_index, self.data2.x, self.data2.edge_index
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        return self.data.x, self.data.edge_index, None, self.data2.x, self.data2.edge_index, None
     
 
 
@@ -395,6 +390,98 @@ class GBT(BasicPretextTask):
         return self.barlow_twins_loss(z1, z2)
 
     
+@gin.configurable
+class MERIT(AbstractSiameseBYOL):
+    def __init__(self, alpha : float = 0.15, 
+                 sample_size : int = 2000,
+                 edge_modification_ratio : float = 0.2,
+                 feature_mask_ratio : float = 0.2,
+                 beta : float = 0.6,
+                 **kwargs):
+        super().__init__(**kwargs)
+        self.sample_size = sample_size
+        self.edge_modification_ratio = edge_modification_ratio
+        self.feature_mask_ratio = feature_mask_ratio
+        self.beta = beta
+        # Produce PPR adjacency matrix where edges with weights less than 0.01 are removed 
+        # GDC assumes edge_attr stores edge weights
+        # - To avoid issues where this is not the case from the generated graphs we set the edge_attr to None
+        data_ppr = self.data.clone()
+        data_ppr.edge_attr = None
+        self.data_ppr = GDC(diffusion_kwargs={'alpha': alpha, 'method': 'ppr'}, 
+                sparsification_kwargs={'method':'threshold', 'eps': 0.01})(data_ppr)
+    
+    def mask_features(self, features):
+        f_mask = torch.empty((features.shape[1], )).uniform_(0,1) < self.feature_mask_ratio
+        f = features.clone()
+        f[:, f_mask] = 0
+        return f
+    
+    def sub_sample(self, sampled_nodes, data) -> Tuple[Tensor, Tensor]:
+        return subgraph(sampled_nodes, data.edge_index, data.edge_attr, 
+                                        relabel_nodes = True, num_nodes = data.num_nodes)
+    
+    def create_views(self, sub_sample : bool) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        if sub_sample and self.sample_size < self.data.num_nodes:
+            # Nodes to be used for subsampling
+            all_nodes = np.arange(self.data.x.shape[0])
+            perm = np.random.permutation(all_nodes)
+            sampled_nodes = perm[: self.sample_size]
+            sampled_nodes = sorted(sampled_nodes) # Need because of how labels are handled when subsampling
+            edge_index1, _ = subgraph(sampled_nodes, self.data.edge_index, 
+                                              relabel_nodes = True, num_nodes = self.data.num_nodes)
+            edge_index2, edge_weights2 = subgraph(sampled_nodes, self.data_ppr.edge_index, self.data_ppr.edge_attr, 
+                                        relabel_nodes = True, num_nodes = self.data_ppr.num_nodes)
+            features = self.data.x[sampled_nodes,:]
+        else:
+            edge_index1 = self.data.edge_index
+            edge_index2, edge_weights2 = self.data_ppr.edge_index, self.data_ppr.edge_attr
+            features = self.data.x
+        
+        # Generate augmentation 1: (SS) + EM + NFM
+        _, new_edges = add_random_edge(edge_index1, p=self.edge_modification_ratio / 2, force_undirected = True)
+        edge_index1, _ = dropout_adj(edge_index1, p=self.edge_modification_ratio / 2)
+        edge_index1 = torch.cat([edge_index1, new_edges], dim=1)
+        features1 = self.mask_features(features)
+
+        # Generate augmentation 2: (SS) + PPR + NFM
+        features2 = self.mask_features(features)
+
+        return features1, edge_index1, None, features2, edge_index2, edge_weights2
+    
+    # Override parent class
+    def generate_views(self) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
+        return self.create_views(sub_sample = True)
+
+    def contrastive_loss_cross_network(self, h1, z):
+        z1 = F.normalize(h1)
+        z2 = F.normalize(z)
+        cross_sim = torch.exp(torch.mm(z1, z2.t()))
+        return -torch.log(cross_sim.diag() / cross_sim.sum(dim=-1))
+
+    # Override loss function 
+    def compute_loss(self, v1_teacher, v2_teacher, v1_pred, v2_pred):
+        l1 = self.beta * compute_InfoNCE_loss(v1_pred, v2_pred) + \
+            (1.0 - self.beta) * self.contrastive_loss_cross_network(v1_pred, v2_teacher.detach())
+        
+        l2 = self.beta * compute_InfoNCE_loss(v2_pred, v1_pred) + \
+            (1.0 - self.beta) * self.contrastive_loss_cross_network(v2_pred, v1_teacher.detach())
+        
+        loss = 0.5 * (l1 + l2)
+            
+        return loss.mean()
+    
+    # Add embeddings of the two views
+    def get_downstream_embeddings(self) -> Tensor:
+        # Generate two views
+        features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.create_views(sub_sample = False)
+
+        # Produce student embeddings
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
+        return v1_student + v2_student
+
+
 
 
 

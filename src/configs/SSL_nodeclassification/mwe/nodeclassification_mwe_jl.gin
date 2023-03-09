@@ -32,7 +32,8 @@ NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
   #@GCN_SelfGNNPPR_/NNNodeBenchmarkJL,
   #@GCN_SelfGNNLDP_/NNNodeBenchmarkJL,
   #@GCN_SelfGNNStandard_/NNNodeBenchmarkJL,
-  @GCN_GBT_/NNNodeBenchmarkJL,
+  #@GCN_GBT_/NNNodeBenchmarkJL,
+  @GCN_MERIT_/NNNodeBenchmarkJL,
 
   @GCN_/NNNodeBenchmarkJL,
 ]
