@@ -9,6 +9,9 @@ from ..augmentation import node_feature_shuffle
 from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
+from torch_geometric.utils import to_dense_adj
+from torch_ppr import personalized_page_rank
+from torch_geometric.utils import subgraph
 
 @gin.configurable
 class DeepGraphInfomax(BasicPretextTask):
@@ -110,3 +113,70 @@ class GraphInfoClust(BasicPretextTask):
         cluster_loss = jensen_shannon_loss(positive_instance=positive_score, negative_instance=negative_score)
 
         return self.alpha * dgi_loss + (1 - self.alpha) * cluster_loss       
+
+@gin.configurable
+class SUBG_CON(BasicPretextTask):
+    '''
+    Proposed by:
+        Jiao, Yizhu, m.fl. “Sub-graph Contrast for Scalable Self-Supervised Graph Representation Learning”. arXiv preprint arXiv:2009.10273, 2020.
+    '''
+    def __init__(self, alpha : float, k: int, margin : float = 3/4, **kwargs):
+        super().__init__(**kwargs)
+        assert alpha >= 0. and alpha <= 1.
+        assert k > 0
+
+        self.N = self.data.num_nodes
+        S = personalized_page_rank(edge_index=self.data.edge_index, alpha=alpha)
+        S_top_k = S.topk(k=k, dim=1).indices
+        self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
+
+        self.top_k = [None] * self.N
+        self.subgraph_edges = [None] * self.N
+        self.old_indices_to_new_indices = [None] * self.N
+
+        for i in range(self.N):
+            i_indices = torch.tensor(sorted(S_top_k[i, :]))
+            self.top_k[i] = i_indices
+            self.old_indices_to_new_indices[i] = (i_indices == i).nonzero()[0]
+
+            subgraph_edges, *_ = subgraph(i_indices, edge_index=self.data.edge_index, relabel_nodes=True, return_edge_mask=False)
+            self.subgraph_edges[i] = subgraph_edges
+
+
+    def __get_embedding_and_summary(self) -> Union[Tensor, Tensor]:
+        embeddings = [None] * self.N
+        summaries = [None] * self.N
+        for i in range(self.N):
+            subgraph_x = self.data.x[self.top_k[i], :]
+            subgraph_edges = self.subgraph_edges[i]
+
+            H_i = self.encoder(subgraph_x, subgraph_edges)
+            
+            embeddings[i] = H_i[self.old_indices_to_new_indices[i], :][None, :]
+            summaries[i] = self.__readout(H_i)
+
+        embeddings, summaries = torch.concat(embeddings).squeeze(), torch.concat(summaries)
+        assert embeddings.shape == summaries.shape
+        return embeddings, summaries
+    
+    def get_downstream_embeddings(self) -> Tensor:
+        return self.__get_embedding_and_summary()[0]
+        
+    def __readout(self, H_i : Tensor):
+        return torch.sigmoid(H_i.mean(dim=0)[None, :])
+
+    def make_loss(self, embeddings, **kwargs):
+        rand_idx = torch.randperm(self.N)
+        embeddings, summaries = self.__get_embedding_and_summary()
+        
+        summaries_tilde = summaries[rand_idx]
+
+        positives = torch.sigmoid((embeddings * summaries).sum(dim=1))
+        negatives = torch.sigmoid((embeddings * summaries_tilde).sum(dim=1))
+        ones = torch.ones(self.N)
+        return self.loss(positives, negatives, ones)
+
+
+
+
+
