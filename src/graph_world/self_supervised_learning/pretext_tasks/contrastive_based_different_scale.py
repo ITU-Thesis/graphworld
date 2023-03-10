@@ -9,9 +9,10 @@ from ..augmentation import node_feature_shuffle
 from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
-from torch_geometric.utils import to_dense_adj
 from torch_ppr import personalized_page_rank
-from torch_geometric.utils import subgraph
+from ..graph import Subgraph
+from torch_geometric.nn import global_mean_pool
+
 
 @gin.configurable
 class DeepGraphInfomax(BasicPretextTask):
@@ -120,7 +121,7 @@ class SUBG_CON(BasicPretextTask):
     Proposed by:
         Jiao, Yizhu, m.fl. “Sub-graph Contrast for Scalable Self-Supervised Graph Representation Learning”. arXiv preprint arXiv:2009.10273, 2020.
     '''
-    def __init__(self, alpha : float, k: int, margin : float = 3/4, **kwargs):
+    def __init__(self, alpha : float, k: int, margin : float = 1/2, **kwargs):
         super().__init__(**kwargs)
         assert alpha >= 0. and alpha <= 1.
         assert k > 0
@@ -128,34 +129,28 @@ class SUBG_CON(BasicPretextTask):
         self.N = self.data.num_nodes
         S = personalized_page_rank(edge_index=self.data.edge_index, alpha=alpha)
         S_top_k = S.topk(k=k, dim=1).indices
+
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
 
-        self.top_k = [None] * self.N
-        self.subgraph_edges = [None] * self.N
-        self.old_indices_to_new_indices = [None] * self.N
-
-        for i in range(self.N):
-            i_indices = torch.tensor(sorted(S_top_k[i, :]))
-            self.top_k[i] = i_indices
-            self.old_indices_to_new_indices[i] = (i_indices == i).nonzero()[0]
-
-            subgraph_edges, *_ = subgraph(i_indices, edge_index=self.data.edge_index, relabel_nodes=True, return_edge_mask=False)
-            self.subgraph_edges[i] = subgraph_edges
+        # Subgraphs for each node
+        self.subgraphs = [Subgraph(node_indices=S_top_k[i, :], data=self.data) for i in range(self.N)]
 
 
     def __get_embedding_and_summary(self) -> Union[Tensor, Tensor]:
         embeddings = [None] * self.N
         summaries = [None] * self.N
-        for i in range(self.N):
-            subgraph_x = self.data.x[self.top_k[i], :]
-            subgraph_edges = self.subgraph_edges[i]
 
-            H_i = self.encoder(subgraph_x, subgraph_edges)
-            
-            embeddings[i] = H_i[self.old_indices_to_new_indices[i], :][None, :]
+        for i in range(self.N):
+            subgraph_i = self.subgraphs[i]
+            subgraph_data = subgraph_i.subgraph_data
+            i_new_index = subgraph_i.get_old_to_new_index(i)
+
+            H_i = self.encoder(subgraph_data.x, subgraph_data.edge_index)
+            embeddings[i] = H_i[i_new_index, :][None, :]
             summaries[i] = self.__readout(H_i)
 
         embeddings, summaries = torch.concat(embeddings).squeeze(), torch.concat(summaries)
+        
         assert embeddings.shape == summaries.shape
         return embeddings, summaries
     
@@ -163,20 +158,26 @@ class SUBG_CON(BasicPretextTask):
         return self.__get_embedding_and_summary()[0]
         
     def __readout(self, H_i : Tensor):
-        return torch.sigmoid(H_i.mean(dim=0)[None, :])
+        return torch.sigmoid(global_mean_pool(x=H_i, batch=None))
+    
 
     def make_loss(self, embeddings, **kwargs):
         rand_idx = torch.randperm(self.N)
-        embeddings, summaries = self.__get_embedding_and_summary()
+        embeddings1, summaries1 = self.__get_embedding_and_summary()
         
-        summaries_tilde = summaries[rand_idx]
+        summaries2 = summaries1[rand_idx]
+        embeddings2 = summaries1[rand_idx]
 
-        positives = torch.sigmoid((embeddings * summaries).sum(dim=1))
-        negatives = torch.sigmoid((embeddings * summaries_tilde).sum(dim=1))
+        positives1 = torch.sigmoid((embeddings1 * summaries1).sum(dim=1))
+        negatives1 = torch.sigmoid((embeddings1 * summaries2).sum(dim=1))
+
+        positives2 = torch.sigmoid((embeddings2 * summaries2).sum(dim=1))
+        negatives2 = torch.sigmoid((embeddings2 * summaries1).sum(dim=1))
+
         ones = torch.ones(self.N)
-        return self.loss(positives, negatives, ones)
 
+        loss_1 = self.loss(positives1, negatives1, ones)
+        loss_2 = self.loss(positives2, negatives2, ones)
 
-
-
+        return loss_1 + loss_2
 

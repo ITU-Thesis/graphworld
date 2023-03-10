@@ -1,7 +1,6 @@
 import torch
 from torch import Tensor
 from typing import Union
-
 def node_feature_shuffle(node_features : Tensor, edge_index : Tensor, seed : int = 987123, **kwargs) -> Union[Tensor, Tensor]:
     '''
     Shuffle the node features (rows) given a node feature matrix.
