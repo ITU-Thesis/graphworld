@@ -35,9 +35,13 @@ from ..beam.benchmarker import BenchmarkerWrapper
 from ..nodeclassification.benchmarker import NNNodeBenchmarker
 from  . import *
 from .pretext_tasks.__types import *
+from torch.profiler import profile, record_function, ProfilerActivity
 
 
-
+def trace_handler(p):
+    output = p.key_averages().table(sort_by="self_cuda_time_total", row_limit=10)
+    print(output)
+    p.export_chrome_trace("/tmp/trace_" + str(p.step_num) + ".json")
 
     
 class NNNodeBenchmarkerJL(NNNodeBenchmarker):
@@ -172,14 +176,27 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     best_val_metric = np.inf if tuning_metric_is_loss else -np.inf
     test_metrics = None
     best_val_metrics = None
-    for _ in range(self._epochs):
-      losses.append(float(self.train_step(data)))
-      val_metrics = self.test(data, test_on_val=True)
-      if ((tuning_metric_is_loss and val_metrics[tuning_metric] < best_val_metric) or
-          (not tuning_metric_is_loss and val_metrics[tuning_metric] > best_val_metric)):
-        best_val_metric = val_metrics[tuning_metric]
-        best_val_metrics = copy.deepcopy(val_metrics)
-        test_metrics = self.test(data, test_on_val=False)
+    with profile(
+        activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
+        record_shapes=True,
+        schedule=torch.profiler.schedule(
+            wait=1,
+            warmup=1,
+            active=2),
+        on_trace_ready=trace_handler
+    ) as p:
+      with record_function(self.GetPretextTaskName()):
+        for _ in range(self._epochs):
+          losses.append(float(self.train_step(data)))
+          val_metrics = self.test(data, test_on_val=True)
+          if ((tuning_metric_is_loss and val_metrics[tuning_metric] < best_val_metric) or
+              (not tuning_metric_is_loss and val_metrics[tuning_metric] > best_val_metric)):
+            best_val_metric = val_metrics[tuning_metric]
+            best_val_metrics = copy.deepcopy(val_metrics)
+            test_metrics = self.test(data, test_on_val=False)
+            p.step()
+    print(p.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total", row_limit=10))
+    print(p.key_averages(group_by_input_shape=True).table(sort_by="cpu_memory_total", row_limit=10))
     return losses, test_metrics, best_val_metrics
 
 

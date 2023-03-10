@@ -195,6 +195,7 @@ class SubgraphCentrality(AbstractCentralityScore):
         super().__init__(CentralityScore_.SUBGRAPH, **kwargs)
 
 
+@gin.configurable
 class CentralityScore(BasicPretextTask):
 
     class Decoder(nn.Module):
@@ -223,8 +224,7 @@ class CentralityScore(BasicPretextTask):
         loss = sum(map(lambda m: m.make_loss(embeddings), self.centrality_scores))
         return loss
 
-
-
+@gin.configurable
 class S2GRL(BasicPretextTask):
     '''
     Implementation of S2GRL from:
@@ -300,7 +300,7 @@ class S2GRL(BasicPretextTask):
         total_loss /= len(self.shortest_paths.items())
         return total_loss
 
-
+@gin.configurable
 class PairwiseAttrSim(BasicPretextTask):
     '''
     Proposed by Jin, Wei, et al. "Self-supervised learning on graphs: Deep insights and new direction." arXiv preprint arXiv:2006.10141 (2020).
