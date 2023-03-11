@@ -29,6 +29,7 @@ class DeepGraphInfomax(BasicPretextTask):
             summary=summary_fn,
             corruption=node_feature_shuffle
         )
+        self.decoder = self.dgi.weight # Needed to pull parameters
 
     def make_loss(self, embeddings: Tensor):
         pos_z, neg_z, summary = self.dgi(self.data.x, self.data.edge_index)
