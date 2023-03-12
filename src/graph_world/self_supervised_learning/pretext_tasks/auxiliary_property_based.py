@@ -228,7 +228,7 @@ class CentralityScore(BasicPretextTask):
 class S2GRL(BasicPretextTask):
     '''
     Implementation of S2GRL from:
-        Peng, Zhen, et al. "Self-supervised graph representation learning via global context prediction."
+        "Peng, Zhen, et al. "Self-supervised graph representation learning via global context prediction."
 
     It implements the "small-world" merge policy as used in their experiments described in table 6.
     According to the paper reduction is always sum, but this might make the model improve more towards

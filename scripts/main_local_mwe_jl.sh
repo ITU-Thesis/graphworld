@@ -33,11 +33,15 @@ OUTPUT_PATH="/tmp/mwe"
 rm -rf "${OUTPUT_PATH}"
 mkdir -p ${OUTPUT_PATH}
 
+echo ${OPTARG}
+
 docker-compose run \
   --entrypoint "python3 /app/beam_benchmark_main.py \
   --output ${OUTPUT_PATH} \
   --gin_files /app/configs/SSL_nodeclassification/mwe/nodeclassification_mwe_jl.gin \
-  --runner DirectRunner" \
+  --runner DirectRunner \
+  --direct_num_workers 10 \
+  --direct_running_mode multi_processing"\
   ${BUILD_NAME}
 
 

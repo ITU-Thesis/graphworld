@@ -9,9 +9,9 @@ from ..augmentation import node_feature_shuffle
 from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
-from torch_ppr import personalized_page_rank
 from ..graph import Subgraph
 from torch_geometric.nn import global_mean_pool
+from torch_geometric.utils import to_dense_adj, degree
 
 
 @gin.configurable
@@ -29,7 +29,7 @@ class DeepGraphInfomax(BasicPretextTask):
             summary=summary_fn,
             corruption=node_feature_shuffle
         )
-        self.decoder = self.dgi.weight # Needed to pull parameters
+        self.decoder = self.dgi # Needed to pull parameters
 
     def make_loss(self, embeddings: Tensor):
         pos_z, neg_z, summary = self.dgi(self.data.x, self.data.edge_index)
@@ -128,7 +128,13 @@ class SUBG_CON(BasicPretextTask):
         assert k > 0
 
         self.N = self.data.num_nodes
-        S = personalized_page_rank(edge_index=self.data.edge_index, alpha=alpha)
+        
+        A = to_dense_adj(self.data.edge_index).squeeze()
+        D_inv = torch.diag(A.sum(dim=1)**(-1))
+        I = torch.eye(A.shape[0])
+        P = A@D_inv
+        S = torch.linalg.pinv(I - (alpha * I + (1-alpha)*P))
+
         S_top_k = S.topk(k=k, dim=1).indices
 
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
