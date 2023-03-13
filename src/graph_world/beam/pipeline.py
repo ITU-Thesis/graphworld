@@ -74,23 +74,24 @@ def entry(argv=None):
         | 'Sample Graphs' >> beam.ParDo(
         gen_handler_wrapper.handler.GetSampleDoFn())
     )
+    
     if args.write_samples:
       graph_samples | 'Write Sampled Graph' >> beam.ParDo(
           gen_handler_wrapper.handler.GetWriteDoFn())
-
+      
     torch_data = (
         graph_samples | 'Compute graph metrics.' >> beam.ParDo(
         gen_handler_wrapper.handler.GetGraphMetricsParDo())
         | 'Convert to torchgeo data.' >> beam.ParDo(
         gen_handler_wrapper.handler.GetConvertParDo())
     )
-
+    
     (torch_data | 'Filter skipped conversions' >> beam.Filter(
         lambda el: el['skipped'])
      | 'Extract skipped sample ids' >> beam.Map(lambda el: el['sample_id'])
      | 'Write skipped text file' >> beam.io.WriteToText(
             os.path.join(args.output, 'skipped.txt')))
-
+   
     dataframe_rows = (
         torch_data | 'Benchmark Simple GCN.' >> beam.ParDo(
         gen_handler_wrapper.handler.GetBenchmarkParDo()))

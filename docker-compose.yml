@@ -29,6 +29,7 @@ services:
     volumes:
       # Map src -> app for code updates.
       - ${PWD}/src:/app
+      - ${PWD}/out:/app/out
       
       # Map /tmp -> /tmp to output data for local testing
       - /tmp:/tmp
