@@ -12,6 +12,14 @@ class BasicPretextTask(ABC):
         self.train_mask = train_mask
         self.decoder = Module()
 
+    @property
+    def input_dim(self):
+        return self.data.x.shape[1]
+    
+    @property
+    def embedding_dim(self):
+        return self.encoder.out_channels
+
     # Override this function to return the pretext task loss
     # The embeddings for the downstream task is given, to be used
     # when the input graph is the same for downstream/pretext tasks
