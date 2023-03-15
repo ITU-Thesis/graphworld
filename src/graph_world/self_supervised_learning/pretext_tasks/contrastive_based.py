@@ -254,7 +254,7 @@ class SelfGNN(AbstractSiameseBYOL):
         return torch.cat([v1_student, v2_student], dim=1)#.detach()
 
     # Because of concat the output dim might change
-    def get_downstream_embeddings_size(self) -> int:
+    def get_embedding_dim(self) -> int:
         return self.encoder.out_channels * 2
     
 

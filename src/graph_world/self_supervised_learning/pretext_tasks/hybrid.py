@@ -17,7 +17,7 @@ class GMI(BasicPretextTask):
         self.decoder = nn.Sequential(
             nn.Bilinear(
                 in1_features=self.input_dim, 
-                in2_features=self.embedding_dim, 
+                in2_features=self.get_embedding_dim, 
                 out_features=1, 
                 bias=False
             ),
