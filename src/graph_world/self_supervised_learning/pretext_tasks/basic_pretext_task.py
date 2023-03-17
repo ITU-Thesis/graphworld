@@ -4,13 +4,13 @@ from torch.nn import Module
 from torch import Tensor, FloatTensor, DoubleTensor
 
 
-class BasicPretextTask(ABC):
+class BasicPretextTask(Module, ABC):
     def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, epochs : int, **kwargs): # **kwargs is needed
+        super().__init__()
         self.data = data.clone()
         self.encoder = encoder
         self.epochs = epochs # How many epochs make_loss can be expected to be called
         self.train_mask = train_mask
-        self.decoder = Module()
 
     @property
     def input_dim(self):
@@ -39,8 +39,14 @@ class BasicPretextTask(ABC):
     def get_downstream_embeddings_size(self) -> int:
         return self.encoder.out_channels
     
+    # def get_pretext_embeddings(self, downstream_embeddings: Tensor = None):
+    #     if downstream_embeddings is not None:
+    #         return downstream_embeddings
+    #     else:
+    #         return self.get_downstream_embeddings()
+    
 
 # Used if there is no pretext task or it is set to None
-class IndentityPretextTask(BasicPretextTask):
+class IdentityPretextTask(BasicPretextTask):
     def make_loss(self, embeddings : Tensor) -> Union[FloatTensor, DoubleTensor]:
         return 0
