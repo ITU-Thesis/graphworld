@@ -155,7 +155,7 @@ class NNNodeBenchmarkerJL(NNNodeBenchmarker):
     self._pretext_model = self._pretext_task(**self._pretext_h_params) # init pretext with hparams
     
     # setup downstream decoder
-    self._downstream_decoder = Linear(self._pretext_model.get_downstream_embeddings_size(), self.downstream_out)
+    self._downstream_decoder = Linear(self._pretext_model.get_embedding_dim(), self.downstream_out)
 
     # Setup optimizer
     params = list(self._encoder.parameters())

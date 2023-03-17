@@ -15,10 +15,6 @@ class BasicPretextTask(Module, ABC):
     @property
     def input_dim(self):
         return self.data.x.shape[1]
-    
-    @property
-    def embedding_dim(self):
-        return self.encoder.out_channels
 
     # Override this function to return the pretext task loss
     # The embeddings for the downstream task is given, to be used
@@ -36,7 +32,7 @@ class BasicPretextTask(Module, ABC):
     # Override this method if the embedding size does not match
     # the output of the graph encoder.
     # - For example in some siamese networks where embeddings are concatted
-    def get_downstream_embeddings_size(self) -> int:
+    def get_embedding_dim(self) -> int:
         return self.encoder.out_channels
     
     # def get_pretext_embeddings(self, downstream_embeddings: Tensor = None):

@@ -9,6 +9,10 @@ class GMI(BasicPretextTask):
     '''
     Introduced in Peng, Zhen, et al. "Graph representation learning via graphical mutual information maximization." Proceedings of The Web Conference 2020. 2020.
     See https://github.com/zpeng27/GMI for their original code.
+
+    Version
+    -------
+    Implements the adaptive (GMI-adaptive). Could also implement the mean (GMI-mean) by setting w_ij=1/i_n as in the paper.
     '''
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -17,12 +21,15 @@ class GMI(BasicPretextTask):
         self.decoder = nn.Sequential(
             nn.Bilinear(
                 in1_features=self.input_dim, 
-                in2_features=self.embedding_dim, 
+                in2_features=self.get_embedding_dim, 
                 out_features=1, 
                 bias=False
             ),
             nn.Sigmoid()
         )
+
+    def __compute_weights(self, X: torch.tesnor):
+        ...
 
 
     def make_loss(self, embeddings):
