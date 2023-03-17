@@ -9,10 +9,9 @@ from ..augmentation import node_feature_shuffle
 #from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
-from ..graph import SubGraph
+from ..graph import SubGraph, SubGraphs
 from torch_geometric.nn import global_mean_pool
 from torch_geometric.utils import to_dense_adj
-from torch_geometric.data import Batch, Data
 import math
 from .utils import pairwise_cosine_similarity
 
@@ -162,27 +161,22 @@ class SUBG_CON(BasicPretextTask):
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
 
         # Subgraphs for each node
-        subgraphs = [SubGraph(node_indices=S_top_k[i, :],
-                              data=self.data) for i in range(self.N)]
-        self.subgraphs_batch = Batch.from_data_list(
-            [subgraph.subgraph_data for subgraph in subgraphs])
-
-        # Subgraph offsets in the feature / embedding matrix of all merged subgraphs
-        subgraph_offsets = [0] * (len(subgraphs) + 1)
+        ss =  [SubGraph(node_indices=S_top_k[i, :], data=self.data) for i in range(self.N)]
+        self.subgraphs = SubGraphs(ss)
 
         # Used for the picking function
-        self.central_node_indices = [None] * len(subgraphs)
-        for (i, subgraph) in enumerate(subgraphs):
-            subgraph_offsets[i + 1] = subgraph_offsets[i] + \
-                subgraph.subgraph_number_of_nodes
-            self.central_node_indices[i] = subgraph_offsets[i] + \
-                subgraph.get_old_to_new_index(i)
+        self.central_node_indices = [None] * self.subgraphs.n_subgraphs
+        
+        for i in range(self.subgraphs.n_subgraphs):
+            self.central_node_indices[i] = self.subgraphs.get_subgraph_offset(i) +\
+                self.subgraphs.get_subgraph(i).node_mapping.src_to_target(i)
+ 
 
     def __get_embedding_and_summary(self) -> Union[Tensor, Tensor]:
         all_embeddings = self.encoder(
-            self.subgraphs_batch.x, self.subgraphs_batch.edge_index)
+            self.subgraphs.subgraph_batches.x, self.subgraphs.subgraph_batches.edge_index)
         summaries = torch.sigmoid(global_mean_pool(
-            x=all_embeddings, batch=self.subgraphs_batch.batch))
+            x=all_embeddings, batch=self.subgraphs.subgraph_batches.batch))
         # Picking function
         embeddings = all_embeddings[self.central_node_indices, :]
 
