@@ -1,0 +1,101 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+MERIT_hparams = {
+    'edge_modification_ratio' : %CORRUPTION_RATIO,
+    'feature_mask_ratio' : %CORRUPTION_RATIO,
+    'beta' : %BALANCE_FACTOR,
+    'alpha' : %ALPHA
+}
+
+# GCN encoder
+GCN_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_MERIT_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+GCN_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_MERIT_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+GCN_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_MERIT_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+
+# # GAT encoder (not possible because of edge weights)
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GAT_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GAT_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GAT_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+
+# # GIN encoder (not possible because of edge weights)
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GIN_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GIN_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GIN_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+
+# APPNP encoder
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
+
+

@@ -1,0 +1,98 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+NodeClusteringWithAlignment_hparams = {
+    'cluster_ratio' : %CLUSTER_RATIO
+}
+
+# GCN encoder
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# GAT encoder
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# GIN encoder
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# APPNP encoder
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+

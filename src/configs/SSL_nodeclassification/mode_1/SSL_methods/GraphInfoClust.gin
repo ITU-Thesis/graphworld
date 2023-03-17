@@ -1,0 +1,101 @@
+
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+GraphInfoClust_hparams = {
+    'cluster_ratio' : %CLUSTER_RATIO,
+    'temperature' : [10, 100],
+    'alpha' : %BALANCE_FACTOR,
+}
+
+# GCN encoder
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+
+# GAT encoder
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+
+# GIN encoder
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+
+# APPNP encoder
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_task = @GraphInfoClust
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL.pretext_params = %GraphInfoClust_hparams
+
+

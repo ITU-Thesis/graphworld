@@ -82,7 +82,7 @@ class BasicGNN(torch.nn.Module):
             else:
                 self.out_channels = hidden_channels
 
-        print(self)
+        #print(self)
 
     def reset_parameters(self):
         for conv in self.convs:
@@ -353,11 +353,11 @@ class APPNP(torch.nn.Module):
                  act: Optional[Callable] = ReLU(inplace=True),
                  cached=False):
         super(APPNP, self).__init__()
-
+        self.out_channels = out_channels
         self.mlp = MLP(in_channels, hidden_channels, num_layers, out_channels, dropout, act)
         self.appnp = APPNPConv(iterations, alpha, cached=cached)
 
-        print(self.appnp)
+        #print(self.appnp)
 
     def reset_parameters(self):
         self.mlp.reset_parameters()
@@ -382,7 +382,7 @@ class SGC(torch.nn.Module):
         self.sgc = SGConv(in_channels=in_channels, out_channels=out_channels, K=iterations, cached=cached)
         self.dropout = dropout
 
-        print(self.sgc)
+        #print(self.sgc)
 
     def reset_parameters(self):
         self.sgc.reset_parameters()

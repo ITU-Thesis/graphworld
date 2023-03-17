@@ -11,6 +11,7 @@ from .basic_pretext_task import BasicPretextTask
 from ...models.basic_gnn import SuperGAT
 from torch_geometric.utils import negative_sampling
 from ..layers import NeuralTensorLayer
+import math
 
 # ------------- Feature generation ------------- #
 @gin.configurable
@@ -22,13 +23,14 @@ class AttributeMask(BasicPretextTask):
         all = np.arange(self.data.x.shape[0])
         unlabeled = all[~self.train_mask]
         perm = np.random.permutation(unlabeled)
-        self.masked_nodes = perm[: int(len(perm)*node_mask_ratio)]
+        self.masked_nodes = perm[: math.ceil(len(perm)*node_mask_ratio)]
 
         # Generate pseudo labels and mask input features
         # We employ PCA to pseudo labels/predictions
         # if features are high-dimensional
         self.pseudo_labels = self.data.x.clone()
-        self.data.x[self.masked_nodes] = torch.zeros(self.data.x.shape[1])
+        self.augmentation = self.data.x.clone()
+        self.augmentation[self.masked_nodes] = torch.zeros(self.augmentation.shape[1])
         if self.pseudo_labels.shape[1] > 256:
             pca = PCA(n_components=256)
             self.pseudo_labels = pca.fit_transform(self.pseudo_labels)
@@ -39,7 +41,7 @@ class AttributeMask(BasicPretextTask):
 
     # Run masked input through graph encoder instead of using the original embeddings
     def make_loss(self, embeddings : Tensor):
-        z = self.encoder(self.data.x, self.data.edge_index)
+        z = self.encoder(self.augmentation, self.data.edge_index)
         y_hat = (self.decoder(z[self.masked_nodes]))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
         return loss
@@ -47,18 +49,18 @@ class AttributeMask(BasicPretextTask):
 
 @gin.configurable
 class CorruptedFeaturesReconstruction(BasicPretextTask):
-    def __init__(self, feature_corruption_ratio : float = 0.1, 
-                 partial_feature_reconstruction : bool =True, **kwargs):
+    def __init__(self, feature_mask_ratio : float = 0.1, 
+                 partial_reconstruction : bool =True, **kwargs):
         super().__init__(**kwargs)
 
         # Create Mask of subset of feature columns
         f_cols = np.arange(self.data.x.shape[1])
         perm = np.random.permutation(f_cols)
-        masked_f_cols = perm[: int(len(perm)*feature_corruption_ratio)]
+        masked_f_cols = perm[: math.ceil(len(perm)*feature_mask_ratio)]
 
         # Create pseudo labels
         self.pseudo_labels = self.data.x.clone()
-        if partial_feature_reconstruction:
+        if partial_reconstruction:
             self.pseudo_labels = self.pseudo_labels[:, masked_f_cols]
 
          # Mask input features
@@ -77,28 +79,28 @@ class CorruptedFeaturesReconstruction(BasicPretextTask):
 
 @gin.configurable
 class CorruptedEmbeddingsReconstruction(BasicPretextTask):
-    def __init__(self, embedding_corruption_ratio : float = 0.1, 
-                 partial_embedding_reconstruction : bool = True, **kwargs):
+    def __init__(self, embedding_mask_ratio : float = 0.1, 
+                 partial_reconstruction : bool = True, **kwargs):
         super().__init__(**kwargs)
 
-        self.partial_embedding_reconstruction = partial_embedding_reconstruction
+        self.partial_reconstruction = partial_reconstruction
 
         # Create Mask of subset of embedding columns
         embedding_cols = np.arange(self.encoder.out_channels)
         perm = np.random.permutation(embedding_cols) # Likely not needed
-        self.masked_embedding_cols = perm[: int(len(perm)*embedding_corruption_ratio)]
+        self.masked_embedding_cols = perm[: math.ceil(len(perm)*embedding_mask_ratio)]
         self.mask = torch.eye(self.encoder.out_channels)
         self.mask[self.masked_embedding_cols, self.masked_embedding_cols] = 0
 
         # Specify pretext decoder
-        out = len(self.masked_embedding_cols) if partial_embedding_reconstruction else self.encoder.out_channels
+        out = len(self.masked_embedding_cols) if partial_reconstruction else self.encoder.out_channels
         self.decoder = Linear(self.encoder.out_channels, out)
 
     # Mask embeddings and reconstruct with decoder
     def make_loss(self, embeddings : Tensor):
         masked_embeddings = torch.matmul(embeddings, self.mask)
         y_hat = (self.decoder(masked_embeddings))
-        if self.partial_embedding_reconstruction:
+        if self.partial_reconstruction:
             pseudo_labels = embeddings[:, self.masked_embedding_cols]
         else:
             pseudo_labels = embeddings
@@ -276,12 +278,12 @@ class DenoisingLinkReconstruction(BasicPretextTask):
 
         # Create mask to remove edges
         perm = np.random.permutation(np.arange(self.data.edge_index.shape[1]))
-        remove_edges = perm[: int(len(perm)*edge_mask_ratio)]
+        remove_edges = perm[: math.ceil(len(perm)*edge_mask_ratio)]
         edge_mask = torch.ones(self.data.edge_index.shape[1], dtype=torch.bool)
         edge_mask[remove_edges] = 0
 
         # Sample negative edges
-        self.neg_edge_index = negative_sampling(self.data.edge_index, num_neg_samples =int(len(perm)*edge_mask_ratio))
+        self.neg_edge_index = negative_sampling(self.data.edge_index, num_neg_samples = math.ceil(len(perm)*edge_mask_ratio))
 
         # Remove of positive edges
         self.removed_edges = self.data.edge_index[:, ~edge_mask]

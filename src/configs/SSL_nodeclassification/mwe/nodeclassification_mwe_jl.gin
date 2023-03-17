@@ -5,7 +5,7 @@ import graph_world.self_supervised_learning.pretext_tasks.generation_based
 import graph_world.self_supervised_learning.beam_handler
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
-GeneratorBeamHandlerWrapper.nsamples = 10
+GeneratorBeamHandlerWrapper.nsamples = 2
 
 NodeClassificationBeamHandlerSSL.num_tuning_rounds = 1
 NodeClassificationBeamHandlerSSL.save_tuning_results = False
@@ -14,28 +14,28 @@ NodeClassificationBeamHandlerSSL.ktrain = 5
 NodeClassificationBeamHandlerSSL.ktuning = 5
 
 NodeClassificationBeamHandlerSSL.benchmarker_wrappers = [
-  #@GCN_AttributeMask_/NNNodeBenchmarkJL,
-  #@GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL,
-  #@GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL,
-  #@GCN_AutoEncoding_/NNNodeBenchmarkJL,
-  #@GCN_GAE_/NNNodeBenchmarkJL,
-  #@GCN_VGAE_/NNNodeBenchmarkJL,
-  #@GCN_ARGA_/NNNodeBenchmarkJL,
-  #@GCN_ARGVA_/NNNodeBenchmarkJL,
-  #@SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL,
-  #@GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL,
-  #@GCN_EdgeMask_/NNNodeBenchmarkJL,
-  #@GCN_GRACE_/NNNodeBenchmarkJL,
-  #@GCN_GCA_/NNNodeBenchmarkJL,
-  #@GCN_BGRL_/NNNodeBenchmarkJL,
-  #@GCN_SelfGNNSplit_/NNNodeBenchmarkJL,
-  #@GCN_SelfGNNPPR_/NNNodeBenchmarkJL,
-  #@GCN_SelfGNNLDP_/NNNodeBenchmarkJL,
-  #@GCN_SelfGNNStandard_/NNNodeBenchmarkJL,
-  #@GCN_GBT_/NNNodeBenchmarkJL,
-  @GCN_MERIT_/NNNodeBenchmarkJL,
+  #@GCN_AttributeMask_/NNNodeBenchmarkSSL,
+  #@GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkSSL,
+  #@GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkSSL,
+  #@GCN_AutoEncoding_/NNNodeBenchmarkSSL,
+  #@GCN_GAE_/NNNodeBenchmarkSSL,
+  #@GCN_VGAE_/NNNodeBenchmarkSSL,
+  #@GCN_ARGA_/NNNodeBenchmarkSSL,
+  #@GCN_ARGVA_/NNNodeBenchmarkSSL,
+  #@SuperGAT_SuperGATSSL_/NNNodeBenchmarkSSL,
+  #@GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkSSL,
+  #@GCN_EdgeMask_/NNNodeBenchmarkSSL,
+  #@GCN_GRACE_/NNNodeBenchmarkSSL,
+  #@GCN_GCA_/NNNodeBenchmarkSSL,
+  #@GCN_BGRL_/NNNodeBenchmarkSSL,
+  #@GCN_SelfGNNSplit_/NNNodeBenchmarkSSL,
+  #@GCN_SelfGNNPPR_/NNNodeBenchmarkSSL,
+  #@GCN_SelfGNNLDP_/NNNodeBenchmarkSSL,
+  #@GCN_SelfGNNStandard_/NNNodeBenchmarkSSL,
+  #@GCN_GBT_/NNNodeBenchmarkSSL,
+  @GCN_MERIT_/NNNodeBenchmarkSSL,
 
-  @GCN_/NNNodeBenchmarkJL,
+  @GCN_/NNNodeBenchmarkSSL,
 ]
 
 

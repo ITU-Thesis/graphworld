@@ -25,14 +25,14 @@ BALANCE_FACTOR = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 
 # GCN setup with AttributeMask
-GCN_AttributeMask_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_AttributeMask_/NNNodeBenchmarkJL.pretext_task = @AttributeMask
-GCN_AttributeMask_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_AttributeMask_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_AttributeMask_/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GCN_AttributeMask_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
+GCN_AttributeMask_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -43,14 +43,14 @@ GCN_AttributeMask_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with CorruptedFeaturesReconstruction
-GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.pretext_task = @CorruptedFeaturesReconstruction
-GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkSSL.pretext_task = @CorruptedFeaturesReconstruction
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.h_params = {
+GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -62,14 +62,14 @@ GCN_CorruptedFeaturesReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with CorruptedEmbeddingsReconstruction
-GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.pretext_task = @CorruptedEmbeddingsReconstruction
-GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.h_params = {
+GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -81,14 +81,14 @@ GCN_CorruptedEmbeddingsReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with AutoEncoding
-GCN_AutoEncoding_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_AutoEncoding_/NNNodeBenchmarkJL.pretext_task = @AutoEncoding
-GCN_AutoEncoding_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_AutoEncoding_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_AutoEncoding_/NNNodeBenchmarkSSL.pretext_task = @AutoEncoding
+GCN_AutoEncoding_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
+GCN_AutoEncoding_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -96,14 +96,14 @@ GCN_AutoEncoding_/NNNodeBenchmarkJL.h_params = {
 }
 
 # GCN setup with NodeClusteringWithAlignment
-GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.pretext_task = @NodeClusteringWithAlignment
-GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.h_params = {
+GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -113,14 +113,14 @@ GCN_NodeClusteringWithAlignment_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with NodeClusteringWithAlignment
-GCN_GraphPartition_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GraphPartition_/NNNodeBenchmarkJL.pretext_task = @GraphPartition
-GCN_GraphPartition_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_GraphPartition_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphPartition_/NNNodeBenchmarkSSL.pretext_task = @GraphPartition
+GCN_GraphPartition_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_GraphPartition_/NNNodeBenchmarkJL.h_params = {
+GCN_GraphPartition_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -130,14 +130,14 @@ GCN_GraphPartition_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with GAE
-GCN_GAE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GAE_/NNNodeBenchmarkJL.pretext_task = @GAE
-GCN_GAE_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_GAE_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GAE_/NNNodeBenchmarkSSL.pretext_task = @GAE
+GCN_GAE_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_GAE_/NNNodeBenchmarkJL.h_params = {
+GCN_GAE_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -146,14 +146,14 @@ GCN_GAE_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with VGAE
-GCN_VGAE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_VGAE_/NNNodeBenchmarkJL.pretext_task = @VGAE
-GCN_VGAE_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_VGAE_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_VGAE_/NNNodeBenchmarkSSL.pretext_task = @VGAE
+GCN_VGAE_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_VGAE_/NNNodeBenchmarkJL.h_params = {
+GCN_VGAE_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -162,50 +162,50 @@ GCN_VGAE_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup with ARGA
-GCN_ARGA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_ARGA_/NNNodeBenchmarkJL.pretext_task = @ARGA
-GCN_ARGA_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_ARGA_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_ARGA_/NNNodeBenchmarkJL.h_params = {
+GCN_ARGA_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
     'discriminator_lr' : %DISCRIMINATOR_LR,
-    'discriminator_epochs' : %DISCRIMINATOR_EPOCHS
+    'discriminator_downstream_epochs' : %DISCRIMINATOR_EPOCHS
 }
 
 
 # GCN setup with ARGVA
-GCN_ARGVA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_ARGVA_/NNNodeBenchmarkJL.pretext_task = @ARGVA
-GCN_ARGVA_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_ARGVA_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGVA_/NNNodeBenchmarkSSL.pretext_task = @ARGVA
+GCN_ARGVA_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_ARGVA_/NNNodeBenchmarkJL.h_params = {
+GCN_ARGVA_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
     'dropout' : %DROPOUT,
     'discriminator_lr' : %DISCRIMINATOR_LR,
-    'discriminator_epochs' : %DISCRIMINATOR_EPOCHS
+    'discriminator_downstream_epochs' : %DISCRIMINATOR_EPOCHS
 }
 
 
 # superGAT with attention losses
-SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.model_class = @SuperGAT
-SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.pretext_task = @SuperGATSSL
-SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkSSL.model_class = @SuperGAT
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkSSL.pretext_task = @SuperGATSSL
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.h_params = {
+SuperGAT_SuperGATSSL_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -214,14 +214,14 @@ SuperGAT_SuperGATSSL_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with denoising link reconstruction
-GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.pretext_task = @DenoisingLinkReconstruction
-GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkSSL.pretext_task = @DenoisingLinkReconstruction
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
+GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -231,14 +231,14 @@ GCN_DenoisingLinkReconstruction_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with denoising link reconstruction
-GCN_EdgeMask_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_EdgeMask_/NNNodeBenchmarkJL.pretext_task = @EdgeMask
-GCN_EdgeMask_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_EdgeMask_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_EdgeMask_/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GCN_EdgeMask_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_EdgeMask_/NNNodeBenchmarkJL.h_params = {
+GCN_EdgeMask_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -247,14 +247,14 @@ GCN_EdgeMask_/NNNodeBenchmarkJL.h_params = {
 }
 
 # GCN with GRACE
-GCN_GRACE_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GRACE_/NNNodeBenchmarkJL.pretext_task = @GRACE
-GCN_GRACE_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_GRACE_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GRACE_/NNNodeBenchmarkSSL.pretext_task = @GRACE
+GCN_GRACE_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_GRACE_/NNNodeBenchmarkJL.h_params = {
+GCN_GRACE_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -268,14 +268,14 @@ GCN_GRACE_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with GCA
-GCN_GCA_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GCA_/NNNodeBenchmarkJL.pretext_task = @GCA
-GCN_GCA_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_GCA_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GCA_/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_GCA_/NNNodeBenchmarkJL.h_params = {
+GCN_GCA_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -289,14 +289,14 @@ GCN_GCA_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with BGRL
-GCN_BGRL_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_BGRL_/NNNodeBenchmarkJL.pretext_task = @BGRL
-GCN_BGRL_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_BGRL_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_BGRL_/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GCN_BGRL_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_BGRL_/NNNodeBenchmarkJL.h_params = {
+GCN_BGRL_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -308,14 +308,14 @@ GCN_BGRL_/NNNodeBenchmarkJL.h_params = {
 }
 
 # GCN with SelfGNNSplit
-GCN_SelfGNNSplit_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_SelfGNNSplit_/NNNodeBenchmarkJL.pretext_task = @SelfGNNSplit
-GCN_SelfGNNSplit_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_SelfGNNSplit_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_SelfGNNSplit_/NNNodeBenchmarkJL.h_params = {
+GCN_SelfGNNSplit_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -324,14 +324,14 @@ GCN_SelfGNNSplit_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with SelfGNNPPR
-GCN_SelfGNNPPR_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_SelfGNNPPR_/NNNodeBenchmarkJL.pretext_task = @SelfGNNPPR
-GCN_SelfGNNPPR_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_SelfGNNPPR_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNPPR_/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+GCN_SelfGNNPPR_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_SelfGNNPPR_/NNNodeBenchmarkJL.h_params = {
+GCN_SelfGNNPPR_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -341,14 +341,14 @@ GCN_SelfGNNPPR_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with SelfGNNLDP
-GCN_SelfGNNLDP_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_SelfGNNLDP_/NNNodeBenchmarkJL.pretext_task = @SelfGNNLDP
-GCN_SelfGNNLDP_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_SelfGNNLDP_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNLDP_/NNNodeBenchmarkSSL.pretext_task = @SelfGNNLDP
+GCN_SelfGNNLDP_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_SelfGNNLDP_/NNNodeBenchmarkJL.h_params = {
+GCN_SelfGNNLDP_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -357,14 +357,14 @@ GCN_SelfGNNLDP_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with SelfGNNStandard
-GCN_SelfGNNStandard_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_SelfGNNStandard_/NNNodeBenchmarkJL.pretext_task = @SelfGNNStandard
-GCN_SelfGNNStandard_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_SelfGNNStandard_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNStandard_/NNNodeBenchmarkSSL.pretext_task = @SelfGNNStandard
+GCN_SelfGNNStandard_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_SelfGNNStandard_/NNNodeBenchmarkJL.h_params = {
+GCN_SelfGNNStandard_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -373,14 +373,14 @@ GCN_SelfGNNStandard_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with G-BT
-GCN_GBT_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_GBT_/NNNodeBenchmarkJL.pretext_task = @GBT
-GCN_GBT_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
+GCN_GBT_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GBT_/NNNodeBenchmarkSSL.pretext_task = @GBT
+GCN_GBT_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
     'lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_GBT_/NNNodeBenchmarkJL.h_params = {
+GCN_GBT_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -391,14 +391,13 @@ GCN_GBT_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN with MERIT
-GCN_MERIT_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_MERIT_/NNNodeBenchmarkJL.pretext_task = @MERIT
-GCN_MERIT_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
-    'lr': %LR,
-    'lambda' : %LAMBDA
+GCN_MERIT_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MERIT_/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
+    'downstream_lr': %LR,
 }
-GCN_MERIT_/NNNodeBenchmarkJL.h_params = {
+GCN_MERIT_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,
@@ -411,14 +410,14 @@ GCN_MERIT_/NNNodeBenchmarkJL.h_params = {
 
 
 # GCN setup standard
-GCN_/NNNodeBenchmarkJL.model_class = @GCN
-GCN_/NNNodeBenchmarkJL.pretext_task = None
-GCN_/NNNodeBenchmarkJL.benchmark_params = {
-    'epochs' : %EPOCHS,
-    'lr': %LR,
+GCN_/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_/NNNodeBenchmarkSSL.pretext_task = None
+GCN_/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %EPOCHS,
+    'downstream_lr': %LR,
     'lambda' : %LAMBDA
 }
-GCN_/NNNodeBenchmarkJL.h_params = {
+GCN_/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
     'hidden_channels' : %HIDDEN_CHANNELS,
     'num_layers' : %NUM_LAYERS,

@@ -1,0 +1,75 @@
+# GCN & GNN hyperparameter ranges
+HIDDEN_CHANNELS = [4, 8, 16]
+NUM_LAYERS = [1, 2, 3, 4]
+DROPOUT = [0, 0, 0, 0.3, 0.5, 0.8] # a hack to make dropout equiprobable
+# PPR & APPNP
+ALPHA = [0.1, 0.2, 0.3]
+ITERATIONS = [5, 10, 15]
+# Multihead model only (GAT)
+NUM_HEADS = [1, 2, 4]
+
+# SSL only
+CORRUPTION_RATIO = [0.1, 0.2, 0.3, 0.4, 0.5]
+CLUSTER_RATIO = [0.05, 0.10, 0.15]
+N_PARTITIONS = [8, 10, 12, 14, 16]
+PARTIAL_RECONSTRUCTION = [True, False]
+DISCRIMINATOR_LR = [0.001, 0.003]
+DISCRIMINATOR_EPOCHS = [5, 10]
+TAU = [0.1, 0.3, 0.5, 0.7, 0.9]
+BALANCE_FACTOR = [0.25, 0.5, 0.75]
+
+
+# Epochs & lr 
+PRETEXT_LR = [0.001]#[0.01, 0.001, 0.0001]
+PRETEXT_EPOCHS = 200
+DOWNSTREAM_LR = [0.001]#[0.01, 0.001, 0.0001]
+DOWNSTREAM_EPOCHS = 200
+
+
+# Training schemes
+JL_BENCHMARK_PARAMS = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR
+}
+PF_BENCHMARK_PARAMS = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr': %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR
+}
+URL_BENCHMARK_PARAMS = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr': %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR
+}
+
+
+# GNN encoder hyperparams
+GCN_HPARAMS = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_HPARAMS = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GAT_HPARAMS = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+APPNP_HPARAMS = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}

@@ -1,0 +1,97 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+ARGA_hparams = {
+    'discriminator_lr' : %DISCRIMINATOR_LR,
+    'discriminator_downstream_epochs' : %DISCRIMINATOR_EPOCHS
+}
+
+# GCN encoder
+GCN_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_ARGA_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GCN_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_ARGA_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GCN_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_ARGA_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+# GAT encoder
+GAT_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_ARGA_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GAT_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_ARGA_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GAT_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_ARGA_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+# GIN encoder
+GIN_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_ARGA_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GIN_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_ARGA_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GIN_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_ARGA_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+# APPNP encoder
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams

@@ -6,12 +6,14 @@ import torch
 import gin
 from .basic_pretext_task import BasicPretextTask
 from ..augmentation import node_feature_shuffle
-from torchmetrics.functional import pairwise_cosine_similarity
+#from torchmetrics.functional import pairwise_cosine_similarity
 from typing import Union
 from ..loss import jensen_shannon_loss
 from ..graph import Subgraph
 from torch_geometric.nn import global_mean_pool
 from torch_geometric.utils import to_dense_adj, degree
+import math
+from .utils import pairwise_cosine_similarity
 
 
 @gin.configurable
@@ -44,7 +46,6 @@ class ClusterNet(Module):
     '''
     def __init__(self, k: int, temperature : float, num_iter : int, out_channels : int, **kwargs):
         super().__init__()
-        assert temperature >= 0. and temperature <= 1.
         self.k = k
         self.temperature = temperature
         self.num_iter = num_iter
@@ -60,7 +61,9 @@ class ClusterNet(Module):
             mu = mu / mu.norm(dim=1, p='fro')[:, None]
 
             # Get distances & compute cosine similarity
-            cosine_similarities = pairwise_cosine_similarity(data, mu)      # (N observations x N clusters)
+            cosine_similarities = torch.randn((data.shape[0], mu.shape[0]))     # (N observations x N clusters)
+
+            cosine_similarities = pairwise_cosine_similarity(data, mu, zero_diagonal=False)      # (N observations x N clusters)
             r = F.softmax(-self.temperature * cosine_similarities, dim=1)   # (N observations x N clusters)
             cluster_r = r.sum(dim=0)                                        # (N clusters)
             cluster_mean = r.t() @ data                                     # (N clusters x N feats)
@@ -79,12 +82,13 @@ class ClusterNet(Module):
         
 @gin.configurable
 class GraphInfoClust(BasicPretextTask):
-    def __init__(self, k: int, temperature : float, num_cluster_iter : int, alpha: float,  **kwargs):
+    def __init__(self, cluster_ratio: float, temperature : float, alpha: float,  **kwargs):
         super().__init__(**kwargs)
         assert alpha >= 0. and alpha <= 1.
+        k = math.ceil(self.data.x.shape[0]*cluster_ratio)
         def summary_fn(h, *args, **kwargs): return h.mean(dim=0)
         self.alpha = alpha
-        self.cluster = ClusterNet(k=k, temperature=temperature, num_iter=num_cluster_iter, out_channels=self.encoder.out_channels)
+        self.cluster = ClusterNet(k=k, temperature=temperature, num_iter=11, out_channels=self.encoder.out_channels)
         self.dgi = DeepGraphInfomaxModule(
             hidden_channels=self.encoder.out_channels,
             encoder=self.encoder,

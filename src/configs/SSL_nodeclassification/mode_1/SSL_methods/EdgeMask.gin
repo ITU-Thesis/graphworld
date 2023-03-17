@@ -1,0 +1,98 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+EdgeMask_hparams = {
+    'edge_mask_ratio' : %CORRUPTION_RATIO
+}
+
+# GCN encoder
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+
+# GAT encoder
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+
+# GIN encoder
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+
+# APPNP encoder
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_EdgeMask_JL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_EdgeMask_PF/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_task = @EdgeMask
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_EdgeMask_URL/NNNodeBenchmarkSSL.pretext_params = %EdgeMask_hparams
+
+

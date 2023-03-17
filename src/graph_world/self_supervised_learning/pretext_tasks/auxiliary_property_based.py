@@ -5,7 +5,7 @@ import gin
 from .__types import *
 from torch import Tensor
 from sklearn.cluster import KMeans
-import pymetis
+#import pymetis
 from torch_geometric.utils.convert import to_scipy_sparse_matrix
 from .basic_pretext_task import BasicPretextTask
 from enum import Enum
@@ -13,11 +13,12 @@ from torch_geometric.utils.convert import to_networkx
 import networkx as nx
 from abc import ABC
 from torch import nn
-from typing import List
+from typing import List, Tuple
 from torch_geometric.utils.undirected import is_undirected
 from networkx import all_pairs_shortest_path_length
 from ..tensor_utils import get_top_k_indices
 from torchmetrics.functional import pairwise_cosine_similarity
+import math 
 
 # ==================================================== #
 # ============= Auxiliary property-based ============= #
@@ -26,11 +27,12 @@ from torchmetrics.functional import pairwise_cosine_similarity
 
 @gin.configurable
 class NodeClusteringWithAlignment(BasicPretextTask):
-    def __init__(self, n_clusters: int, random_state: int = 3364, **kwargs):
+    def __init__(self, cluster_ratio: float, **kwargs):
         super().__init__(**kwargs)
 
+        n_clusters = math.ceil(self.data.x.shape[0]*cluster_ratio)
+
         # Step 0: Setup
-        train_mask = self.data.train_mask
         X, y = self.data.x, self.data.y
         num_classes = y.unique().shape[0]
         feat_dim = X.shape[1]
@@ -38,17 +40,16 @@ class NodeClusteringWithAlignment(BasicPretextTask):
 
         # Step 1: Compute centroids in each cluster by the mean in each class
         for cn in range(num_classes):
-            lf = X[train_mask]
-            ll = y[train_mask]
+            lf = X[self.train_mask]
+            ll = y[self.train_mask]
             centroids_labeled[cn] = lf[ll == cn].mean(axis=0)
 
         # Step 2: Set cluster labels for each node
         cluster_labels = torch.ones(y.shape, dtype=torch.int64) * -1
-        cluster_labels[train_mask] = y[train_mask]
+        cluster_labels[self.train_mask] = y[self.train_mask]
 
         # Step 3: Train KMeans on all points
-        kmeans = KMeans(n_clusters=n_clusters,
-                        random_state=random_state).fit(X)
+        kmeans = KMeans(n_clusters=n_clusters).fit(X)
 
         # Step 4: Perform alignment mechanism
         # See https://arxiv.org/pdf/1902.11038.pdf and
@@ -59,13 +60,13 @@ class NodeClusteringWithAlignment(BasicPretextTask):
         for cn in range(n_clusters):
             # v_l
             centroids_unlabeled = X[torch.logical_and(torch.tensor(
-                kmeans.labels_ == cn), ~train_mask)].mean(axis=0)
+                kmeans.labels_ == cn), ~self.train_mask)].mean(axis=0)
 
             # Equation 5
             label_for_cluster = np.linalg.norm(
                 centroids_labeled - centroids_unlabeled, axis=1).argmin()
             for node in np.where(kmeans.labels_ == cn)[0]:
-                if not train_mask[node]:
+                if not self.train_mask[node]:
                     cluster_labels[node] = label_for_cluster
 
         self.pseudo_labels = cluster_labels
@@ -78,9 +79,10 @@ class NodeClusteringWithAlignment(BasicPretextTask):
 
 
 @gin.configurable
-class GraphPartition(BasicPretextTask):
-    def __init__(self, n_parts: int, **kwargs):
+class GraphPartitioning(BasicPretextTask):
+    def __init__(self, n_partitions: int, **kwargs):
         super().__init__(**kwargs)
+
         sparse_matrix = to_scipy_sparse_matrix(self.data.edge_index)
         node_num = sparse_matrix.shape[0]
         adj_list = [[] for _ in range(node_num)]
@@ -89,10 +91,10 @@ class GraphPartition(BasicPretextTask):
                 continue
             adj_list[i].append(j)
 
-        _, ss_labels = pymetis.part_graph(adjacency=adj_list, nparts=n_parts)
+        _, ss_labels = pymetis.part_graph(adjacency=adj_list, nparts=n_partitions)
 
         self.pseudo_labels = torch.tensor(ss_labels, dtype=torch.int64)
-        self.decoder = Linear(self.encoder.out_channels, n_parts)
+        self.decoder = Linear(self.encoder.out_channels, n_partitions)
         self.loss = torch.nn.CrossEntropyLoss()
 
     def make_loss(self, embeddings):
@@ -140,7 +142,7 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
         rank_order = torch.zeros((scores.shape[0], scores.shape[0]))
         for i in range(len(scores)):
             for j in range(len(scores)):
-                if i > j:
+                if scores[i] > scores[j]:
                     rank_order[i, j] = 1.0
         self.rank_order = rank_order
 
@@ -149,10 +151,10 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
         
         # Outer subtraction followed by element-wise sigmoid
         predicted_rank_order = torch.sigmoid(
-            predicted_centrality_score.reshape(-1, 1) - predicted_centrality_score
+            predicted_centrality_score - predicted_centrality_score.T
         )
         R, R_hat = self.rank_order, predicted_rank_order
-        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).sum() # Elementwise CE loss followed by sum
+        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).mean() # Elementwise CE loss followed by mean
         return loss
 
 @gin.configurable
@@ -196,32 +198,22 @@ class SubgraphCentrality(AbstractCentralityScore):
 
 
 @gin.configurable
-class CentralityScore(BasicPretextTask):
-
-    class Decoder(nn.Module):
-        def __init__(self, centrality_scores : List[AbstractCentralityScore], **kwargs):
-            super().__init__()
-            self.centrality_scores = centrality_scores
-
-        def forward(self, x):
-            return torch.stack([*map(lambda m: m.decoder.forward(x), self.centrality_scores)], dim=1).squeeze()
-
+class CentralityScoreRanking(BasicPretextTask):
     '''
     Proposed in https://arxiv.org/pdf/1905.13728.pdf.
     '''
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        self.centrality_scores = [
+        self.centrality_scores = nn.ModuleList([
             EigenvectorCentrality(**kwargs),
             BetweennessCentrality(**kwargs),
             ClosenessCentrality(**kwargs),
             SubgraphCentrality(**kwargs)
-        ]
-        self.decoder = CentralityScore.Decoder(centrality_scores=self.centrality_scores)
+        ])
 
     def make_loss(self, embeddings):
-        loss = sum(map(lambda m: m.make_loss(embeddings), self.centrality_scores))
+        loss = sum(map(lambda m: m.make_loss(embeddings), self.centrality_scores)) * 0.25
         return loss
 
 @gin.configurable
@@ -234,8 +226,9 @@ class S2GRL(BasicPretextTask):
     According to the paper reduction is always sum, but this might make the model improve more towards
     hubs / nodes in highly dense neighbourhoods.
     '''
-    def __init__(self, shortest_path_cutoff : int, N_classes : int, **kwargs):
+    def __init__(self, shortest_path_classes : Tuple[int,int], **kwargs):
         super().__init__(**kwargs)
+        shortest_path_cutoff, N_classes = shortest_path_classes
         assert shortest_path_cutoff > 0
 
         self.N_classes = N_classes
@@ -284,10 +277,12 @@ class S2GRL(BasicPretextTask):
 
             # Distance i maps to class i - 1.
             distances = torch.tensor([*targets.values()]) - 1
-            pseudo_labels = torch.nn.functional.one_hot(distances, num_classes=self.N_classes).to(torch.float64)
+            pseudo_labels = distances
 
             # Select embeddings of neighbours
             neighbour_indices = torch.tensor([*targets.keys()])
+            if len(neighbour_indices) == 0:
+                continue
             neighbour_embeddings = embeddings[neighbour_indices]
             assert pseudo_labels.shape[0] == neighbour_embeddings.shape[0]
 
@@ -340,7 +335,7 @@ class PairwiseAttrSim(BasicPretextTask):
             assert ((highest_similarities.view(-1, 1) - smallest_similarities) >= 0).all()
 
         # Extract top-k similarities[i, j] for each top-k node pair (v_i, v_j).
-        self.top_similarities = torch.concat([
+        self.top_similarities = torch.cat([
             highest_similarities,
             smallest_similarities
         ]).view(-1, 1)
@@ -362,7 +357,7 @@ class PairwiseAttrSim(BasicPretextTask):
         X_hat = embeddings[self.null_mask]
         highest_similarities_pred = self.decoder((X_hat[self.T_s[:, 0]] - X_hat[self.T_s[:, 1]]).abs())
         lowest_similarities_pred = self.decoder((X_hat[self.T_d[:, 0]] - X_hat[self.T_d[:, 1]]).abs())
-        predicted_similarities = torch.concat([
+        predicted_similarities = torch.cat([
             highest_similarities_pred,
             lowest_similarities_pred
         ])
