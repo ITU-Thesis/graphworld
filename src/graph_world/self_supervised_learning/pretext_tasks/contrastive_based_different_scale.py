@@ -56,30 +56,32 @@ class ClusterNet(Module):
 
     def compute(self, data: Tensor, num_iter: int, mu_init: Tensor):
         # [0, 1] normalize
-        data = data / (data.norm(dim=1) + 1e-8)[:, None]
-
+        data = data / (data.norm(dim=1)[:, None] + 1e-6)
         mu = mu_init
+        temperature = torch.tensor(self.temperature)
 
         for _ in range(num_iter):
-            mu = mu / mu.norm(dim=1, p='fro')[:, None]
+            prev_mu = mu.clone()
+            mu = mu / (mu.norm(dim=1, p='fro')[:, None] + 1e-6)
 
             # Get distances & compute cosine similarity
-            cosine_similarities = torch.randn((data.shape[0], mu.shape[0]))     # (N observations x N clusters)
+            #cosine_similarities = torch.randn((data.shape[0], mu.shape[0]))     # (N observations x N clusters)
 
-            cosine_similarities = pairwise_cosine_similarity(data, mu, zero_diagonal=False)      # (N observations x N clusters)
-            r = F.softmax(-self.temperature * cosine_similarities, dim=1)   # (N observations x N clusters)
+            dist = torch.mm(data, mu.transpose(0,1))   # (N observations x N clusters)
+            r = F.softmax(temperature * dist, dim=1)   # (N observations x N clusters)
             cluster_r = r.sum(dim=0)                                        # (N clusters)
             cluster_mean = r.t() @ data                                     # (N clusters x N feats)
             new_mu = torch.diag(1 / cluster_r) @ cluster_mean               # (N clusters x N feats)
             mu = new_mu
 
+
         return mu, r
 
     def forward(self, embeddings: Tensor) -> Union[Tensor, Tensor]:
         mu_init = torch.rand(self.k, self.out_channels)
-        mu_init, _ = self.compute(data=embeddings, num_iter=1, mu_init=mu_init)
+        mu_init, _ = self.compute(data=embeddings, num_iter=self.num_iter, mu_init=mu_init)
         mu, r = self.compute(
-            data=embeddings, num_iter=self.num_iter, mu_init=mu_init)
+            data=embeddings, num_iter=1, mu_init=mu_init.clone().detach())
 
         return mu, r
 
@@ -92,7 +94,7 @@ class GraphInfoClust(BasicPretextTask):
         k = math.ceil(self.data.x.shape[0]*cluster_ratio)
         def summary_fn(h, *args, **kwargs): return h.mean(dim=0)
         self.alpha = alpha
-        self.cluster = ClusterNet(k=k, temperature=temperature, num_iter=11, out_channels=self.encoder.out_channels)
+        self.cluster = ClusterNet(k=k, temperature=temperature, num_iter=10, out_channels=self.encoder.out_channels)
         self.dgi = DeepGraphInfomaxModule(
             hidden_channels=self.encoder.out_channels,
             encoder=self.encoder,
@@ -113,7 +115,6 @@ class GraphInfoClust(BasicPretextTask):
         # DGI (global) objective
         pos_z, neg_z, summary = self.dgi(self.data.x, self.data.edge_index)
         dgi_loss = self.dgi.loss(pos_z=pos_z, neg_z=neg_z, summary=summary)
-
         # Clustering (coarse-grained) objective
         mu, r = self.cluster(pos_z)
         # (N observations x cluster dim)
@@ -122,14 +123,14 @@ class GraphInfoClust(BasicPretextTask):
             pos_z, cluster_summary).squeeze()
         negative_score = self.clustering_discriminator(
             neg_z, cluster_summary).squeeze()
+
         cluster_loss = jensen_shannon_loss(
             positive_instance=positive_score, negative_instance=negative_score)
-
         return self.alpha * dgi_loss + (1 - self.alpha) * cluster_loss
 
 
 @gin.configurable
-class SUBG_CON(BasicPretextTask):
+class SUBGCON(BasicPretextTask):
     '''
     Proposed by:
         Jiao, Yizhu, m.fl. “Sub-graph Contrast for Scalable Self-Supervised Graph Representation Learning”. arXiv preprint arXiv:2009.10273, 2020.
@@ -152,7 +153,7 @@ class SUBG_CON(BasicPretextTask):
 
         # Take the k most important neighbours
         S_top_k = S.topk(k=k, dim=1).indices
-        S_top_k = torch.concat([
+        S_top_k = torch.cat([
             S_top_k, 
             torch.arange(start=0, end=A.shape[0], step=1).unsqueeze(dim=1)
         ], dim=1)

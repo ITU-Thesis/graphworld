@@ -47,7 +47,7 @@ class SubGraph:
     @property
     def subgraph_data(self) -> Data:
         if self.__subgraph is None:
-            subgraph_edges, *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True, return_edge_mask=False)
+            subgraph_edges, *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True)
             subgraph_x = self.__full_graph.x[self.new_to_old_node_indices, :]
             subgraph_y = self.__full_graph.y[self.new_to_old_node_indices]
             self.__subgraph = Data(x=subgraph_x, edge_index=subgraph_edges, y=subgraph_y)

@@ -2,12 +2,14 @@ from .__types import *
 from abc import ABC, abstractclassmethod
 from torch.nn import Module
 from torch import Tensor, FloatTensor, DoubleTensor
+import torch
 
 
 class BasicPretextTask(Module, ABC):
     def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, epochs : int, **kwargs): # **kwargs is needed
         super().__init__()
         self.data = data.clone()
+        self.data_test = self.data.clone()
         self.encoder = encoder
         self.epochs = epochs # How many epochs make_loss can be expected to be called
         self.train_mask = train_mask
