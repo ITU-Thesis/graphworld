@@ -13,7 +13,7 @@ from ..graph import SubGraph, SubGraphs
 from torch_geometric.nn import global_mean_pool
 from torch_geometric.utils import to_dense_adj
 import math
-from .utils import pairwise_cosine_similarity
+from .utils import get_exact_ppr_matrix
 
 
 @gin.configurable
@@ -142,11 +142,7 @@ class SUBGCON(BasicPretextTask):
 
         self.N = self.data.num_nodes
 
-        A = to_dense_adj(self.data.edge_index).squeeze().fill_diagonal_(1)
-        D_inv = torch.diag(1/A.sum(dim=1))
-        I = torch.eye(A.shape[0])
-        P = A@D_inv
-        S = torch.linalg.pinv(I - (alpha * I + (1-alpha)*P))
+        S = get_exact_ppr_matrix(edge_index=self.data.edge_index, num_nodes=self.data.num_nodes, alpha=alpha)
         S = S.fill_diagonal_(S.min() - 1)
 
 
