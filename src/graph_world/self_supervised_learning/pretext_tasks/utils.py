@@ -2,11 +2,14 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import Tensor
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 import scipy as sp
 import scipy.sparse as sprs
-import scipy.spatial
 import scipy.sparse.linalg
+import networkx as nx
+from torch_geometric.data import Data
+from torch_geometric.utils import to_networkx
+from torch_geometric.utils import to_dense_adj, get_laplacian
 
 # Copied from https://github.com/Namkyeong/BGRL_Pytorch
 class EMA:
@@ -37,6 +40,17 @@ def pad_views(view1data, view2data):
             smaller_data.x = F.pad(smaller_data.x, pad=(0, diff))
             view1data.x = F.normalize(view1data.x)
             view2data.x = F.normalize(view2data.x)
+
+
+def k_closest_neighbors(data: Data, v : int, K : int) -> List[int]:
+    '''
+    Given a node v in a graph, find the neighbors that are closest to v in terms of connectivity.
+    '''
+    G = to_networkx(data)
+    all_neighbors = nx.single_source_shortest_path_length(G=G, source=v, cutoff=K)
+    sorted_neighbors = sorted(all_neighbors.items(), key=lambda x: x[1])
+    
+    return [x[0] for x in sorted_neighbors[0:K]]
 
 
 def compute_InfoNCE_loss(z1: Tensor, z2: Tensor, tau: float = 1.0):
@@ -98,3 +112,12 @@ def pairwise_cosine_similarity(x: Tensor, y: Optional[Tensor] = None, zero_diago
     if zero_diagonal:
         distance.fill_diagonal_(0)
     return distance
+
+def get_exact_ppr_matrix(edge_index : torch.Tensor, num_nodes : int, alpha: float, normalization='rw') -> torch.Tensor:
+    assert alpha >= 0. and alpha <= 1.
+    
+    identity = torch.eye(n=num_nodes)
+    edge_index, weights = get_laplacian(edge_index=edge_index, normalization=normalization)
+    L = to_dense_adj(edge_index=edge_index, edge_attr=weights).squeeze() + identity
+    PPR_matrix = torch.linalg.pinv(identity - (alpha * identity + (1-alpha)*L))
+    return PPR_matrix
