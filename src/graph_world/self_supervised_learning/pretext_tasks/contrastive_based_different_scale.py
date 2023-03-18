@@ -153,8 +153,6 @@ class SUBGCON(BasicPretextTask):
             torch.arange(start=0, end=A.shape[0], step=1).unsqueeze(dim=1)
         ], dim=1)
 
-        assert (S_top_k.shape[0] == A.shape[0]) and (S_top_k.shape[1] == k + 1)
-
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
 
         # Subgraphs for each node
