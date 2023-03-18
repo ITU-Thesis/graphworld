@@ -140,7 +140,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
 
     embeddings = self._pretext_model.get_downstream_embeddings()
     out = self._downstream_decoder(embeddings)
-    
+
     if test_on_val:
       pred = out[self._val_mask].detach().numpy()
     else:
@@ -179,14 +179,13 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
 
 
   def train(self, data : InputGraph, tuning_metric: str, tuning_metric_is_loss: bool):
-
     # Setup pretext task
     self._pretext_h_params['data'] = data
     self._pretext_h_params['train_mask'] = self._train_mask
     self._pretext_model = self._pretext_task(**self._pretext_h_params) # init pretext with hparams
     
     # Setup downstream decoder
-    self._downstream_decoder = Linear(self._pretext_model.get_downstream_embeddings_size(), self._downstream_out)
+    self._downstream_decoder = Linear(self._pretext_model.get_embedding_dim(), self._downstream_out)
 
     # Pretrain if two-stage training scheme
     pretext_losses = []
