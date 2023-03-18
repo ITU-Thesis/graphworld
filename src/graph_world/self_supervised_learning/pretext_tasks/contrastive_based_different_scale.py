@@ -150,7 +150,7 @@ class SUBGCON(BasicPretextTask):
         S_top_k = S.topk(k=k, dim=1).indices
         S_top_k = torch.cat([
             S_top_k, 
-            torch.arange(start=0, end=A.shape[0], step=1).unsqueeze(dim=1)
+            torch.arange(start=0, end=self.data.num_nodes, step=1).unsqueeze(dim=1)
         ], dim=1)
 
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
