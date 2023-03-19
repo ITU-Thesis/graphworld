@@ -21,27 +21,31 @@ BALANCE_FACTOR = [0.25, 0.5, 0.75]
 
 # Epochs & lr 
 PRETEXT_LR = [0.001]#[0.01, 0.001, 0.0001]
-PRETEXT_EPOCHS = 10
+PRETEXT_EPOCHS = [50, 100, 150, 200, 250, 300]
 DOWNSTREAM_LR = [0.001]#[0.01, 0.001, 0.0001]
-DOWNSTREAM_EPOCHS = 10
+DOWNSTREAM_EPOCHS = [500]
+PATIENCE = [100]
 
 
 # Training schemes
 JL_BENCHMARK_PARAMS = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE
 }
 PF_BENCHMARK_PARAMS = {
     'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr': %PRETEXT_LR,
+    'pretext_lr' : %PRETEXT_LR,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
 }
 URL_BENCHMARK_PARAMS = {
     'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr': %PRETEXT_LR,
+    'pretext_lr' : %PRETEXT_LR,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
 }
 
 

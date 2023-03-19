@@ -70,6 +70,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     # Params for training scheme
     self._downstream_lr = benchmark_params['downstream_lr']
     self._downstream_epochs = benchmark_params['downstream_epochs']
+    self._patience = benchmark_params['patience']
     if training_scheme in ['URL', 'PF']:
       self._pretext_epochs = benchmark_params['pretext_epochs']
       self._pretext_lr = benchmark_params['pretext_lr']
@@ -214,16 +215,22 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     best_val_metric = np.inf if tuning_metric_is_loss else -np.inf
     test_metrics = None
     best_val_metrics = None
+    last_improvement = 0
     for _ in range(self._downstream_epochs):
+      if last_improvement == self._patience:
+        break
       downstream_train_losses.append(float(self.downstream_train_step(data)))
       val_metrics = self.test(data, test_on_val=True)
       downstream_val_tuning_metrics.append(val_metrics[tuning_metric])
       downstream_val_losses.append(val_metrics['logloss'])
       if ((tuning_metric_is_loss and val_metrics[tuning_metric] < best_val_metric) or
           (not tuning_metric_is_loss and val_metrics[tuning_metric] > best_val_metric)):
+        last_improvement = 0
         best_val_metric = val_metrics[tuning_metric]
         best_val_metrics = copy.deepcopy(val_metrics)
         test_metrics = self.test(data, test_on_val=False)
+      else:
+        last_improvement += 1
     return pretext_losses, downstream_train_losses, downstream_val_losses, downstream_val_tuning_metrics, test_metrics, best_val_metrics
 
 

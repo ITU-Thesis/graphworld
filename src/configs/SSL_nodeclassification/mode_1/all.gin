@@ -227,22 +227,22 @@ BENCHMARKERS = [
 #   @APPNP_BGRL_PF/NNNodeBenchmarkSSL,
 #   @APPNP_BGRL_URL/NNNodeBenchmarkSSL,
 
-#   #SelfGNNSplit
-#   @GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-#   @GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-#   @GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+  #SelfGNNSplit
+  @GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+  @GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+  @GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-#   @GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-#   @GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-#   @GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+  @GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+  @GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+  @GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-#   @GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-#   @GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-#   @GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+  @GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+  @GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+  @GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-#   @APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-#   @APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-#   @APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+  @APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+  @APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+  @APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
 #   #SelfGNNPPR
 #   @GCN_SelfGNNPPR_JL/NNNodeBenchmarkSSL,
@@ -346,22 +346,22 @@ BENCHMARKERS = [
 #   @APPNP_SUBGCON_PF/NNNodeBenchmarkSSL,
 #   @APPNP_SUBGCON_URL/NNNodeBenchmarkSSL,
 
-  # G-Zoom
-  @GCN_GZoom_JL/NNNodeBenchmarkSSL,
-  @GCN_GZoom_PF/NNNodeBenchmarkSSL,
-  @GCN_GZoom_URL/NNNodeBenchmarkSSL,
+#   # G-Zoom
+#   @GCN_GZoom_JL/NNNodeBenchmarkSSL,
+#   @GCN_GZoom_PF/NNNodeBenchmarkSSL,
+#   @GCN_GZoom_URL/NNNodeBenchmarkSSL,
 
-  # @GAT_GZoom_JL/NNNodeBenchmarkSSL,
-  # @GAT_GZoom_PF/NNNodeBenchmarkSSL,
-  # @GAT_GZoom_URL/NNNodeBenchmarkSSL,
+#   # @GAT_GZoom_JL/NNNodeBenchmarkSSL,
+#   # @GAT_GZoom_PF/NNNodeBenchmarkSSL,
+#   # @GAT_GZoom_URL/NNNodeBenchmarkSSL,
 
-  # @GIN_GZoom_JL/NNNodeBenchmarkSSL,
-  # @GIN_GZoom_PF/NNNodeBenchmarkSSL,
-  # @GIN_GZoom_URL/NNNodeBenchmarkSSL,
+#   # @GIN_GZoom_JL/NNNodeBenchmarkSSL,
+#   # @GIN_GZoom_PF/NNNodeBenchmarkSSL,
+#   # @GIN_GZoom_URL/NNNodeBenchmarkSSL,
 
-  @APPNP_GZoom_JL/NNNodeBenchmarkSSL,
-  @APPNP_GZoom_PF/NNNodeBenchmarkSSL,
-  @APPNP_GZoom_URL/NNNodeBenchmarkSSL,
+#   @APPNP_GZoom_JL/NNNodeBenchmarkSSL,
+#   @APPNP_GZoom_PF/NNNodeBenchmarkSSL,
+#   @APPNP_GZoom_URL/NNNodeBenchmarkSSL,
 
 ]
 
