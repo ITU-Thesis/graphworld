@@ -5,22 +5,22 @@ BENCHMARKERS = [
 #   @GIN_Baselines_JL/NNNodeBenchmarkSSL,
 #   @APPNP_Baselines_JL/NNNodeBenchmarkSSL,
 
-#   # AttributeMask
-#   @GCN_AttributeMask_JL/NNNodeBenchmarkSSL,
-#   @GCN_AttributeMask_PF/NNNodeBenchmarkSSL,
-#   @GCN_AttributeMask_URL/NNNodeBenchmarkSSL,
+  # AttributeMask
+  @GCN_AttributeMask_JL/NNNodeBenchmarkSSL,
+  @GCN_AttributeMask_PF/NNNodeBenchmarkSSL,
+  @GCN_AttributeMask_URL/NNNodeBenchmarkSSL,
 
-#   @GAT_AttributeMask_JL/NNNodeBenchmarkSSL,
-#   @GAT_AttributeMask_PF/NNNodeBenchmarkSSL,
-#   @GAT_AttributeMask_URL/NNNodeBenchmarkSSL,
+  @GAT_AttributeMask_JL/NNNodeBenchmarkSSL,
+  @GAT_AttributeMask_PF/NNNodeBenchmarkSSL,
+  @GAT_AttributeMask_URL/NNNodeBenchmarkSSL,
 
-#   @GIN_AttributeMask_JL/NNNodeBenchmarkSSL,
-#   @GIN_AttributeMask_PF/NNNodeBenchmarkSSL,
-#   @GIN_AttributeMask_URL/NNNodeBenchmarkSSL,
+  @GIN_AttributeMask_JL/NNNodeBenchmarkSSL,
+  @GIN_AttributeMask_PF/NNNodeBenchmarkSSL,
+  @GIN_AttributeMask_URL/NNNodeBenchmarkSSL,
 
-#   @APPNP_AttributeMask_JL/NNNodeBenchmarkSSL,
-#   @APPNP_AttributeMask_PF/NNNodeBenchmarkSSL,
-#   @APPNP_AttributeMask_URL/NNNodeBenchmarkSSL,
+  @APPNP_AttributeMask_JL/NNNodeBenchmarkSSL,
+  @APPNP_AttributeMask_PF/NNNodeBenchmarkSSL,
+  @APPNP_AttributeMask_URL/NNNodeBenchmarkSSL,
 
 #   # CorruptedFeatureReconstruction
 #   @GCN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
@@ -227,22 +227,22 @@ BENCHMARKERS = [
 #   @APPNP_BGRL_PF/NNNodeBenchmarkSSL,
 #   @APPNP_BGRL_URL/NNNodeBenchmarkSSL,
 
-  #SelfGNNSplit
-  @GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-  @GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-  @GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+#   #SelfGNNSplit
+#   @GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+#   @GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+#   @GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-  @GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-  @GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-  @GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+#   @GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+#   @GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+#   @GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-  @GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-  @GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-  @GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+#   @GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+#   @GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+#   @GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
-  @APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-  @APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-  @APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
+#   @APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
+#   @APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
+#   @APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
 #   #SelfGNNPPR
 #   @GCN_SelfGNNPPR_JL/NNNodeBenchmarkSSL,
@@ -363,6 +363,23 @@ BENCHMARKERS = [
 #   @APPNP_GZoom_PF/NNNodeBenchmarkSSL,
 #   @APPNP_GZoom_URL/NNNodeBenchmarkSSL,
 
+#   #MEtAl
+#   @GCN_MEtAl_JL/NNNodeBenchmarkSSL,
+#   @GCN_MEtAl_PF/NNNodeBenchmarkSSL,
+#   @GCN_MEtAl_URL/NNNodeBenchmarkSSL,
+
+#   @GAT_MEtAl_JL/NNNodeBenchmarkSSL,
+#   @GAT_MEtAl_PF/NNNodeBenchmarkSSL,
+#   @GAT_MEtAl_URL/NNNodeBenchmarkSSL,
+
+#   @GIN_MEtAl_JL/NNNodeBenchmarkSSL,
+#   @GIN_MEtAl_PF/NNNodeBenchmarkSSL,
+#   @GIN_MEtAl_URL/NNNodeBenchmarkSSL,
+
+#   @APPNP_MEtAl_JL/NNNodeBenchmarkSSL,
+#   @APPNP_MEtAl_PF/NNNodeBenchmarkSSL,
+#   @APPNP_MEtAl_URL/NNNodeBenchmarkSSL,
+
 ]
 
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/Baselines.gin'
@@ -388,4 +405,5 @@ include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/DeepGraphInfomax
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GraphInfoClust.gin'
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/SUBGCON.gin'
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GZoom.gin'
+include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MEtAl.gin'
 

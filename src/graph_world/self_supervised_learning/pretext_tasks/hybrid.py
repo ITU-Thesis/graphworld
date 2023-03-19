@@ -9,6 +9,7 @@ from ..augmentation import node_feature_shuffle
 from .basic_pretext_task import BasicPretextTask
 from torch_geometric.nn import global_mean_pool
 
+from .generation_based import AutoEncoding, CorruptedFeaturesReconstruction, CorruptedEmbeddingsReconstruction
 from .auxiliary_property_based import CentralityScoreRanking, GraphPartitioning
 from .generation_based import DenoisingLinkReconstruction
 import random
@@ -98,8 +99,32 @@ class HuEtAL(BasicPretextTask):
 
     
     def make_loss(self, embeddings, **kwargs):
-        return 1/3 * sum(map(lambda task: task.make_loss(embeddings, **kwargs), self.pretext_tasks))
+        return sum(map(lambda task: task.make_loss(embeddings, **kwargs), self.pretext_tasks))
     
+@gin.configurable
+class MEtAl(BasicPretextTask):
+    def __init__(self, partial_reconstruction: bool = False,
+                 feature_mask_ratio: float = 0.1, 
+                 embedding_mask_ratio: float = 0.1,
+                 ae_loss_weight: int = 1,
+                 fr_loss_weight: int = 1,
+                 er_loss_weight: int = 1,
+                 **kwargs):
+        super().__init__(**kwargs)
+        self.weights = [ae_loss_weight, fr_loss_weight, er_loss_weight]
+        self.pretext_tasks = nn.ModuleDict({
+            'autoencoding': AutoEncoding(**kwargs),
+            'corruptedFeaturesReconstruction': CorruptedFeaturesReconstruction(feature_mask_ratio, partial_reconstruction, **kwargs),
+            'corruptedEmbeddingsReconstruction': CorruptedEmbeddingsReconstruction(embedding_mask_ratio, partial_reconstruction, **kwargs)
+        })
+    
+    # We divide by the pretext weight, as the ae/fr/er weights are to be used instead
+    # Hence this nullifies the weight multiplication done by the benchmarker during joint training
+    def make_loss(self, embeddings):
+        loss = 0
+        for i,t in enumerate(self.pretext_tasks):
+            loss += self.weights[i] * self.pretext_tasks[t].make_loss(embeddings)
+        return loss / self.pretext_weight
 
 # Augmentations: Graph diffusion + sampling (2 augmented views)
 # G1 sample from original graph | G2 sampled from diffused graph
@@ -156,7 +181,6 @@ class G_Zoom(BasicPretextTask):
         importance_matrix.fill_diagonal_(importance_matrix.min() - 1)
         self.R = self.__get_neighborhood_register(I=importance_matrix, k=k)
         self.same_batch = torch.ones(self.B)
-        torch.autograd.set_detect_anomaly(True)
         
     def __get_neighborhood_register(self, I : Tensor, k : int) -> Tensor:
         '''

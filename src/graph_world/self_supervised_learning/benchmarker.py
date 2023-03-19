@@ -128,7 +128,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
 
     # Add pretext loss
     if self._training_scheme in ['JL']:
-        loss += self._pretext_model.make_loss(embeddings)
+        loss += self._pretext_h_params['pretext_weight'] * self._pretext_model.make_loss(embeddings)
     
     # Update parameters
     loss.backward()
