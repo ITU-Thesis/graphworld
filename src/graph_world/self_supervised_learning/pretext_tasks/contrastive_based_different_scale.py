@@ -142,7 +142,7 @@ class SUBGCON(BasicPretextTask):
 
         self.N = self.data.num_nodes
 
-        S = get_exact_ppr_matrix(edge_index=self.data.edge_index, num_nodes=self.data.num_nodes, alpha=alpha)
+        S = get_exact_ppr_matrix(data=self.data, alpha=alpha)
         S = S.fill_diagonal_(S.min() - 1)
 
 

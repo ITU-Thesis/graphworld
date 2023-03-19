@@ -113,6 +113,17 @@ class G_Zoom(BasicPretextTask):
     Proposed in:
         Zheng, Yizhen, et al. "Toward Graph Self-Supervised Learning With Contrastive Adjusted Zooming." IEEE Transactions on Neural Networks and Learning Systems (2022).
     '''
+    
+    class Decoder(nn.Module):
+        def __init__(self, in1 : int, in2 : int, **kwargs):
+            super().__init__(**kwargs)
+            self.bilinear = torch.nn.Bilinear(in1, in2, 1)
+            
+
+        def forward(self, input1 : Tensor, input2 : Tensor):
+            x = self.bilinear(input1, input2)
+            return torch.sigmoid(x)
+
     def __init__(self, B : int, k : int, P : int, alpha : float, micro_meso_macro_weights : List[float], **kwargs):
         '''
         args
@@ -122,40 +133,38 @@ class G_Zoom(BasicPretextTask):
         '''
         super().__init__(**kwargs)
         assert len(micro_meso_macro_weights) == 3
-        self.discriminator = torch.nn.Bilinear(self.get_embedding_dim(), self.get_embedding_dim(), 1)
+        assert (P > (B * k)) and (P <= self.data.num_nodes), 'P has to be larger than B*K'
+        self.decoder = G_Zoom.Decoder(self.get_embedding_dim(), self.get_embedding_dim())
         self.B = B
         self.P = P
+        self.k = k
         self.alpha, self.beta, self.gamma = micro_meso_macro_weights
-
+        self.batch_indices = torch.arange(0, B).view(-1, 1).repeat((1, k)).view(-1)
 
         # Compute PPR
-        # A = to_dense_adj(self.data.edge_index).squeeze().fill_diagonal_(1)
-        PPR_matrix = get_exact_ppr_matrix(
-            edge_index=self.data.edge_index, num_nodes=self.data.num_nodes, alpha=alpha, normalization='rw'
-        )
+        PPR_matrix = get_exact_ppr_matrix(data=self.data, alpha=alpha)
         G_tilde_edges, G_tilde_weights = dense_to_sparse(PPR_matrix)
         
         self.G = self.data
         self.G_tilde = Data(x=self.data.x, edge_index=G_tilde_edges, edge_weight=G_tilde_weights)
 
         # Compute neighborhood register
-        importance_matrix = PPR_matrix.copy()
-        importance_matrix.fill_diagonal_(importance_matrix() - 1)
-        self.R, self.R_batches = self.__get_neighborhood_register(I=importance_matrix, k=k)
+        importance_matrix = PPR_matrix
+        importance_matrix.fill_diagonal_(importance_matrix.min() - 1)
+        self.R = self.__get_neighborhood_register(I=importance_matrix, k=k)
         
-    def __get_neighborhood_register(self, I : Tensor, k : int) -> Union[Tensor, Tensor]:
+    def __get_neighborhood_register(self, I : Tensor, k : int) -> Tensor:
         '''
         Compute the neighborhood register given the importance matrix I and the number of k important neighbors for each node.
 
         Returns
         -------
 
-        The neighborhood register and the batches
+        The neighborhood register
         '''
         R = I.topk(k=k, dim=1).indices
-        R_batches = torch.arange(start=0, end=I.shape[0]).unsqueeze(dim=0).repeat((k, 1)).t()
 
-        return R, R_batches
+        return R
         
     def __graph_samplig(self) -> Union[List[int], List[int]]:
         '''
@@ -168,26 +177,23 @@ class G_Zoom(BasicPretextTask):
         3: Sample P - k random nodes in the graph which was not sampled in step 1 and 2.
         4: Return the target nodes and all nodes from step 1, 2, and 3.
         '''
-        B, R, P = self.B, self.R, self.P
-        k = R.shape[1]
-        assert (P > (B * k)) and (P <= self.data.num_nodes)
         all_nodes = {*range(self.data.num_nodes)}
 
         # Step 1
-        target_nodes = random.sample(all_nodes, k=B) if target_nodes is not None else target_nodes
+        target_nodes = random.sample(all_nodes, k=self.B)
 
         # Step 2
-        top_k_neighbors = set(R[target_nodes].flatten().detach().tolist())
-        assert top_k_neighbors.issubset(all_nodes) # TODO: Remove when we have tested on a couple of graphs
+        top_k_neighbors = set(self.R[target_nodes].flatten().detach().tolist())
+        assert top_k_neighbors.issubset(all_nodes), 'not subset' # TODO: Remove when we have tested on a couple of graphs
 
         # Step 3
         nodes_not_a_neighbor = all_nodes - top_k_neighbors
-        random_selected_nodes = set(random.sample(nodes_not_a_neighbor, k=P-(B * k)))
+        random_selected_nodes = set(random.sample(nodes_not_a_neighbor, k=self.P-(self.B * self.k)))
 
-        subgraph_nodes = top_k_neighbors + random_selected_nodes
+        subgraph_nodes = top_k_neighbors | random_selected_nodes
         
         # Step 4
-        return target_nodes, subgraph_nodes
+        return list(target_nodes), list(subgraph_nodes)
 
     def micro_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, target_nodes : Set[int]) -> Tensor:
         N_targets = len(target_nodes)
@@ -211,39 +217,37 @@ class G_Zoom(BasicPretextTask):
 
         positive_pairs = similarities_exp['(H1, H2)'].diag()
 
-        H1_H2 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H1, H1)']))
-        H2_H1 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H2, H2)']))
+        H1_H2 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H1, H1)'] + 1e-8))
+        H2_H1 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H2, H2)'] + 1e-8))
         
-        L_micro = -(1/(N_targets * 2)) * (H1_H2.sum() + H2_H1.sum())
+        L_micro = -(1/(2 * N_targets)) * (H1_H2.sum() + H2_H1.sum())
         return L_micro
 
     def meso_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, H_tilde : Tensor, target_nodes : Set[int]) -> Tensor:
-        R, R_batches = self.R, self.R_batches
         H1_t, H2_t, H_tilde_t = H1[target_nodes], H2[target_nodes], H_tilde[target_nodes]
-        top_k_neighbors_batches = R_batches[target_nodes].view(-1)          # Maps each top-k nodes to a batch
-        top_k_neighbors = R[target_nodes].view(-1)                          # Map target nodes to its top-k nodes
+        top_k_neighbors = self.R[target_nodes].view(-1)                          # Map target nodes to its top-k nodes
 
 
-        n1 = global_mean_pool(x=H1[top_k_neighbors], batch=top_k_neighbors_batches)
-        n2 = global_mean_pool(x=H2[top_k_neighbors], batch=top_k_neighbors_batches)
+        n1 = global_mean_pool(x=H1[top_k_neighbors], batch=self.batch_indices)
+        n2 = global_mean_pool(x=H2[top_k_neighbors], batch=self.batch_indices)
 
-        H1_N2 = jensen_shannon_loss(positive_instance=self.discriminator(H1_t, n2), negative_instance=self.discriminator(H_tilde_t, n2))
-        H2_N1 = jensen_shannon_loss(positive_instance=self.discriminator(H2_t, n1), negative_instance=self.discriminator(H_tilde_t, n1))
+        H1_N2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, n2), negative_instance=self.decoder(H_tilde_t, n2))
+        H2_N1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, n1), negative_instance=self.decoder(H_tilde_t, n1))
         L_meso = H1_N2 + H2_N1
         return L_meso
 
     def macro_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, H_tilde : Tensor, target_nodes : Set[int]) -> torch.Tensor:
         H1_t, H2_t, H_tilde_t = H1[target_nodes], H2[target_nodes], H_tilde[target_nodes]
-        s1, s2 = global_mean_pool(H1), global_mean_pool(H2)
-
+        s1, s2 = global_mean_pool(H1, batch=None, size=H1_t.shape[1]), global_mean_pool(H2, batch=None, size=H1_t.shape[1])
+        s1, s2 = s1.repeat((self.B, 1)), s2.repeat((self.B, 1))
         
-        H1_S2 = jensen_shannon_loss(positive_instance=self.discriminator(H1_t, s2), negative_instance=self.discriminator(H_tilde_t, s2))
-        H2_S1 = jensen_shannon_loss(positive_instance=self.discriminator(H2_t, s1), negative_instance=self.discriminator(H_tilde_t, s1))
+        H1_S2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, s2), negative_instance=self.decoder(H_tilde_t, s2))
+        H2_S1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, s1), negative_instance=self.decoder(H_tilde_t, s1))
         L_macro = H1_S2 + H2_S1
         return L_macro
         
     def make_loss(self, embeddings, **kwargs):
-        target_nodes, subgraph_nodes = self.__graph_samplig(num_nodes=self.data.num_nodes)
+        target_nodes, subgraph_nodes = self.__graph_samplig()
 
         G1_edge_index, *_ = subgraph(subset=subgraph_nodes, edge_index=self.G.edge_index, relabel_nodes=False)
         G2_edge_index, G2_weights = subgraph(subset=subgraph_nodes, edge_index=self.G_tilde.edge_index, edge_attr=self.G_tilde.edge_weight, relabel_nodes=False)

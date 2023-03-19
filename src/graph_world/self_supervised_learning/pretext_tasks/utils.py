@@ -10,6 +10,8 @@ import networkx as nx
 from torch_geometric.data import Data
 from torch_geometric.utils import to_networkx
 from torch_geometric.utils import to_dense_adj, get_laplacian
+from torch_geometric.transforms.gdc import GDC
+from torch_geometric.utils import to_dense_adj
 
 # Copied from https://github.com/Namkyeong/BGRL_Pytorch
 class EMA:
@@ -113,11 +115,12 @@ def pairwise_cosine_similarity(x: Tensor, y: Optional[Tensor] = None, zero_diago
         distance.fill_diagonal_(0)
     return distance
 
-def get_exact_ppr_matrix(edge_index : torch.Tensor, num_nodes : int, alpha: float, normalization='rw') -> torch.Tensor:
+def get_exact_ppr_matrix(data : Data, alpha: float) -> torch.Tensor:
     assert alpha >= 0. and alpha <= 1.
+
+    R = GDC(
+        diffusion_kwargs={'alpha': 0.15, 'method': 'ppr'}, 
+        sparsification_kwargs={'method':'threshold', 'avg_degree': data.num_edges // data.num_nodes}
+    )(data)
+    return to_dense_adj(edge_index=R.edge_index, edge_attr=R.edge_attr, max_num_nodes=data.num_nodes).squeeze()
     
-    identity = torch.eye(n=num_nodes)
-    edge_index, weights = get_laplacian(edge_index=edge_index, normalization=normalization)
-    L = to_dense_adj(edge_index=edge_index, edge_attr=weights).squeeze() + identity
-    PPR_matrix = torch.linalg.pinv(identity - (alpha * identity + (1-alpha)*L))
-    return PPR_matrix
