@@ -71,6 +71,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     self._downstream_lr = benchmark_params['downstream_lr']
     self._downstream_epochs = benchmark_params['downstream_epochs']
     self._patience = benchmark_params['patience']
+    self._pretext_h_params['pretext_weight'] = benchmark_params.get('pretext_weight', 1)
     if training_scheme in ['URL', 'PF']:
       self._pretext_epochs = benchmark_params['pretext_epochs']
       self._pretext_lr = benchmark_params['pretext_lr']

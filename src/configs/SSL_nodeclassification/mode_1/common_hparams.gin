@@ -28,10 +28,12 @@ PATIENCE = [100]
 
 
 # Training schemes
+PRETEXT_WEIGHT = [1, 5, 10, 50, 100, 500]
 JL_BENCHMARK_PARAMS = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
     'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
 }
 PF_BENCHMARK_PARAMS = {
     'pretext_epochs' : %PRETEXT_EPOCHS,

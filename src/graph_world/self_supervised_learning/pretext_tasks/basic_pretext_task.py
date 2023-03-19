@@ -6,13 +6,17 @@ import torch
 
 
 class BasicPretextTask(Module, ABC):
-    def __init__(self, data : InputGraph, encoder : Module, train_mask : Tensor, epochs : int, **kwargs): # **kwargs is needed
+    def __init__(self, 
+                 data : InputGraph, encoder: Module, 
+                 train_mask: Tensor, epochs: int, 
+                 pretext_weight: int = 1, **kwargs): # **kwargs is needed
         super().__init__()
         self.data = data.clone()
         self.data_test = self.data.clone()
         self.encoder = encoder
         self.epochs = epochs # How many epochs make_loss can be expected to be called
         self.train_mask = train_mask
+        self.pretext_weight = pretext_weight # Used to signal how much the benchmarker will multiply the loss with
 
     @property
     def input_dim(self):
