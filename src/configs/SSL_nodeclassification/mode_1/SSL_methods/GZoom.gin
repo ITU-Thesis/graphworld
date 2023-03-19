@@ -1,0 +1,104 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+GZoom_hparams = {
+    'B_perc' : 0.1,
+    'k': 8,
+    'P_perc': 1.2,
+    'alpha_loss': 0.3,
+    'beta_loss': 0.3,
+    'gamma_loss': 0.3,
+    'alpha': 0.15
+}
+
+# GCN encoder
+GCN_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_GZoom_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GCN_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_GZoom_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GCN_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_GZoom_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# GAT encoder
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# GIN encoder
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GIN_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GIN_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GIN_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# APPNP encoder
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+

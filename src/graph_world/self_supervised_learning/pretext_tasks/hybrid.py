@@ -2,7 +2,7 @@
 from typing import List, Set, Union
 import torch
 from torch import nn
-from torchmetrics.functional import pairwise_cosine_similarity
+# from torchmetrics.functional import pairwise_cosine_similarity
 
 
 from ..augmentation import node_feature_shuffle
@@ -17,7 +17,7 @@ import gin
 from ..loss import jensen_shannon_loss
 from torch import Tensor
 from torch_geometric.utils import to_dense_adj, dense_to_sparse, subgraph, get_laplacian
-from .utils import get_exact_ppr_matrix
+from .utils import get_exact_ppr_matrix, pairwise_cosine_similarity
 
 # class GMI(BasicPretextTask):
 #     '''
@@ -124,22 +124,25 @@ class G_Zoom(BasicPretextTask):
             x = self.bilinear(input1, input2)
             return torch.sigmoid(x)
 
-    def __init__(self, B : int, k : int, P : int, alpha : float, micro_meso_macro_weights : List[float], **kwargs):
+    def __init__(self, B_perc : float, k : int, P_perc : float, alpha : float, alpha_loss : float, beta_loss : float, gamma_loss : float, **kwargs):
         '''
         args
         ----
         micro_meso_macro_weights:
             Weights of the micro, mseo, and macro level contrastive learnings.
         '''
+
         super().__init__(**kwargs)
-        assert len(micro_meso_macro_weights) == 3
-        assert (P > (B * k)) and (P <= self.data.num_nodes), 'P has to be larger than B*K'
+        assert P_perc >= 1.
+        self.alpha_loss = alpha_loss
+        self.beta_loss = beta_loss
+        self.gamma_loss = gamma_loss
+        
         self.decoder = G_Zoom.Decoder(self.get_embedding_dim(), self.get_embedding_dim())
-        self.B = B
-        self.P = P
+        self.B = int(self.data.num_nodes * B_perc)
         self.k = k
-        self.alpha, self.beta, self.gamma = micro_meso_macro_weights
-        self.batch_indices = torch.arange(0, B).view(-1, 1).repeat((1, k)).view(-1)
+        self.P = max(self.data.num_nodes, int(P_perc * self.B * k))
+        self.batch_indices = torch.arange(0, self.B).view(-1, 1).repeat((1, k)).view(-1)
 
         # Compute PPR
         PPR_matrix = get_exact_ppr_matrix(data=self.data, alpha=alpha)
@@ -152,6 +155,8 @@ class G_Zoom(BasicPretextTask):
         importance_matrix = PPR_matrix
         importance_matrix.fill_diagonal_(importance_matrix.min() - 1)
         self.R = self.__get_neighborhood_register(I=importance_matrix, k=k)
+        self.same_batch = torch.ones(self.B)
+        torch.autograd.set_detect_anomaly(True)
         
     def __get_neighborhood_register(self, I : Tensor, k : int) -> Tensor:
         '''
@@ -196,7 +201,6 @@ class G_Zoom(BasicPretextTask):
         return list(target_nodes), list(subgraph_nodes)
 
     def micro_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, target_nodes : Set[int]) -> Tensor:
-        N_targets = len(target_nodes)
         H1_t, H2_t = H1[target_nodes], H2[target_nodes]
 
         adjust_constant = torch.tensor(1).exp() # Adjust for cosine_sim(vi, vi) in same view
@@ -220,7 +224,7 @@ class G_Zoom(BasicPretextTask):
         H1_H2 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H1, H1)'] + 1e-8))
         H2_H1 = torch.log(positive_pairs / (similarity_exp_sums['(H1, H2)'] + similarity_exp_sums['(H2, H2)'] + 1e-8))
         
-        L_micro = -(1/(2 * N_targets)) * (H1_H2.sum() + H2_H1.sum())
+        L_micro = -(1/(2 * self.B)) * (H1_H2.sum() + H2_H1.sum())
         return L_micro
 
     def meso_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, H_tilde : Tensor, target_nodes : Set[int]) -> Tensor:
@@ -231,19 +235,19 @@ class G_Zoom(BasicPretextTask):
         n1 = global_mean_pool(x=H1[top_k_neighbors], batch=self.batch_indices)
         n2 = global_mean_pool(x=H2[top_k_neighbors], batch=self.batch_indices)
 
-        H1_N2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, n2), negative_instance=self.decoder(H_tilde_t, n2))
-        H2_N1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, n1), negative_instance=self.decoder(H_tilde_t, n1))
-        L_meso = H1_N2 + H2_N1
+        H1_N2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, n2), negative_instance=self.decoder(H_tilde_t, n2), reduction='sum')
+        H2_N1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, n1), negative_instance=self.decoder(H_tilde_t, n1), reduction='sum')
+        L_meso = (1/(2 * self.B)) * (H1_N2 + H2_N1) # jensen_shannon already negative
         return L_meso
 
     def macro_contrastiveness_loss(self, H1 : Tensor, H2 : Tensor, H_tilde : Tensor, target_nodes : Set[int]) -> torch.Tensor:
         H1_t, H2_t, H_tilde_t = H1[target_nodes], H2[target_nodes], H_tilde[target_nodes]
-        s1, s2 = global_mean_pool(H1, batch=None, size=H1_t.shape[1]), global_mean_pool(H2, batch=None, size=H1_t.shape[1])
+        s1, s2 = H1.mean(dim=0), H2.mean(dim=0)
         s1, s2 = s1.repeat((self.B, 1)), s2.repeat((self.B, 1))
         
-        H1_S2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, s2), negative_instance=self.decoder(H_tilde_t, s2))
-        H2_S1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, s1), negative_instance=self.decoder(H_tilde_t, s1))
-        L_macro = H1_S2 + H2_S1
+        H1_S2 = jensen_shannon_loss(positive_instance=self.decoder(H1_t, s2), negative_instance=self.decoder(H_tilde_t, s2), reduction='sum')
+        H2_S1 = jensen_shannon_loss(positive_instance=self.decoder(H2_t, s1), negative_instance=self.decoder(H_tilde_t, s1), reduction='sum')
+        L_macro = (1/(2*self.B)) * (H1_S2 + H2_S1)
         return L_macro
         
     def make_loss(self, embeddings, **kwargs):
@@ -261,8 +265,7 @@ class G_Zoom(BasicPretextTask):
         L_micro = self.micro_contrastiveness_loss(H1=H1, H2=H2, target_nodes=target_nodes)
         L_meso = self.meso_contrastiveness_loss(H1=H1, H2=H2, H_tilde=H_tilde, target_nodes=target_nodes)
         L_macro = self.macro_contrastiveness_loss(H1=H1, H2=H2, H_tilde=H_tilde, target_nodes=target_nodes)
-
-        L = self.alpha * L_micro + self.beta * L_meso + self.gamma * L_macro
+        L = self.alpha_loss * L_micro + self.beta_loss * L_meso + self.gamma_loss * L_macro
         return L
     
     def get_downstream_embeddings(self) -> Tensor:

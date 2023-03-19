@@ -3,6 +3,7 @@ import graph_world.self_supervised_learning.pretext_tasks.auxiliary_property_bas
 import graph_world.self_supervised_learning.pretext_tasks.contrastive_based
 import graph_world.self_supervised_learning.pretext_tasks.contrastive_based_different_scale
 import graph_world.self_supervised_learning.pretext_tasks.generation_based
+import graph_world.self_supervised_learning.pretext_tasks.hybrid
 import graph_world.self_supervised_learning.beam_handler
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()

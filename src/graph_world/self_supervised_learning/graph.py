@@ -1,5 +1,5 @@
 from typing import Dict, List, Union
-from torch_geometric.data.data import Data, BaseData
+from torch_geometric.data.data import Data
 from torch_geometric.data import Batch
 from torch_geometric.utils import subgraph
 import torch
@@ -99,7 +99,7 @@ class SubGraphs:
         return self.__subgraph_data_list
     
     @property
-    def subgraph_batches(self) -> BaseData:
+    def subgraph_batches(self):
         return self.subgraph_data
 
     @property

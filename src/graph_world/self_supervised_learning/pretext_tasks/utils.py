@@ -117,7 +117,7 @@ def pairwise_cosine_similarity(x: Tensor, y: Optional[Tensor] = None, zero_diago
 
 def get_exact_ppr_matrix(data : Data, alpha: float) -> torch.Tensor:
     assert alpha >= 0. and alpha <= 1.
-
+    data.edge_attr = None
     R = GDC(
         diffusion_kwargs={'alpha': 0.15, 'method': 'ppr'}, 
         sparsification_kwargs={'method':'threshold', 'avg_degree': data.num_edges // data.num_nodes}
