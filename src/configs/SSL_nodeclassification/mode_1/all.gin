@@ -159,21 +159,21 @@ BENCHMARKERS = [
 #   @APPNP_S2GRL_URL/NNNodeBenchmarkSSL,
 
 #   # CentralityScoreRanking
-#   @GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL, # Too slow for extensive experiments
+# #   @GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
 
-#   @GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
 
-#   @GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
 
-#   @APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   @APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
 
 
 #   # PairwiseAttrSim
