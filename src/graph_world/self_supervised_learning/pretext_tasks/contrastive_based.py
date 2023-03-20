@@ -347,6 +347,7 @@ class GBT(BasicPretextTask):
         super().__init__(**kwargs)
         self.edge_mask_ratio =  edge_mask_ratio
         self.feature_mask_ratio = feature_mask_ratio
+        self.iteration = 0
    
    # EM and NFM (same as in GRACE)
     def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
@@ -375,9 +376,21 @@ class GBT(BasicPretextTask):
             (1 - c.diagonal()).pow(2).sum()
             + _lambda * c[off_diagonal_mask].pow(2).sum()
         )
+
+        if (not loss.isfinite().all()):
+            print(self.iteration)
+            print(_lambda, '_lambda')
+            print(feature_dim, 'feature_dim')
+            print(z1_norm, 'z1_norm')
+            print(z2_norm, 'z2_norm')
+            print(c, 'c')
+            print(off_diagonal_mask, 'off_diagonal_mask')
+            print(loss, 'loss')
+
         return loss
     
     def make_loss(self, embeddings: Tensor):
+        self.iteration += 1
         # Generate the two views (same masking ratios)
         features1, edge_index1 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
         features2, edge_index2 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
@@ -385,6 +398,15 @@ class GBT(BasicPretextTask):
         # Compute embeddings of both views
         z1 = self.encoder(features1, edge_index1)
         z2 = self.encoder(features2, edge_index2)
+
+        if (not z1.isfinite().all()) or (not z2.isfinite().all()):
+            print(self.iteration)
+            print(features1, 'features1')
+            print(edge_index1, 'edge_index1')
+            print(features2, 'features2')
+            print(edge_index2, 'edge_index2')
+            print(z1, 'z1')
+            print(z2, 'z2')
 
         # Compute Barlow Twins loss
         return self.barlow_twins_loss(z1, z2)

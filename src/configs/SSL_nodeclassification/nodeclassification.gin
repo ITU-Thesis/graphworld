@@ -7,7 +7,7 @@ import graph_world.self_supervised_learning.pretext_tasks.hybrid
 import graph_world.self_supervised_learning.beam_handler
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
-GeneratorBeamHandlerWrapper.nsamples = 1
+GeneratorBeamHandlerWrapper.nsamples = 10
 
 NodeClassificationBeamHandlerSSL.num_tuning_rounds = 1
 NodeClassificationBeamHandlerSSL.save_tuning_results = False

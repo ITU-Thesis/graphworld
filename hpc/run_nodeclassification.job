@@ -1,0 +1,27 @@
+#!/bin/sh
+#SBATCH --array=1-30
+#SBATCH -o out/node_classification/slurm_%a.out
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=1 
+#SBATCH --time=04:30:00         
+#SBATCH --partition=brown
+#SBATCH --mail-type=BEGIN,FAIL,END          # Send an email when the job finishes
+
+
+start=`date +%s`
+
+cd ..
+module load singularity
+
+outdir=${PWD}/hpc/out/node_classification/$SLURM_ARRAY_TASK_ID
+mkdir -p ${outdir}
+
+singularity exec -B ${PWD}/src:/app,${outdir}:/app/out graphworld.sif python3 /app/beam_benchmark_main.py \
+        --gin_files /app/configs/SSL_nodeclassification/nodeclassification.gin \
+        --runner DirectRunner \
+        --output /app/out \
+        --direct_num_workers 1
+
+end=`date +%s`
+runtime=$((end-start))
+echo "runtime: ${runtime}"

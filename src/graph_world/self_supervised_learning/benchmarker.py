@@ -45,7 +45,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     self._training_scheme = training_scheme
     # Set number of classes
     self._downstream_out = h_params['out_channels']
-
+    #torch.autograd.set_detect_anomaly(True)
     # pretext_task and name. Set JL training scheme if no pretext task
     if pretext_task is None:
       self._pretext_task = IdentityPretextTask
@@ -136,7 +136,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     return loss
 
 
-  def test(self, data : InputGraph, test_on_val : bool = False) -> EvaluationMetrics:
+  def test(self, data : InputGraph, test_on_val : bool = False, debug=False) -> EvaluationMetrics:
     self._downstream_decoder.eval()
     self._pretext_model.eval()
 
@@ -150,10 +150,21 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
       
 
     pred_best = pred.argmax(-1)
+
     if test_on_val:
       correct = data.y[self._val_mask].numpy()
     else:
       correct = data.y[self._test_mask].numpy()
+
+
+    if debug:
+      print(f'test_on_val: {test_on_val}')
+      print("pred\n")
+      print(pred)
+      print("pred_best\n")
+      print(pred_best)
+      print("correct\n")
+      print(correct)
     n_classes = out.shape[-1]
     pred_onehot = np.zeros((len(pred_best), n_classes))
     pred_onehot[np.arange(pred_best.shape[0]), pred_best] = 1
@@ -263,12 +274,26 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     val_metrics = {}
     test_metrics = {}
     pretext_losses = None
-    downstream_losses = None
-    downstream_tuning_metrics = None    
+    downstream_train_losses = None
+    downstream_val_losses = None
+    downstream_val_tuning_metrics = None    
     try:
+      test = True
       pretext_losses, downstream_train_losses, downstream_val_losses, downstream_val_tuning_metrics, test_metrics, val_metrics = self.train(
         torch_data, tuning_metric=tuning_metric, tuning_metric_is_loss=tuning_metric_is_loss)
     except Exception as e:
+      if test:
+        print("failed")
+        for param in self._pretext_model.parameters():
+          print(param.data)
+        print()
+        for param in self._downstream_decoder.parameters():
+          print(param.data)
+        print()
+        test = False
+        
+        self.test(self._pretext_h_params['data'], test_on_val=True, debug=True)
+        self.test(self._pretext_h_params['data'], test_on_val=False, debug=True)
       raise e
       logging.info(f'Failed to run for sample id {sample_id}')
       out['skipped'] = True
