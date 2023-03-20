@@ -312,55 +312,30 @@ class PairwiseAttrSim(BasicPretextTask):
         self.null_mask = ~torch.isclose(input=self.data.x.sum(dim=1), other=torch.tensor(0.))
         X = self.data.x[self.null_mask]
 
-        # Index (i, j) is cos(x[i], x[j])
-
         similarities = pairwise_cosine_similarity(X)
+        similarities.fill_diagonal_(similarities.min() - 1)
+        T_s_ = similarities.topk(k=k_largest, largest=True, dim=1)
+        T_d_ = similarities.topk(k=k_largest, largest=False, dim=1)
 
-        # Mask redundant similarities (i,j)=(j,i) by multipliying by 2 and -2 - 
-        # cosine support is [-1, 1].
-        # inf_mask:     Lower triangular (including diagonal) is 2
-        # inf_mask_neg: Lower triangular (including diagonal) is -2
-        ones = torch.ones((similarities.shape))
-        redundant_mask = (ones * 2).tril() + ones
-        redundant_mask_neg = (ones * -2).tril() + ones
-
-        self.T_s = self.get_top_k_node_pairs(similarities * redundant_mask_neg, largest=True) # Highest similarity
-        self.T_d = self.get_top_k_node_pairs(similarities * redundant_mask, largest=False)    # Lowest similarity
-        
-        highest_similarities = similarities[self.T_s[:, 0], self.T_s[:, 1]]
-        smallest_similarities = similarities[self.T_d[:, 0], self.T_d[:, 1]]
-
-        # If no top-k are overlapping, assert all highest similarities >= all smallest similarities
-        if k_largest * 2 <= similarities.shape[0]:
-            assert ((highest_similarities.view(-1, 1) - smallest_similarities) >= 0).all()
-
-        # Extract top-k similarities[i, j] for each top-k node pair (v_i, v_j).
-        self.top_similarities = torch.cat([
-            highest_similarities,
-            smallest_similarities
-        ]).view(-1, 1)
-        
-
-    def get_top_k_node_pairs(self, input : Tensor, largest : bool) -> Tensor:
-        '''
-        Returns
-        -------
-        Top-k node pairs of shape (self.k_largest, 2) where element [i, :] is the indices of the nodes
-        in the node pair (v_i, v_j) having the top-k similarity.
-        '''
-        assert input.dim() == 2
-        rows, cols = get_top_k_indices(input=input, k=self.k_largest, largest=largest)
-        return torch.cat([rows.view(-1, 1), cols.view(-1, 1)], dim=1)
+        self.T_s = T_s_.indices.view(-1)
+        self.T_d = T_d_.indices.view(-1)
+        self.top_sims = torch.cat([
+            T_s_.values.view(-1),
+            T_d_.values.view(-1)
+        ])       
+        self.v_indices = torch.arange(0, self.data.num_nodes).view((-1, 1)).repeat((1, k_largest)).view(-1)
         
 
     def make_loss(self, embeddings : Tensor):
         X_hat = embeddings[self.null_mask]
-        highest_similarities_pred = self.decoder((X_hat[self.T_s[:, 0]] - X_hat[self.T_s[:, 1]]).abs())
-        lowest_similarities_pred = self.decoder((X_hat[self.T_d[:, 0]] - X_hat[self.T_d[:, 1]]).abs())
-        predicted_similarities = torch.cat([
+
+        highest_similarities_pred = self.decoder((X_hat[self.v_indices, :] - X_hat[self.T_s, :]).abs())
+        smallest_similarities_pred = self.decoder((X_hat[self.v_indices, :] - X_hat[self.T_d, :]).abs())
+
+        predicted = torch.cat([
             highest_similarities_pred,
-            lowest_similarities_pred
-        ])
-        loss = self.loss(input=predicted_similarities, target=self.top_similarities)
+            smallest_similarities_pred
+        ]).squeeze()
+        loss = self.loss(input=predicted, target=self.top_sims)
         return loss
     

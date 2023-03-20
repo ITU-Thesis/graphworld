@@ -105,6 +105,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     
     # Update parameters
     loss.backward()
+    torch.nn.utils.clip_grad_norm_(self._pretext_model.parameters())
     self._pretext_optimizer.step()
     return loss
 
@@ -132,6 +133,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     
     # Update parameters
     loss.backward()
+    torch.nn.utils.clip_grad_norm_(self._downstream_optimizer)
     self._downstream_optimizer.step()
     return loss
 
@@ -211,12 +213,12 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
         self._pretext_optimizer.zero_grad()  
 
     # Setup downstream optimizer
-    params = list(self._downstream_decoder.parameters())
+    self.downstream_params = list(self._downstream_decoder.parameters())
     if self._training_scheme in ['PF']:
-      params += list(self._encoder.parameters())
+      self.downstream_params += list(self._encoder.parameters())
     elif self._training_scheme in ['JL']:
-      params += list(self._pretext_model.parameters())
-    self._downstream_optimizer = torch.optim.Adam(params,
+      self.downstream_params += list(self._pretext_model.parameters())
+    self._downstream_optimizer = torch.optim.Adam(self.downstream_params,
                                     lr=self._downstream_lr,
                                     weight_decay=5e-4)
 
