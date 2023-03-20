@@ -28,3 +28,19 @@ def get_top_k_indices(input: Tensor, k : int, largest : bool = True) -> Union[Te
     row = torch.div(top_k_indices, N_cols, rounding_mode='floor')
     col = top_k_indices % N_cols
     return row, col
+
+def repeat_rows(X : torch.tensor, n_repeats : int) -> torch.Tensor:
+    '''
+    Repeat the rows of a 2D tensor n_repeats times.
+
+    Example
+    -------
+    [ 0 0 0 ]                        [ 0 0 0 ]
+    [ 1 1 1 ] --> repeat 2 times --> [ 0 0 0 ]
+    [ 2 2 2 ]                        [ 1 1 1 ]
+                                     [ 1 1 1 ]
+                                     [ 2 2 2 ]
+                                     [ 2 2 2 ]
+    '''
+    assert X.dim() == 2
+    return X.repeat(1, n_repeats).view(-1, X.shape[1])

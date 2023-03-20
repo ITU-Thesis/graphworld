@@ -363,3 +363,4 @@ class PairwiseAttrSim(BasicPretextTask):
         ])
         loss = self.loss(input=predicted_similarities, target=self.top_similarities)
         return loss
+    

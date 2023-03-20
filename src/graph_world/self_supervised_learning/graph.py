@@ -1,69 +1,114 @@
 from typing import Dict, List, Union
-from torch_geometric.data import Data
+from torch_geometric.data.data import Data
+from torch_geometric.data import Batch
 from torch_geometric.utils import subgraph
 import torch
 
+
+class NodeMappings:
+    '''
+    Maps node indices between a source graph to a target graph. The k'th smallest node in the source graph is mapped to node k in the target graph.
+    '''
+    def __init__(self, src_nodes : Union[torch.Tensor, List]):
+        if isinstance(src_nodes, torch.Tensor):
+            assert src_nodes.dim() == 1
+            src_nodes = src_nodes.detach().numpy().tolist()
+        src_nodes_sorted = sorted(src_nodes)
+
+        self.__src_to_target = { source: target for (target, source) in enumerate(src_nodes_sorted) }
+        self.__target_to_src = src_nodes_sorted
+    
+    def src_to_target(self, src_node: int) -> int:
+        return self.__src_to_target[src_node]
+    
+    def target_to_src(self, target_node: int) -> int:
+        return self.__target_to_src[target_node]
+    
+    @property
+    def all_target_to_src(self) -> List[int]:
+        return self.__target_to_src
+    
+    @property
+    def num_nodes(self) -> int:
+        return len(self.__target_to_src)
+
+    
+
+
 class SubGraph:
     '''
-    Create a subgraph G' from graph G. This keeps track of the indices from the nodes in the subgraph G' (new indices)
-    to the nodes in the graph G (old indices).
-    Note this does not preserve the edge attributes.
+    Create a subgraph G' from graph G. Note this does not preserve the edge attributes.
     '''
-    def __init__(self, node_indices: Union[torch.Tensor, List], data: Data, **kwargs):
-        if isinstance(node_indices, torch.Tensor):
-            assert node_indices.dim() == 1
-            node_indices = node_indices.detach().numpy().tolist()
-        
+    def __init__(self, node_indices: Union[torch.Tensor, List], data: Data, subgraph_edges = None, **kwargs):
+        '''
+        args
+        ----
+        node_indices: 
+            Indices of the original graph G
+        data:
+            Data object of the original graph G
+        subgraph_edges:
+            Edges that are to be includes in the subgraph. If this is None, it will be computed using the subgraph method in
+            pytorch geometric from the node_indices.
+        '''
+        self.node_mapping = NodeMappings(src_nodes=node_indices)
         self.__subgraph = None
         self.__full_graph = data
         self.__node_indices = node_indices
-        self.__new_to_old_node_indices = None
-        self.__old_to_new_node_indices = None
+        self.__subgraph_edges_cached = subgraph_edges
 
     @property
     def subgraph_number_of_nodes(self):
         return len(self.__node_indices)
-
-    @property
-    def new_to_old_node_indices(self) -> List[int]:
-        '''
-        Map the new indices (from the subgraph) to the old indices (from the original graph)
-        Index 0 maps to the smallest old index.
-        '''
-        if self.__new_to_old_node_indices is None:
-            self.__new_to_old_node_indices = sorted(self.__node_indices)
-        return self.__new_to_old_node_indices
     
     @property
-    def old_to_new_node_indices(self) -> Dict[int, int]:
-        '''
-        Map the old indices (from the original graph) to the new indices (in the subgraph).
-        Smallest old index maps to index 0.
-        '''
-        if self.__old_to_new_node_indices is None:
-            self.__old_to_new_node_indices = { old_index: new_index for new_index, old_index in enumerate(self.new_to_old_node_indices) }
-        return self.__old_to_new_node_indices
+    def __subgraph_edges(self):
+        if self.__subgraph_edges_cached is None:
+            self.__subgraph_edges_cached , *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True, return_edge_mask=False)
+        return self.__subgraph_edges_cached
 
     @property
     def subgraph_data(self) -> Data:
         if self.__subgraph is None:
-            subgraph_edges, *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True)
-            subgraph_x = self.__full_graph.x[self.new_to_old_node_indices, :]
-            subgraph_y = self.__full_graph.y[self.new_to_old_node_indices]
-            self.__subgraph = Data(x=subgraph_x, edge_index=subgraph_edges, y=subgraph_y)
+            subgraph_x = self.__full_graph.x[self.node_mapping.all_target_to_src, :]
+            subgraph_y = self.__full_graph.y[self.node_mapping.all_target_to_src]
+            self.__subgraph = Data(x=subgraph_x, edge_index=self.__subgraph_edges, y=subgraph_y)
 
         return self.__subgraph
 
     @property
     def original_graph_data(self) -> Data:
         return self.__full_graph
-    
-    def get_old_to_new_index(self, old_index : int) -> int:
-        assert old_index in self.old_to_new_node_indices
-        return self.old_to_new_node_indices[old_index]
-    
-    def get_new_to_old_index(self, new_index : int) -> int:
-        assert new_index in self.new_to_old_node_indices
-        return self.new_to_old_node_indices[new_index]
 
 
+class SubGraphs:
+    def __init__(self, subgraphs: List[SubGraph]):
+        self.__subgraph_data_list = subgraphs
+        self.subgraph_data = Batch.from_data_list(
+            [subgraph.subgraph_data for subgraph in subgraphs]
+        )
+
+        # Subgraph offsets in the feature / embedding matrix of all merged subgraphs
+        self.subgraph_offsets = [0] * (len(subgraphs) + 1)
+        for (i, subgraph) in enumerate(subgraphs):
+            self.subgraph_offsets[i + 1] = self.subgraph_offsets[i] + \
+                subgraph.subgraph_number_of_nodes
+            
+    @property
+    def subgraph_data_list(self) -> List[SubGraph]:
+        return self.__subgraph_data_list
+    
+    @property
+    def subgraph_batches(self):
+        return self.subgraph_data
+
+    @property
+    def n_subgraphs(self) -> int:
+        return len(self.subgraph_data_list)
+    
+    def get_subgraph_offset(self, subgraph_idx : int) -> int:
+        return self.subgraph_offsets[subgraph_idx]
+
+    def get_subgraph(self, subgraph_idx : int) -> SubGraph:
+        return self.subgraph_data_list[subgraph_idx]
+    

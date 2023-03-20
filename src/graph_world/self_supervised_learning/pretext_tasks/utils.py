@@ -2,11 +2,16 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import Tensor
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 import scipy as sp
 import scipy.sparse as sprs
-import scipy.spatial
 import scipy.sparse.linalg
+import networkx as nx
+from torch_geometric.data import Data
+from torch_geometric.utils import to_networkx
+from torch_geometric.utils import to_dense_adj, get_laplacian
+from torch_geometric.transforms.gdc import GDC
+from torch_geometric.utils import to_dense_adj
 
 # Copied from https://github.com/Namkyeong/BGRL_Pytorch
 class EMA:
@@ -39,6 +44,17 @@ def pad_views(view1data, view2data):
             view2data.x = F.normalize(view2data.x)
 
 
+def k_closest_neighbors(data: Data, v : int, K : int) -> List[int]:
+    '''
+    Given a node v in a graph, find the neighbors that are closest to v in terms of connectivity.
+    '''
+    G = to_networkx(data)
+    all_neighbors = nx.single_source_shortest_path_length(G=G, source=v, cutoff=K)
+    sorted_neighbors = sorted(all_neighbors.items(), key=lambda x: x[1])
+    
+    return [x[0] for x in sorted_neighbors[0:K]]
+
+
 def compute_InfoNCE_loss(z1: Tensor, z2: Tensor, tau: float = 1.0):
     z1 = F.normalize(z1)
     z2 = F.normalize(z2)
@@ -49,102 +65,6 @@ def compute_InfoNCE_loss(z1: Tensor, z2: Tensor, tau: float = 1.0):
     return -torch.log(
         between_sim.diag() / (refl_sim.sum(1) + between_sim.sum(1) - refl_sim.diag())
     )
-
-
-
-
-
-def pagerank(A, p=0.85,
-             personalize=None, reverse=False):
-    """ Calculates PageRank given a csr graph
-    Inputs:
-    -------
-    G: a csr graph.
-    p: damping factor
-    personlize: if not None, should be an array with the size of the nodes
-                containing probability distributions.
-                It will be normalized automatically
-    reverse: If true, returns the reversed-PageRank
-    outputs
-    -------
-    PageRank Scores for the nodes
-    """
-    # In Moler's algorithm, $A_{ij}$ represents the existences of an edge
-    # from node $j$ to $i$, while we have assumed the opposite!
-    if reverse:
-        A = A.T
-
-    n, _ = A.shape
-    r = sp.asarray(A.sum(axis=1)).reshape(-1)
-
-    k = r.nonzero()[0]
-
-    D_1 = sprs.csr_matrix((1 / r[k], (k, k)), shape=(n, n))
-
-    if personalize is None:
-        personalize = sp.ones(n)
-    personalize = personalize.reshape(n, 1)
-    s = (personalize / personalize.sum()) * n
-
-    I = sprs.eye(n)
-    x = sprs.linalg.spsolve((I - p * A.T @ D_1), s)
-
-    x = x / x.sum()
-    return x
-
-
-def pagerank_power(A, p=0.85, max_iter=100,
-                   tol=1e-06, personalize=None, reverse=False):
-    """ Calculates PageRank given a csr graph
-    Inputs:
-    -------
-    A: a csr graph.
-    p: damping factor
-    max_iter: maximum number of iterations
-    personlize: if not None, should be an array with the size of the nodes
-                containing probability distributions.
-                It will be normalized automatically.
-    reverse: If true, returns the reversed-PageRank
-    Returns:
-    --------
-    PageRank Scores for the nodes
-    """
-    # In Moler's algorithm, $G_{ij}$ represents the existences of an edge
-    # from node $j$ to $i$, while we have assumed the opposite!
-    if reverse:
-        A = A.T
-
-    n, _ = A.shape
-    r = sp.asarray(A.sum(axis=1)).reshape(-1)
-
-    k = r.nonzero()[0]
-
-    D_1 = sprs.csr_matrix((1 / r[k], (k, k)), shape=(n, n))
-
-    if personalize is None:
-        personalize = sp.ones(n)
-    personalize = personalize.reshape(n, 1)
-    s = (personalize / personalize.sum()) * n
-
-    z_T = (((1 - p) * (r != 0) + (r == 0)) / n)[sp.newaxis, :]
-    W = p * A.T @ D_1
-
-    x = s
-    oldx = sp.zeros((n, 1))
-
-    iteration = 0
-
-    while sp.linalg.norm(x - oldx) > tol:
-        oldx = x
-        x = W @ x + s @ (z_T @ x)
-        iteration += 1
-        if iteration >= max_iter:
-            break
-    x = x / sum(x)
-
-    return x.reshape(-1)
-
-
 
 
 def _check_input(
@@ -194,3 +114,13 @@ def pairwise_cosine_similarity(x: Tensor, y: Optional[Tensor] = None, zero_diago
     if zero_diagonal:
         distance.fill_diagonal_(0)
     return distance
+
+def get_exact_ppr_matrix(data : Data, alpha: float) -> torch.Tensor:
+    assert alpha >= 0. and alpha <= 1.
+    data.edge_attr = None
+    R = GDC(
+        diffusion_kwargs={'alpha': 0.15, 'method': 'ppr'}, 
+        sparsification_kwargs={'method':'threshold', 'avg_degree': data.num_edges // data.num_nodes}
+    )(data)
+    return to_dense_adj(edge_index=R.edge_index, edge_attr=R.edge_attr, max_num_nodes=data.num_nodes).squeeze()
+    
