@@ -64,7 +64,7 @@ class SubGraph:
     @property
     def __subgraph_edges(self):
         if self.__subgraph_edges_cached is None:
-            self.__subgraph_edges_cached , *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True, return_edge_mask=False)
+            self.__subgraph_edges_cached , *_ = subgraph(self.__node_indices, edge_index=self.__full_graph.edge_index, relabel_nodes=True)
         return self.__subgraph_edges_cached
 
     @property

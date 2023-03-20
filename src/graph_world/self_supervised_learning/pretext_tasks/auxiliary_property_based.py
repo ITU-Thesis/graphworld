@@ -5,7 +5,7 @@ import gin
 from .__types import *
 from torch import Tensor
 from sklearn.cluster import KMeans
-#import pymetis
+import pymetis
 from torch_geometric.utils.convert import to_scipy_sparse_matrix
 from .basic_pretext_task import BasicPretextTask
 from enum import Enum

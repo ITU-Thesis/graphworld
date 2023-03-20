@@ -26,3 +26,4 @@ do
 done
 
 docker build . -t ${BUILD_NAME}:latest -t gcr.io/${PROJECT_NAME}/${BUILD_NAME}:latest
+docker save ${BUILD_NAME}:latest -o ./graphworld_image.tar
