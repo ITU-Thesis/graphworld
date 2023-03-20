@@ -64,14 +64,15 @@ class CorruptedFeaturesReconstruction(BasicPretextTask):
             self.pseudo_labels = self.pseudo_labels[:, masked_f_cols]
 
          # Mask input features
-        self.data.x[:,masked_f_cols] = 0
+        self.masked_f = self.data.x.clone()
+        self.masked_f[:,masked_f_cols] = 0
 
          # Specify pretext decoder
         self.decoder = Linear(self.encoder.out_channels, self.pseudo_labels.shape[1])
 
     # Run masked input through graph encoder instead of using the original embeddings
     def make_loss(self, embeddings : Tensor):
-        z = self.encoder(self.data.x, self.data.edge_index)
+        z = self.encoder(self.masked_f, self.data.edge_index)
         y_hat = (self.decoder(z))
         loss = F.mse_loss(y_hat, self.pseudo_labels, reduction='mean')
         return loss
@@ -287,7 +288,8 @@ class DenoisingLinkReconstruction(BasicPretextTask):
 
         # Remove of positive edges
         self.removed_edges = self.data.edge_index[:, ~edge_mask]
-        self.data.x.edge_index = self.data.edge_index[:, edge_mask]
+        self.kept_edges = self.data.edge_index.clone()
+        self.kept_edges = self.kept_edges[:, edge_mask]
 
         # Create NTN decoder (simplified)
         out = self.encoder.out_channels
@@ -301,7 +303,7 @@ class DenoisingLinkReconstruction(BasicPretextTask):
     # - Difference: Different decoder (NTN) and loss is focused around masks
     def make_loss(self, embedding: Tensor):
         # Run masked input through encoder instead of using the embedding
-        z = self.encoder(self.data.x, self.data.edge_index)
+        z = self.encoder(self.data.x, self.kept_edges)
 
         # Compute loss for masked edges
         pos_decode_embed = self.ntn(z[self.removed_edges[0]], z[self.removed_edges[1]])
