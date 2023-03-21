@@ -1,13 +1,16 @@
 include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 GZoom_hparams = {
-    'B_perc' : 0.1,
-    'k': 8,
-    'P_perc': 1.2,
-    'alpha_loss': 0.3,
-    'beta_loss': 0.3,
-    'gamma_loss': 0.3,
-    'alpha': 0.15
+    'B_perc' : [0.1],   # Set to 200 for Cora in paper
+    'k': [4, 8],        # Set to 100 for Cora in paper
+    'P_perc': [1.1],
+    'alpha_beta_gamma_weights' = [
+        (0.3, 0.3, 0.3),                                            # Zooms equal contribute
+        (0.0, 0.5, 0.5), (0.5, 0.0, 0.5), (0.5, 0.5, 0.0),          # Turn one zoom off
+        (0.1, 0.45, 0.45), (0.45, 0.1, 0.45), (0.45, 0.45, 0.1),    # Weight one zoom less
+        (0.7, 0.15, 0.15), (0.15, 0.7, 0.15), (0.15, 0.15, 0.7)     # Weight one zoom more
+    ],
+    'alpha': [0.15]
 }
 
 # GCN encoder

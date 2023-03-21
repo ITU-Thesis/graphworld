@@ -80,7 +80,7 @@ class G_Zoom(BasicPretextTask):
             x = self.bilinear(input1, input2)
             return torch.sigmoid(x)
 
-    def __init__(self, B_perc: float, k: int, P_perc: float, alpha: float, alpha_loss: float, beta_loss: float, gamma_loss: float, **kwargs):
+    def __init__(self, B_perc: float, k: int, P_perc: float, alpha: float, alpha_beta_gamma_weights : List[float], **kwargs):
         '''
         args
         ----
@@ -90,9 +90,7 @@ class G_Zoom(BasicPretextTask):
 
         super().__init__(**kwargs)
         assert P_perc >= 1.
-        self.alpha_loss = alpha_loss
-        self.beta_loss = beta_loss
-        self.gamma_loss = gamma_loss
+        self.alpha_loss, self.beta_loss self.gamma_loss = alpha_beta_gamma_weights
 
         self.decoder = G_Zoom.Decoder(
             self.get_embedding_dim(), self.get_embedding_dim())
