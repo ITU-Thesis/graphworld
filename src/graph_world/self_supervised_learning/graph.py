@@ -7,7 +7,7 @@ import torch
 
 class NodeMappings:
     '''
-    Maps node indices between a source graph to a target graph. The k'th smallest node in the source graph is mapped to node k in the target graph.
+    Maps node indices between a source graph to a target graph. The k-th smallest node in the source graph is mapped to node k in the target graph.
     '''
     def __init__(self, src_nodes : Union[torch.Tensor, List]):
         if isinstance(src_nodes, torch.Tensor):

@@ -161,7 +161,7 @@ class SUBGCON(BasicPretextTask):
                 self.subgraphs.get_subgraph(i).node_mapping.src_to_target(i)
  
 
-    def __get_embedding_and_summary(self) -> Union[Tensor, Tensor]:
+    def __get_embedding_and_summaries(self) -> Union[Tensor, Tensor]:
         all_embeddings = self.encoder(
             self.subgraphs.subgraph_batches.x, self.subgraphs.subgraph_batches.edge_index)
         summaries = torch.sigmoid(global_mean_pool(
@@ -169,15 +169,14 @@ class SUBGCON(BasicPretextTask):
         # Picking function
         embeddings = all_embeddings[self.central_node_indices, :]
 
-        assert embeddings.shape == summaries.shape
         return embeddings, summaries
 
     def get_downstream_embeddings(self) -> Tensor:
-        return self.__get_embedding_and_summary()[0]
+        return self.__get_embedding_and_summaries()[0]
 
     def make_loss(self, embeddings, **kwargs):
         rand_idx = torch.randperm(self.N)
-        embeddings1, summaries1 = self.__get_embedding_and_summary()
+        embeddings1, summaries1 = self.__get_embedding_and_summaries()
 
         summaries2 = summaries1[rand_idx]
         embeddings2 = embeddings1[rand_idx]
