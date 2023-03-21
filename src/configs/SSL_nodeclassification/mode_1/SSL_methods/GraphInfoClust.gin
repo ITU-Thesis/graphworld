@@ -2,7 +2,7 @@
 include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 GraphInfoClust_hparams = {
-    'cluster_ratio' : %CLUSTER_RATIO,
+    'cluster_ratio' : [0.01, 0.03, 0.06], # Authors set K \in {32, 128}. Ratio computed from #nodes in Cora.
     'temperature' : [5, 10],
     'alpha' : %BALANCE_FACTOR,
 }
