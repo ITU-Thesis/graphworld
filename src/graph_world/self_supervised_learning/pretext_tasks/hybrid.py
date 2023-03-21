@@ -372,6 +372,19 @@ class MVMI_FT(BasicPretextTask):
     
     def make_loss(self, embeddings, **kwargs):
         E = self.__compute_embeddings()
+        assert not torch.isnan(E['s_f']).any(), "s_f contains NaN values"
+        assert not torch.isnan(E['pos_z_f']).any(), "pos_z_f contains NaN values"
+        assert not torch.isnan(E['neg_z_f']).any(), "neg_z_f contains NaN values"
+        assert not torch.isnan(E['pos_z_t']).any(), "pos_z_t contains NaN values"
+        assert not torch.isnan(E['neg_z_t']).any(), "neg_z_t contains NaN values"
+        assert not torch.isnan(E['s_t']).any(), "s_t contains NaN values"
+        assert not torch.isnan(E['pos_z_cf']).any(), "pos_z_cf contains NaN values"
+        assert not torch.isnan(E['pos_z_ct']).any(), "pos_z_ct contains NaN values"
+        assert not torch.isnan(E['pos_z_cft']).any(), "pos_z_cft contains NaN values"
+        assert not torch.isnan(E['neg_z_cf']).any(), "neg_z_cf contains NaN values"
+        assert not torch.isnan(E['neg_z_ct']).any(), "neg_z_ct contains NaN values"
+        assert not torch.isnan(E['neg_z_cft']).any(), "neg_z_cft contains NaN values"
+        assert not torch.isnan(E['s_cft']).any(), "s_cft contains NaN values"
 
         # feature view
         pos_loss_f = torch.log(
@@ -384,12 +397,12 @@ class MVMI_FT(BasicPretextTask):
         # topology view
         pos_loss_t = torch.log(
             self.discriminator_t(E['pos_z_t'], E['s_f']) + 1e-7).mean()
-        neg_loss_t = torch.log(1 -self.discriminator_t(E['neg_z_t'], E['s_f']) + 1e-7).mean()
+        neg_loss_t = torch.log((1 - self.discriminator_t(E['neg_z_t'], E['s_f'])) + 1e-7).mean()
         mi_loss_t = pos_loss_t + neg_loss_t
 
         # common view
         pos_loss_cf = torch.log(self.discriminator_cf(E['pos_z_cft'], E['s_cft']) + 1e-7).mean()
-        neg_loss_cf = torch.log(1 - self.discriminator_cf(E['neg_z_cft'], E['s_cft']) +1e-7).mean()
+        neg_loss_cf = torch.log((1 - self.discriminator_cf(E['neg_z_cft'], E['s_cft'])) +1e-7).mean()
         mi_loss_cf = pos_loss_cf + neg_loss_cf
 
         # recont loss
@@ -401,6 +414,12 @@ class MVMI_FT(BasicPretextTask):
         cosine_loss_f = F.cosine_similarity(E['pos_z_f'], E['pos_z_cf']).mean()
         cosine_loss_t = F.cosine_similarity(E['pos_z_t'], E['pos_z_ct']).mean()
         cosine_loss = -(cosine_loss_f + cosine_loss_t)
+        assert not torch.isnan(mi_loss_f).any(), "mi_loss_f contains NaN values"
+        assert not torch.isnan(mi_loss_t).any(), "mi_loss_t contains NaN values"
+        assert not torch.isnan(mi_loss_cf).any(), "mi_loss_cf contains NaN values"
+        assert not torch.isnan(recont_loss).any(), "recont_loss contains NaN values"
+        assert not torch.isnan(cosine_loss).any(), "cosine_loss contains NaN values"
+
 
         return -(mi_loss_f + mi_loss_t + self.common_representation_regularization *(mi_loss_cf - recont_loss) + self.disagreement_regularization * cosine_loss)
         

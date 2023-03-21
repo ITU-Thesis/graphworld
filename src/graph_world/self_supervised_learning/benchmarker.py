@@ -273,6 +273,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
         torch_data, tuning_metric=tuning_metric, tuning_metric_is_loss=tuning_metric_is_loss)
     except Exception as e:
       print("FAILED")
+      print(e)
       logging.info(f'Failed to run for sample id {sample_id}')
       out['skipped'] = True
 

@@ -231,6 +231,7 @@ class S2GRL(BasicPretextTask):
     def __init__(self, shortest_path_classes : Tuple[int,int], sample_size : float, **kwargs):
         super().__init__(**kwargs)
         shortest_path_cutoff, N_classes = shortest_path_classes
+
         assert shortest_path_cutoff > 0, 'cutoff shout be greater than 0'
         assert sample_size > 0. and sample_size <= 1., f'sample size of value {sample_size} must be bewtween 0 and 1.'
 
@@ -243,7 +244,6 @@ class S2GRL(BasicPretextTask):
                 Linear(in_channel, in_channel // 2),
                 nn.ReLU(),
                 Linear(in_channel // 2, self.N_classes),
-                nn.Softmax(dim=-1)
         )        
         
 
@@ -257,11 +257,16 @@ class S2GRL(BasicPretextTask):
         shortest_paths = map(lambda v_i: (v_i[0], filter(lambda neighbours: neighbours[1] > 0, v_i[1].items())), shortest_paths)
         shortest_paths = map(lambda v_i: (v_i[0], map(lambda neighbours: (neighbours[0], min(neighbours[1], self.N_classes - 1)), v_i[1])), shortest_paths)
         for source, neighbors in shortest_paths:
-            neighbors = filter(lambda neighbor: not (neighbor[0] == source), neighbors)
-            indices, distances = zip(*neighbors)
-
+            neighbors = filter(lambda neighbor: (not (neighbor[0] == source)) and (neighbor[1] > 0), neighbors)
+            # print(len(zip(*neighbors)))
+            neighbors = list(zip(*neighbors))
+            if len(neighbors) == 0:
+                indices, distances = [], []
+            else:               
+                indices, distances = neighbors
+        
             self.k_hop_neighbors_target_indices[source] = torch.tensor(list(indices), dtype=torch.long)
-            self.k_hop_neighbors_distances[source] = torch.tensor(list(distances)) - 1 # Map distance 1 to class 0
+            self.k_hop_neighbors_distances[source] = torch.tensor(list(distances), dtype=torch.long) - 1 # Map distance 1 to class 0
             self.k_hop_neighbors_source_indices[source] = torch.ones(len(indices), dtype=torch.long) * source
 
     def make_loss(self, embeddings : Tensor):
@@ -270,11 +275,19 @@ class S2GRL(BasicPretextTask):
         source_nodes = torch.cat([self.k_hop_neighbors_source_indices[i] for i in source_node_indices])
         neighbor_nodes = torch.cat([self.k_hop_neighbors_target_indices[i] for i in source_node_indices])
         distances = torch.cat([self.k_hop_neighbors_distances[i] for i in source_node_indices])
-        
+        assert not torch.isnan(embeddings).any(), "embeddings contains NaN values"
+        assert not torch.isinf(embeddings).any(), "embeddings contains infinite values"
+        assert not torch.isnan(source_nodes).any(), "source_nodes contains NaN values"
+        assert not torch.isnan(neighbor_nodes).any(), "neighbor_nodes contains NaN values"
+        assert not torch.isnan(distances).any(), "distances contains NaN values"
+
         vi_embeddings = embeddings[source_nodes]
         neighbor_embeddings = embeddings[neighbor_nodes]
 
         predicted_distance = self.decoder((vi_embeddings - neighbor_embeddings).abs())
+        assert not torch.isnan(predicted_distance).any(), "predicted_distance contains NaN values"
+        assert not torch.isinf(predicted_distance).any(), "predicted_distance contains infinite values"
+
         loss = self.loss(input=predicted_distance, target=distances)
         return loss
 
