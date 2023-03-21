@@ -49,25 +49,21 @@ class ClusterNet(Module):
     def __init__(self, k: int, temperature: float, num_iter: int, out_channels: int, **kwargs):
         super().__init__()
         self.k = k
-        self.temperature = temperature
+        self.temperature = torch.tensor(temperature)
         self.num_iter = num_iter
         self.out_channels = out_channels
 
     def compute(self, data: Tensor, num_iter: int, mu_init: Tensor):
         # [0, 1] normalize
-        data = data / (data.norm(dim=1)[:, None] + 1e-6)
+        data = data / (data.norm(dim=1)[:, None] + 1e-8)
         mu = mu_init
-        temperature = torch.tensor(self.temperature)
 
         for _ in range(num_iter):
-            prev_mu = mu.clone()
-            mu = mu / (mu.norm(dim=1, p='fro')[:, None] + 1e-6)
+            mu = mu / (mu.norm(dim=1, p='fro')[:, None] + 1e-8)
 
-            # Get distances & compute cosine similarity
-            #cosine_similarities = torch.randn((data.shape[0], mu.shape[0]))     # (N observations x N clusters)
-
-            dist = torch.mm(data, mu.transpose(0,1))   # (N observations x N clusters)
-            r = F.softmax(temperature * dist, dim=1)   # (N observations x N clusters)
+            # Get distances & compute similarities
+            dist = torch.mm(data, mu.transpose(0,1))                        # (N observations x N clusters)
+            r = F.softmax(self.temperature * dist, dim=1)                        # (N observations x N clusters)
             cluster_r = r.sum(dim=0)                                        # (N clusters)
             cluster_mean = r.t() @ data                                     # (N clusters x N feats)
             new_mu = torch.diag(1 / cluster_r) @ cluster_mean               # (N clusters x N feats)
@@ -118,10 +114,8 @@ class GraphInfoClust(BasicPretextTask):
         mu, r = self.cluster(pos_z)
         # (N observations x cluster dim)
         cluster_summary = torch.sigmoid(r @ mu)
-        positive_score = self.clustering_discriminator(
-            pos_z, cluster_summary).squeeze()
-        negative_score = self.clustering_discriminator(
-            neg_z, cluster_summary).squeeze()
+        positive_score = self.clustering_discriminator(pos_z, cluster_summary).squeeze()
+        negative_score = self.clustering_discriminator(neg_z, cluster_summary).squeeze()
 
         cluster_loss = jensen_shannon_loss(
             positive_instance=positive_score, negative_instance=negative_score)

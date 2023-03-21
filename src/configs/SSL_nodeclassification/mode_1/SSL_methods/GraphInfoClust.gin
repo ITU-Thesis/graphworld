@@ -3,7 +3,7 @@ include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 GraphInfoClust_hparams = {
     'cluster_ratio' : %CLUSTER_RATIO,
-    'temperature' : [10],
+    'temperature' : [5, 10],
     'alpha' : %BALANCE_FACTOR,
 }
 
