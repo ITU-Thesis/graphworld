@@ -241,6 +241,15 @@ class G_Zoom(BasicPretextTask):
                           edge_weight=self.G_tilde.edge_weight)
         return H1 + H2
 
+
+class ResNet(torch.nn.Module):
+    def __init__(self, module):
+        super().__init__()
+        self.module = module
+
+    def forward(self, inputs):
+        return self.module(inputs) + inputs
+
 @gin.configurable
 class MVMI_FT(BasicPretextTask):
     '''
@@ -272,10 +281,9 @@ class MVMI_FT(BasicPretextTask):
         self.encoder_t = copy.deepcopy(self.encoder)    # Topological encoder
         self.encoder_c = self.encoder                   # Common encoder
 
-        self.weight_z_t = torch.nn.Parameter(torch.Tensor(hidden_dim, hidden_dim))
-        self.weight_z_f = torch.nn.Parameter(torch.Tensor(hidden_dim, hidden_dim))
-        self.weight_z_cf = torch.nn.Parameter(torch.Tensor(hidden_dim, hidden_dim))
-        self.weight_z_ct = torch.nn.Parameter(torch.Tensor(hidden_dim, hidden_dim))
+        self.d1 = nn.Bilinear(hidden_dim, hidden_dim, 1)
+        self.d2 = nn.Bilinear(hidden_dim, hidden_dim, 1)
+        self.d3 = nn.Bilinear(hidden_dim, hidden_dim, 1)
 
         self.mlp_ft = nn.Sequential(nn.Linear(hidden_dim, hidden_dim),
                                     nn.PReLU(hidden_dim),
@@ -338,22 +346,19 @@ class MVMI_FT(BasicPretextTask):
             's_cft': s_cft
         }
 
-    def reset_parameters(self):
-        self.uniform(self.hidden_dim, self.weight_z_t)
-        self.uniform(self.hidden_dim, self.weight_z_f)
-        self.uniform(self.hidden_dim, self.weight_z_cf)
-        self.uniform(self.hidden_dim, self.weight_z_ct)
-
     def discriminator_t(self, z, s):
-        value = torch.matmul(z, torch.matmul(self.weight_z_t, s))
+        s_expanded  = s.repeat(z.shape[0], 1)
+        value = self.d1(z, s_expanded)
         return torch.sigmoid(value)
 
     def discriminator_f(self, z, s):
-        value = torch.matmul(z, torch.matmul(self.weight_z_f, s))
+        s_expanded  = s.repeat(z.shape[0], 1)
+        value = self.d2(z, s_expanded)
         return torch.sigmoid(value)
 
     def discriminator_cf(self, z, s):
-        value = torch.matmul(z, torch.matmul(self.weight_z_cf, s))
+        s_expanded  = s.repeat(z.shape[0], 1)
+        value = self.d3(z, s_expanded)
         return torch.sigmoid(value)
 
     def recont_loss(self, z, edge_index):
@@ -372,28 +377,14 @@ class MVMI_FT(BasicPretextTask):
     
     def make_loss(self, embeddings, **kwargs):
         E = self.__compute_embeddings()
-        assert not torch.isnan(E['s_f']).any(), "s_f contains NaN values"
-        assert not torch.isnan(E['pos_z_f']).any(), "pos_z_f contains NaN values"
-        assert not torch.isnan(E['neg_z_f']).any(), "neg_z_f contains NaN values"
-        assert not torch.isnan(E['pos_z_t']).any(), "pos_z_t contains NaN values"
-        assert not torch.isnan(E['neg_z_t']).any(), "neg_z_t contains NaN values"
-        assert not torch.isnan(E['s_t']).any(), "s_t contains NaN values"
-        assert not torch.isnan(E['pos_z_cf']).any(), "pos_z_cf contains NaN values"
-        assert not torch.isnan(E['pos_z_ct']).any(), "pos_z_ct contains NaN values"
-        assert not torch.isnan(E['pos_z_cft']).any(), "pos_z_cft contains NaN values"
-        assert not torch.isnan(E['neg_z_cf']).any(), "neg_z_cf contains NaN values"
-        assert not torch.isnan(E['neg_z_ct']).any(), "neg_z_ct contains NaN values"
-        assert not torch.isnan(E['neg_z_cft']).any(), "neg_z_cft contains NaN values"
-        assert not torch.isnan(E['s_cft']).any(), "s_cft contains NaN values"
 
         # feature view
         pos_loss_f = torch.log(
             self.discriminator_f(E['pos_z_f'], E['s_t']) + 1e-7).mean()
-        neg_loss_f = torch.log(1 -
-                               self.discriminator_f(E['neg_z_f'], E['s_t']) +
+        neg_loss_f = torch.log((1 -
+                               self.discriminator_f(E['neg_z_f'], E['s_t'])) +
                                1e-7).mean()
         mi_loss_f = pos_loss_f + neg_loss_f
-
         # topology view
         pos_loss_t = torch.log(
             self.discriminator_t(E['pos_z_t'], E['s_f']) + 1e-7).mean()
@@ -414,12 +405,6 @@ class MVMI_FT(BasicPretextTask):
         cosine_loss_f = F.cosine_similarity(E['pos_z_f'], E['pos_z_cf']).mean()
         cosine_loss_t = F.cosine_similarity(E['pos_z_t'], E['pos_z_ct']).mean()
         cosine_loss = -(cosine_loss_f + cosine_loss_t)
-        assert not torch.isnan(mi_loss_f).any(), "mi_loss_f contains NaN values"
-        assert not torch.isnan(mi_loss_t).any(), "mi_loss_t contains NaN values"
-        assert not torch.isnan(mi_loss_cf).any(), "mi_loss_cf contains NaN values"
-        assert not torch.isnan(recont_loss).any(), "recont_loss contains NaN values"
-        assert not torch.isnan(cosine_loss).any(), "cosine_loss contains NaN values"
-
 
         return -(mi_loss_f + mi_loss_t + self.common_representation_regularization *(mi_loss_cf - recont_loss) + self.disagreement_regularization * cosine_loss)
         
