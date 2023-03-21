@@ -1,179 +1,139 @@
 BENCHMARKERS = [
-  # Baselines
-  @GCN_Baselines_JL/NNNodeBenchmarkSSL,
-  @GAT_Baselines_JL/NNNodeBenchmarkSSL,
-  @GIN_Baselines_JL/NNNodeBenchmarkSSL,
-  # @APPNP_Baselines_JL/NNNodeBenchmarkSSL,
-
-  # AttributeMask
-  @GCN_AttributeMask_JL/NNNodeBenchmarkSSL,
-  @GCN_AttributeMask_PF/NNNodeBenchmarkSSL,
-  @GCN_AttributeMask_URL/NNNodeBenchmarkSSL,
-
-  @GAT_AttributeMask_JL/NNNodeBenchmarkSSL,
-  @GAT_AttributeMask_PF/NNNodeBenchmarkSSL,
-  @GAT_AttributeMask_URL/NNNodeBenchmarkSSL,
-
-  @GIN_AttributeMask_JL/NNNodeBenchmarkSSL,
-  @GIN_AttributeMask_PF/NNNodeBenchmarkSSL,
-  @GIN_AttributeMask_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_AttributeMask_JL/NNNodeBenchmarkSSL,
-  # @APPNP_AttributeMask_PF/NNNodeBenchmarkSSL,
-  # @APPNP_AttributeMask_URL/NNNodeBenchmarkSSL,
-
-  # CorruptedFeatureReconstruction
-  @GCN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
-  @GCN_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
-  @GCN_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
-
-  @GAT_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
-  @GAT_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
-  @GAT_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
-
-  @GIN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
-  @GIN_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
-  @GIN_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
-
-  #CorruptedEmbeddingsReconstruction
-  @GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
-  @GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
-  @GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
-
-  @GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
-  @GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
-  @GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
-
-  @GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
-  @GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
-  @GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
-
-  #GAE
-  @GCN_GAE_JL/NNNodeBenchmarkSSL,
-  @GCN_GAE_PF/NNNodeBenchmarkSSL,
-  @GCN_GAE_URL/NNNodeBenchmarkSSL,
-
-  @GAT_GAE_JL/NNNodeBenchmarkSSL,
-  @GAT_GAE_PF/NNNodeBenchmarkSSL,
-  @GAT_GAE_URL/NNNodeBenchmarkSSL,
-
-  @GIN_GAE_JL/NNNodeBenchmarkSSL,
-  @GIN_GAE_PF/NNNodeBenchmarkSSL,
-  @GIN_GAE_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_GAE_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GAE_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GAE_URL/NNNodeBenchmarkSSL,
-
-  #ARGA
-  @GCN_ARGA_JL/NNNodeBenchmarkSSL,
-  @GCN_ARGA_PF/NNNodeBenchmarkSSL,
-  @GCN_ARGA_URL/NNNodeBenchmarkSSL,
-
-  @GAT_ARGA_JL/NNNodeBenchmarkSSL,
-  @GAT_ARGA_PF/NNNodeBenchmarkSSL,
-  @GAT_ARGA_URL/NNNodeBenchmarkSSL,
-
-  @GIN_ARGA_JL/NNNodeBenchmarkSSL,
-  @GIN_ARGA_PF/NNNodeBenchmarkSSL,
-  @GIN_ARGA_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_ARGA_JL/NNNodeBenchmarkSSL,
-  # @APPNP_ARGA_PF/NNNodeBenchmarkSSL,
-  # @APPNP_ARGA_URL/NNNodeBenchmarkSSL,
-
-  # EdgeMask
-  @GCN_EdgeMask_JL/NNNodeBenchmarkSSL,
-  @GCN_EdgeMask_PF/NNNodeBenchmarkSSL,
-  @GCN_EdgeMask_URL/NNNodeBenchmarkSSL,
-
-  @GAT_EdgeMask_JL/NNNodeBenchmarkSSL,
-  @GAT_EdgeMask_PF/NNNodeBenchmarkSSL,
-  @GAT_EdgeMask_URL/NNNodeBenchmarkSSL,
-
-  @GIN_EdgeMask_JL/NNNodeBenchmarkSSL,
-  @GIN_EdgeMask_PF/NNNodeBenchmarkSSL,
-  @GIN_EdgeMask_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_EdgeMask_JL/NNNodeBenchmarkSSL,
-  # @APPNP_EdgeMask_PF/NNNodeBenchmarkSSL,
-  # @APPNP_EdgeMask_URL/NNNodeBenchmarkSSL,
-
-  # NodeClusteringWithAlignment
-  @GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
-  @GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
-  @GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-
-  @GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
-  @GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
-  @GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-
-  @GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
-  @GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
-  @GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
-  # @APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
-  # @APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-
-  # GraphPartitioning
-  @GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
-  @GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
-  @GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL,
-
-  @GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL,
-  @GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL,
-  @GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL,
-
-  @GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
-  @GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
-  @GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL,
-
-  # S2GRL
-  @GCN_S2GRL_JL/NNNodeBenchmarkSSL,
-  @GCN_S2GRL_PF/NNNodeBenchmarkSSL,
-  @GCN_S2GRL_URL/NNNodeBenchmarkSSL,
-
-  @GAT_S2GRL_JL/NNNodeBenchmarkSSL,
-  @GAT_S2GRL_PF/NNNodeBenchmarkSSL,
-  @GAT_S2GRL_URL/NNNodeBenchmarkSSL,
-
-  @GIN_S2GRL_JL/NNNodeBenchmarkSSL,
-  @GIN_S2GRL_PF/NNNodeBenchmarkSSL,
-  @GIN_S2GRL_URL/NNNodeBenchmarkSSL,
-
-  # @APPNP_S2GRL_JL/NNNodeBenchmarkSSL,
-  # @APPNP_S2GRL_PF/NNNodeBenchmarkSSL,
-  # @APPNP_S2GRL_URL/NNNodeBenchmarkSSL,
-
-  # CentralityScoreRanking
-#   @GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL, # Too slow for extensive experiments
-#   @GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-
-#   @GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-
-#   @GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-
-#   # @APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   # @APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   # @APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+#   # Baselines
+#   @GCN_Baselines_JL/NNNodeBenchmarkSSL,
+#   @GAT_Baselines_JL/NNNodeBenchmarkSSL,
+#   @GIN_Baselines_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_Baselines_JL/NNNodeBenchmarkSSL,
+#   # AttributeMask
+#   @GCN_AttributeMask_JL/NNNodeBenchmarkSSL,
+#   @GCN_AttributeMask_PF/NNNodeBenchmarkSSL,
+#   @GCN_AttributeMask_URL/NNNodeBenchmarkSSL,
+#   @GAT_AttributeMask_JL/NNNodeBenchmarkSSL,
+#   @GAT_AttributeMask_PF/NNNodeBenchmarkSSL,
+#   @GAT_AttributeMask_URL/NNNodeBenchmarkSSL,
+#   @GIN_AttributeMask_JL/NNNodeBenchmarkSSL,
+#   @GIN_AttributeMask_PF/NNNodeBenchmarkSSL,
+#   @GIN_AttributeMask_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_AttributeMask_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_AttributeMask_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_AttributeMask_URL/NNNodeBenchmarkSSL,
+#   # CorruptedFeatureReconstruction
+#   @GCN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GCN_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GCN_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
+#   #CorruptedEmbeddingsReconstruction
+#   @GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
+#   @GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
+#   #GAE
+#   @GCN_GAE_JL/NNNodeBenchmarkSSL,
+#   @GCN_GAE_PF/NNNodeBenchmarkSSL,
+#   @GCN_GAE_URL/NNNodeBenchmarkSSL,
+#   @GAT_GAE_JL/NNNodeBenchmarkSSL,
+#   @GAT_GAE_PF/NNNodeBenchmarkSSL,
+#   @GAT_GAE_URL/NNNodeBenchmarkSSL,
+#   @GIN_GAE_JL/NNNodeBenchmarkSSL,
+#   @GIN_GAE_PF/NNNodeBenchmarkSSL,
+#   @GIN_GAE_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_GAE_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_GAE_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_GAE_URL/NNNodeBenchmarkSSL,
+#   #ARGA
+#   @GCN_ARGA_JL/NNNodeBenchmarkSSL,
+#   @GCN_ARGA_PF/NNNodeBenchmarkSSL,
+#   @GCN_ARGA_URL/NNNodeBenchmarkSSL,
+#   @GAT_ARGA_JL/NNNodeBenchmarkSSL,
+#   @GAT_ARGA_PF/NNNodeBenchmarkSSL,
+#   @GAT_ARGA_URL/NNNodeBenchmarkSSL,
+#   @GIN_ARGA_JL/NNNodeBenchmarkSSL,
+#   @GIN_ARGA_PF/NNNodeBenchmarkSSL,
+#   @GIN_ARGA_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_ARGA_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_ARGA_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_ARGA_URL/NNNodeBenchmarkSSL,
+#   # EdgeMask
+#   @GCN_EdgeMask_JL/NNNodeBenchmarkSSL,
+#   @GCN_EdgeMask_PF/NNNodeBenchmarkSSL,
+#   @GCN_EdgeMask_URL/NNNodeBenchmarkSSL,
+#   @GAT_EdgeMask_JL/NNNodeBenchmarkSSL,
+#   @GAT_EdgeMask_PF/NNNodeBenchmarkSSL,
+#   @GAT_EdgeMask_URL/NNNodeBenchmarkSSL,
+#   @GIN_EdgeMask_JL/NNNodeBenchmarkSSL,
+#   @GIN_EdgeMask_PF/NNNodeBenchmarkSSL,
+#   @GIN_EdgeMask_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_EdgeMask_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_EdgeMask_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_EdgeMask_URL/NNNodeBenchmarkSSL,
+#   # NodeClusteringWithAlignment
+#   @GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
+#   @GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
+#   @GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
+#   @GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
+#   @GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
+#   @GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL
+#   @GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
+#   @GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
+#   @GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
+#   # GraphPartitioning
+#   @GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
+#   @GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
+#   @GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL,
+#   @GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL,
+#   @GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL,
+#   @GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL,
+#   @GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
+#   @GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
+#   @GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL,
+#   # S2GRL
+#   @GCN_S2GRL_JL/NNNodeBenchmarkSSL,
+#   @GCN_S2GRL_PF/NNNodeBenchmarkSSL,
+#   @GCN_S2GRL_URL/NNNodeBenchmarkSSL,
+#   @GAT_S2GRL_JL/NNNodeBenchmarkSSL,
+#   @GAT_S2GRL_PF/NNNodeBenchmarkSSL,
+#   @GAT_S2GRL_URL/NNNodeBenchmarkSSL,
+#   @GIN_S2GRL_JL/NNNodeBenchmarkSSL,
+#   @GIN_S2GRL_PF/NNNodeBenchmarkSSL,
+#   @GIN_S2GRL_URL/NNNodeBenchmarkSSL,
+#   # @APPNP_S2GRL_JL/NNNodeBenchmarkSSL,
+#   # @APPNP_S2GRL_PF/NNNodeBenchmarkSSL,
+#   # @APPNP_S2GRL_URL/NNNodeBenchmarkSSL,
+#   # CentralityScoreRanking
+# #   @GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL, # Too slow for extensive experiments
+# #   @GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   @GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
+# #   # @APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
+# #   # @APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
+# #   # @APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
 
 
   # PairwiseAttrSim
@@ -380,6 +340,22 @@ BENCHMARKERS = [
   # @APPNP_MEtAl_PF/NNNodeBenchmarkSSL,
   # @APPNP_MEtAl_URL/NNNodeBenchmarkSSL,
 
+  # MVMI-FT
+  @GCN_MVMIFT_JL/NNNodeBenchmarkSSL,
+  @GCN_MVMIFT_PF/NNNodeBenchmarkSSL,
+  @GCN_MVMIFT_URL/NNNodeBenchmarkSSL,
+
+  @GAT_MVMIFT_JL/NNNodeBenchmarkSSL,
+  @GAT_MVMIFT_PF/NNNodeBenchmarkSSL,
+  @GAT_MVMIFT_URL/NNNodeBenchmarkSSL,
+
+  @GIN_MVMIFT_JL/NNNodeBenchmarkSSL,
+  @GIN_MVMIFT_PF/NNNodeBenchmarkSSL,
+  @GIN_MVMIFT_URL/NNNodeBenchmarkSSL,
+
+  # @APPNP_MVMIFT_JL/NNNodeBenchmarkSSL,
+  # @APPNP_MVMIFT_PF/NNNodeBenchmarkSSL,
+  # @APPNP_MVMIFT_URL/NNNodeBenchmarkSSL,
 ]
 
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/Baselines.gin'
@@ -406,4 +382,5 @@ include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GraphInfoClust.g
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/SUBGCON.gin'
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GZoom.gin'
 include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MEtAl.gin'
+include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MVMIFT.gin'
 

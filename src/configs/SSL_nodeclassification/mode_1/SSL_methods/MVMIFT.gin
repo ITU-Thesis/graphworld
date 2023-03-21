@@ -1,0 +1,78 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+MVMIFT_hparams = {
+    'k': [2,3,6],
+    'disagreement_regularization': [0.01, 0.1, 1.] # Set to 0.01 in paper & 1.0 on GitHub
+    'common_representation_regularization': [0.1, 0.3, 0.5] # Set to 0.3 in paper & 0.5 on GitHub
+}
+
+# GCN encoder
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+
+# GAT encoder
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+
+# GIN encoder
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_MVMIFT_JL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_MVMIFT_PF/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_task = @MVMI_FT
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_MVMIFT_URL/NNNodeBenchmarkSSL.pretext_params = %MVMIFT_hparams
+
+
+
