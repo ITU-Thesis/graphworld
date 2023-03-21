@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --array=1-30
+#SBATCH --array=1-100
 #SBATCH -o out/node_classification/slurm_%a.out
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=1 

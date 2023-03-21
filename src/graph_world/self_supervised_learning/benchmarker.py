@@ -45,7 +45,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     self._training_scheme = training_scheme
     # Set number of classes
     self._downstream_out = h_params['out_channels']
-    #torch.autograd.set_detect_anomaly(True)
+
     # pretext_task and name. Set JL training scheme if no pretext task
     if pretext_task is None:
       self._pretext_task = IdentityPretextTask
@@ -105,7 +105,6 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     
     # Update parameters
     loss.backward()
-    torch.nn.utils.clip_grad_norm_(self._pretext_model.parameters())
     self._pretext_optimizer.step()
     return loss
 
@@ -114,7 +113,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     # Set train/eval modes
     self._downstream_decoder.train()
     if self._training_scheme in ['JL', 'PF']:
-        self._pretext_model.train()
+      self._pretext_model.train()
     else:
       self._encoder.eval()
 
@@ -133,12 +132,11 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     
     # Update parameters
     loss.backward()
-    torch.nn.utils.clip_grad_norm_(self._downstream_optimizer)
     self._downstream_optimizer.step()
     return loss
 
 
-  def test(self, data : InputGraph, test_on_val : bool = False, debug=False) -> EvaluationMetrics:
+  def test(self, data : InputGraph, test_on_val : bool = False) -> EvaluationMetrics:
     self._downstream_decoder.eval()
     self._pretext_model.eval()
 
@@ -158,15 +156,6 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     else:
       correct = data.y[self._test_mask].numpy()
 
-
-    if debug:
-      print(f'test_on_val: {test_on_val}')
-      print("pred\n")
-      print(pred)
-      print("pred_best\n")
-      print(pred_best)
-      print("correct\n")
-      print(correct)
     n_classes = out.shape[-1]
     pred_onehot = np.zeros((len(pred_best), n_classes))
     pred_onehot[np.arange(pred_best.shape[0]), pred_best] = 1
@@ -213,12 +202,12 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
         self._pretext_optimizer.zero_grad()  
 
     # Setup downstream optimizer
-    self.downstream_params = list(self._downstream_decoder.parameters())
+    params = list(self._downstream_decoder.parameters())
     if self._training_scheme in ['PF']:
-      self.downstream_params += list(self._encoder.parameters())
+      params += list(self._encoder.parameters())
     elif self._training_scheme in ['JL']:
-      self.downstream_params += list(self._pretext_model.parameters())
-    self._downstream_optimizer = torch.optim.Adam(self.downstream_params,
+      params += list(self._pretext_model.parameters())
+    self._downstream_optimizer = torch.optim.Adam(params,
                                     lr=self._downstream_lr,
                                     weight_decay=5e-4)
 
@@ -280,23 +269,10 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     downstream_val_losses = None
     downstream_val_tuning_metrics = None    
     try:
-      test = True
       pretext_losses, downstream_train_losses, downstream_val_losses, downstream_val_tuning_metrics, test_metrics, val_metrics = self.train(
         torch_data, tuning_metric=tuning_metric, tuning_metric_is_loss=tuning_metric_is_loss)
     except Exception as e:
-      if test:
-        print("failed")
-        for param in self._pretext_model.parameters():
-          print(param.data)
-        print()
-        for param in self._downstream_decoder.parameters():
-          print(param.data)
-        print()
-        test = False
-        
-        self.test(self._pretext_h_params['data'], test_on_val=True, debug=True)
-        self.test(self._pretext_h_params['data'], test_on_val=False, debug=True)
-      raise e
+      print("FAILED")
       logging.info(f'Failed to run for sample id {sample_id}')
       out['skipped'] = True
 

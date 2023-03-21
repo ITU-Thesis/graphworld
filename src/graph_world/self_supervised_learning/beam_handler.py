@@ -75,6 +75,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
         downstream_train_losses = benchmarker_out['downstream_train_losses']
         downstream_val_losses = benchmarker_out['downstream_val_losses']
         downstream_val_tuning_metrics = benchmarker_out['downstream_val_tuning_metrics']
+        skipped = benchmarker_out['skipped']
 
       else:
         configs = []
@@ -140,13 +141,14 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
                                                   tuning_metric=self._tuning_metric,
                                                   tuning_metric_is_loss=self._tuning_metric_is_loss)
 
-          configs.append((benchmark_params_sample, h_params_sample, pretext_params_sample))
-          val_metrics_list.append(benchmarker_out['val_metrics'])
-          test_metrics_list.append(benchmarker_out['test_metrics'])
-          pretext_losses_list.append(benchmarker_out['pretext_losses'])
-          downstream_train_losses_list.append(benchmarker_out['downstream_train_losses'])
-          downstream_val_losses_list.append(benchmarker_out['downstream_val_losses'])
-          downstream_val_tuning_metrics_list.append(benchmarker_out['downstream_val_tuning_metrics'])
+          if not benchmarker_out['skipped']:
+            configs.append((benchmark_params_sample, h_params_sample, pretext_params_sample))
+            val_metrics_list.append(benchmarker_out['val_metrics'])
+            test_metrics_list.append(benchmarker_out['test_metrics'])
+            pretext_losses_list.append(benchmarker_out['pretext_losses'])
+            downstream_train_losses_list.append(benchmarker_out['downstream_train_losses'])
+            downstream_val_losses_list.append(benchmarker_out['downstream_val_losses'])
+            downstream_val_tuning_metrics_list.append(benchmarker_out['downstream_val_tuning_metrics'])
 
         val_scores = [metrics[self._tuning_metric] for metrics in val_metrics_list]
         test_scores = [metrics[self._tuning_metric] for metrics in test_metrics_list]
@@ -173,6 +175,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
         downstream_val_losses = downstream_val_losses_list[best_tuning_round]
         downstream_train_losses = downstream_train_losses_list[best_tuning_round]
         downstream_val_tuning_metrics = downstream_val_tuning_metrics_list[best_tuning_round]
+        skipped = False # Hack as this will be skipped if all tuning rounds fails. TODO fix this
 
       # Return benchmark data for next beam stage.
 
@@ -194,6 +197,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
         for key, value in pretext_params_sample.items():
           output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_pretext_{key}'] = value
 
+      output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_skipped'] = skipped
       output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_pretext_losses'] = pretext_losses
       output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_val_losses'] = downstream_val_losses
       output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_train_losses'] = downstream_train_losses

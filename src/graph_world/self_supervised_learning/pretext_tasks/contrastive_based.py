@@ -377,16 +377,6 @@ class GBT(BasicPretextTask):
             + _lambda * c[off_diagonal_mask].pow(2).sum()
         )
 
-        if (not loss.isfinite().all()):
-            print(self.iteration)
-            print(_lambda, '_lambda')
-            print(feature_dim, 'feature_dim')
-            print(z1_norm, 'z1_norm')
-            print(z2_norm, 'z2_norm')
-            print(c, 'c')
-            print(off_diagonal_mask, 'off_diagonal_mask')
-            print(loss, 'loss')
-
         return loss
     
     def make_loss(self, embeddings: Tensor):
@@ -398,15 +388,6 @@ class GBT(BasicPretextTask):
         # Compute embeddings of both views
         z1 = self.encoder(features1, edge_index1)
         z2 = self.encoder(features2, edge_index2)
-
-        if (not z1.isfinite().all()) or (not z2.isfinite().all()):
-            print(self.iteration)
-            print(features1, 'features1')
-            print(edge_index1, 'edge_index1')
-            print(features2, 'features2')
-            print(edge_index2, 'edge_index2')
-            print(z1, 'z1')
-            print(z2, 'z2')
 
         # Compute Barlow Twins loss
         return self.barlow_twins_loss(z1, z2)
