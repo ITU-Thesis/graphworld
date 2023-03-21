@@ -81,13 +81,6 @@ class G_Zoom(BasicPretextTask):
             return torch.sigmoid(x)
 
     def __init__(self, B_perc: float, k: int, P_perc: float, alpha: float, alpha_beta_gamma_weights : List[float], **kwargs):
-        '''
-        args
-        ----
-        micro_meso_macro_weights:
-            Weights of the micro, mseo, and macro level contrastive learnings.
-        '''
-
         super().__init__(**kwargs)
         assert P_perc >= 1.
         self.alpha_loss, self.beta_loss self.gamma_loss = alpha_beta_gamma_weights
