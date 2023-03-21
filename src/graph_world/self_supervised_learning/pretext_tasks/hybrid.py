@@ -263,6 +263,11 @@ class MVMI_FT(BasicPretextTask):
 
     def corruption(self, x) -> Tensor:
         return x[torch.randperm(x.shape[0])]
+    
+    def uniform(self, size, tensor):
+        if tensor is not None:
+            bound = 1.0 / torch.sqrt(size)
+            tensor.data.uniform_(-bound, bound)
 
     def __init__(self, k: int, disagreement_regularization: float, common_representation_regularization: float, **kwargs):
         super().__init__(**kwargs)
@@ -341,7 +346,13 @@ class MVMI_FT(BasicPretextTask):
             'neg_z_cft': neg_z_cft,
             's_cft': s_cft
         }
-    
+
+    def reset_parameters(self):
+        self.uniform(self.hidden_dim, self.weight_z_t)
+        self.uniform(self.hidden_dim, self.weight_z_f)
+        self.uniform(self.hidden_dim, self.weight_z_cf)
+        self.uniform(self.hidden_dim, self.weight_z_ct)
+
     def discriminator_t(self, z, s):
         value = torch.matmul(z, torch.matmul(self.weight_z_t, s))
         return torch.sigmoid(value)
@@ -396,8 +407,8 @@ class MVMI_FT(BasicPretextTask):
         recont_loss = recont_loss_cftf + recont_loss_cftt
 
         # disagreement regularization
-        cosine_loss_f = F.cosine_similarity(self.pos_z_f, self.pos_z_cf).mean()
-        cosine_loss_t = F.cosine_similarity(self.pos_z_t, self.pos_z_ct).mean()
+        cosine_loss_f = F.cosine_similarity(E['pos_z_f'], E['pos_z_cf']).mean()
+        cosine_loss_t = F.cosine_similarity(E['pos_z_t'], E['pos_z_ct']).mean()
         cosine_loss = -(cosine_loss_f + cosine_loss_t)
 
         return -(mi_loss_f + mi_loss_t + self.common_representation_regularization *(mi_loss_cf - recont_loss) + self.disagreement_regularization * cosine_loss)
