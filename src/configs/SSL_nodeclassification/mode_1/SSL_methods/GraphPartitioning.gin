@@ -1,7 +1,7 @@
 include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 GraphPartitioning_hparams = {
-    'n_partitions' : %N_PARTITIONS
+    'n_partitions' : [8, 10, 12, 14, 16]
 }
 
 # GCN encoder

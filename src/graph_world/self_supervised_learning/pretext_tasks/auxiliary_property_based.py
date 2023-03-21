@@ -154,7 +154,7 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
             predicted_centrality_score - predicted_centrality_score.T
         )
         R, R_hat = self.rank_order, predicted_rank_order
-        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).mean() # Elementwise CE loss followed by mean
+        loss = -(torch.log(R * R_hat + 1e-8) + (1 - R) * torch.log((1 - R_hat) + 1e-8)).mean() # Elementwise CE loss followed by mean
         return loss
 
 @gin.configurable
