@@ -19,6 +19,7 @@ from networkx import all_pairs_shortest_path_length
 from ..tensor_utils import get_top_k_indices
 from torchmetrics.functional import pairwise_cosine_similarity
 import math 
+import random
 
 # ==================================================== #
 # ============= Auxiliary property-based ============= #
@@ -27,6 +28,11 @@ import math
 
 @gin.configurable
 class NodeClusteringWithAlignment(BasicPretextTask):
+    '''
+    Paper from:
+        You, Yuning, et al. "When does self-supervision help graph convolutional networks?." international conference on machine learning. PMLR, 2020.
+    Implementation modified from https://github.com/Shen-Lab/SS-GCNs/blob/master/SS-GCNs/clu.py
+    '''
     def __init__(self, cluster_ratio: float, **kwargs):
         super().__init__(**kwargs)
 
@@ -52,19 +58,15 @@ class NodeClusteringWithAlignment(BasicPretextTask):
         kmeans = KMeans(n_clusters=n_clusters).fit(X)
 
         # Step 4: Perform alignment mechanism
-        # See https://arxiv.org/pdf/1902.11038.pdf and
-        # https://github.com/Junseok0207/M3S_Pytorch/blob/master/models/M3S.py for code implementaiton.
-        # 1) Compute its centroids
-        # 2) Find cluster closest to the centroid computed in step 1
-        # 3) Assign all unlabeled nodes to that closest cluster.
+        #   1) Compute its centroids
+        #   2) Find cluster closest to the centroid computed in step 1
+        #   3) Assign all unlabeled nodes to that closest cluster.
         for cn in range(n_clusters):
-            # v_l
-            centroids_unlabeled = X[torch.logical_and(torch.tensor(
-                kmeans.labels_ == cn), ~self.train_mask)].mean(axis=0)
+            # v_l - Note we exclude the training data as this is only for the unlabeled data.
+            centroids_unlabeled = X[torch.logical_and(torch.tensor(kmeans.labels_ == cn), ~self.train_mask)].mean(axis=0)
 
             # Equation 5
-            label_for_cluster = np.linalg.norm(
-                centroids_labeled - centroids_unlabeled, axis=1).argmin()
+            label_for_cluster = np.linalg.norm(centroids_labeled - centroids_unlabeled, axis=1).argmin()
             for node in np.where(kmeans.labels_ == cn)[0]:
                 if not self.train_mask[node]:
                     cluster_labels[node] = label_for_cluster
@@ -154,7 +156,7 @@ class AbstractCentralityScore(BasicPretextTask, ABC):
             predicted_centrality_score - predicted_centrality_score.T
         )
         R, R_hat = self.rank_order, predicted_rank_order
-        loss = -(R * R_hat.log() + (1 - R) * (1 - R_hat).log()).mean() # Elementwise CE loss followed by mean
+        loss = -(torch.log(R * R_hat + 1e-8) + (1 - R) * torch.log((1 - R_hat) + 1e-8)).mean() # Elementwise CE loss followed by mean
         return loss
 
 @gin.configurable
@@ -226,12 +228,15 @@ class S2GRL(BasicPretextTask):
     According to the paper reduction is always sum, but this might make the model improve more towards
     hubs / nodes in highly dense neighbourhoods.
     '''
-    def __init__(self, shortest_path_classes : Tuple[int,int], **kwargs):
+    def __init__(self, shortest_path_classes : Tuple[int,int], sample_size : float, **kwargs):
         super().__init__(**kwargs)
         shortest_path_cutoff, N_classes = shortest_path_classes
-        assert shortest_path_cutoff > 0
+
+        assert shortest_path_cutoff > 0, 'cutoff shout be greater than 0'
+        assert sample_size > 0. and sample_size <= 1., f'sample size of value {sample_size} must be bewtween 0 and 1.'
 
         self.N_classes = N_classes
+        self.N_sampled_nodes = int(sample_size * self.data.num_nodes)
         in_channel = self.encoder.out_channels
 
         self.loss = nn.CrossEntropyLoss(reduction='mean')
@@ -239,61 +244,52 @@ class S2GRL(BasicPretextTask):
                 Linear(in_channel, in_channel // 2),
                 nn.ReLU(),
                 Linear(in_channel // 2, self.N_classes),
-                nn.Sigmoid()
-        )
-        self.__shortest_paths = None
+        )        
         
 
+        self.k_hop_neighbors_source_indices = [None] * self.data.num_nodes      # Src node --> Src node
+        self.k_hop_neighbors_target_indices = [None] * self.data.num_nodes      # Src node --> indices of K-hop neighbors
+        self.k_hop_neighbors_distances = [None] * self.data.num_nodes           # Src node --> distance of K-hop neighbors
+        
+        G = to_networkx(self.data)
+        self.indices = [*range(0, self.data.num_nodes)]
+        shortest_paths = all_pairs_shortest_path_length(G, cutoff=shortest_path_cutoff)
+        shortest_paths = map(lambda v_i: (v_i[0], filter(lambda neighbours: neighbours[1] > 0, v_i[1].items())), shortest_paths)
+        shortest_paths = map(lambda v_i: (v_i[0], map(lambda neighbours: (neighbours[0], min(neighbours[1], self.N_classes - 1)), v_i[1])), shortest_paths)
+        for source, neighbors in shortest_paths:
+            neighbors = filter(lambda neighbor: (not (neighbor[0] == source)) and (neighbor[1] > 0), neighbors)
+            # print(len(zip(*neighbors)))
+            neighbors = list(zip(*neighbors))
+            if len(neighbors) == 0:
+                indices, distances = [], []
+            else:               
+                indices, distances = neighbors
+        
+            self.k_hop_neighbors_target_indices[source] = torch.tensor(list(indices), dtype=torch.long)
+            self.k_hop_neighbors_distances[source] = torch.tensor(list(distances), dtype=torch.long) - 1 # Map distance 1 to class 0
+            self.k_hop_neighbors_source_indices[source] = torch.ones(len(indices), dtype=torch.long) * source
 
-    @property
-    def shortest_paths(self) -> Dict[int, Dict[int, int]]:
-        '''
-        Outer dict:     Source node v_i --> k-hop neighbours
-        Inner dicts:    Target node v_j --> distance between v_i and v_j (symmetric)
-        '''
-        if self.__shortest_paths is None:
-            G = to_networkx(self.data)
-            self.__shortest_paths = { i: {} for i in range(G.number_of_nodes())}
-
-            # 1) Find shortest paths
-            # 2) Remove paths of length 0 (path v_i --> v_i)
-            # 3) Smallworld merge policy
-            shortest_paths = all_pairs_shortest_path_length(G, cutoff=self.N_classes)
-            shortest_paths = map(lambda v_i: (v_i[0], filter(lambda neighbours: neighbours[1] > 0, v_i[1].items())), shortest_paths)
-            shortest_paths = map(lambda v_i: (v_i[0], map(lambda neighbours: (neighbours[0], max(neighbours[1], self.N_classes)), v_i[1])), shortest_paths)
-            self.__shortest_paths = { v_i: dict(v_j) for v_i, v_j in shortest_paths}
-            
-        return self.__shortest_paths
-    
-    @property
-    def pseudo_labels(self):
-        return self.shortest_paths
-
-    
     def make_loss(self, embeddings : Tensor):
-        total_loss = torch.tensor(0, dtype=torch.float64)
-        for source, targets in self.shortest_paths.items():
-            v_i = embeddings[source]
+        source_node_indices = random.sample(self.indices, k=self.N_sampled_nodes)
 
-            # Distance i maps to class i - 1.
-            distances = torch.tensor([*targets.values()]) - 1
-            pseudo_labels = distances
+        source_nodes = torch.cat([self.k_hop_neighbors_source_indices[i] for i in source_node_indices])
+        neighbor_nodes = torch.cat([self.k_hop_neighbors_target_indices[i] for i in source_node_indices])
+        distances = torch.cat([self.k_hop_neighbors_distances[i] for i in source_node_indices])
+        # assert not torch.isnan(embeddings).any(), "embeddings contains NaN values"
+        # assert not torch.isinf(embeddings).any(), "embeddings contains infinite values"
+        # assert not torch.isnan(source_nodes).any(), "source_nodes contains NaN values"
+        # assert not torch.isnan(neighbor_nodes).any(), "neighbor_nodes contains NaN values"
+        # assert not torch.isnan(distances).any(), "distances contains NaN values"
 
-            # Select embeddings of neighbours
-            neighbour_indices = torch.tensor([*targets.keys()])
-            if len(neighbour_indices) == 0:
-                continue
-            neighbour_embeddings = embeddings[neighbour_indices]
-            assert pseudo_labels.shape[0] == neighbour_embeddings.shape[0]
+        vi_embeddings = embeddings[source_nodes]
+        neighbor_embeddings = embeddings[neighbor_nodes]
 
-            # Calculate interactions
-            distances = (v_i - neighbour_embeddings).abs()
-            encoded = self.decoder(distances)
-            loss = self.loss(input=encoded, target=pseudo_labels)
-            total_loss += loss
-        
-        total_loss /= len(self.shortest_paths.items())
-        return total_loss
+        predicted_distance = self.decoder((vi_embeddings - neighbor_embeddings).abs())
+        # assert not torch.isnan(predicted_distance).any(), "predicted_distance contains NaN values"
+        # assert not torch.isinf(predicted_distance).any(), "predicted_distance contains infinite values"
+
+        loss = self.loss(input=predicted_distance, target=distances)
+        return loss
 
 @gin.configurable
 class PairwiseAttrSim(BasicPretextTask):

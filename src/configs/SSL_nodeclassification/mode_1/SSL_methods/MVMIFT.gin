@@ -2,7 +2,7 @@ include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 MVMIFT_hparams = {
     'k': [2,3,6],
-    'disagreement_regularization': [0.01, 0.1, 1.] # Set to 0.01 in paper & 1.0 on GitHub
+    'disagreement_regularization': [0.01, 0.1, 1.], # Set to 0.01 in paper & 1.0 on GitHub
     'common_representation_regularization': [0.1, 0.3, 0.5] # Set to 0.3 in paper & 0.5 on GitHub
 }
 

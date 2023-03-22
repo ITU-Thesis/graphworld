@@ -1,7 +1,7 @@
 include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
 
 PairwiseAttrSim_hparams = {
-    'k_largest' : [3,6,9]
+    'k_largest' : [3, 6, 9] # Set to 3 by the authors
 }
 
 # GCN encoder

@@ -16,3 +16,4 @@ scikit-learn
 pymetis
 torchmetrics
 numba
+torch-cluster
