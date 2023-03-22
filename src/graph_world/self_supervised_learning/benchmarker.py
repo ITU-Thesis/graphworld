@@ -30,6 +30,8 @@ from graph_world.self_supervised_learning.pretext_tasks.basic_pretext_task impor
 from typing import Type, List
 import inspect
 import logging
+import traceback
+
 
 
 from ..beam.benchmarker import BenchmarkerWrapper
@@ -273,7 +275,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
         torch_data, tuning_metric=tuning_metric, tuning_metric_is_loss=tuning_metric_is_loss)
     except Exception as e:
       print("FAILED")
-      print(e)
+      traceback.print_exc()
       logging.info(f'Failed to run for sample id {sample_id}')
       out['skipped'] = True
 

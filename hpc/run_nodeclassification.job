@@ -3,11 +3,11 @@
 #SBATCH -o out/node_classification/slurm_%a.out
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=1 
-#SBATCH --time=04:30:00         
+#SBATCH --time=21:00:00         
 #SBATCH --partition=brown
 #SBATCH --mail-type=BEGIN,FAIL,END          # Send an email when the job finishes
 
-
+echo "Running on $(hostname):"
 start=`date +%s`
 
 cd ..
