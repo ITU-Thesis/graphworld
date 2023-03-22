@@ -37,26 +37,26 @@ GCN_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
 
 
 # GAT encoder
-GAT_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
-GAT_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
-GAT_GZoom_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
 
-GAT_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
-GAT_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
-GAT_GZoom_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
 
-GAT_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
-GAT_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
-GAT_GZoom_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
 
 
 # GIN encoder

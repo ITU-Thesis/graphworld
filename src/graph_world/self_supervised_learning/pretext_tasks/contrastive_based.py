@@ -186,13 +186,13 @@ class AbstractSiameseBYOL(BasicPretextTask, ABC):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
-        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
+        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
+        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
 
         # Produce teacher embeddings
         with torch.no_grad():
-            v1_teacher = self.teacher_encoder(features1, edge_index1, edge_weights1)
-            v2_teacher = self.teacher_encoder(features2, edge_index2, edge_weights2)
+            v1_teacher = self.teacher_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
+            v2_teacher = self.teacher_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
 
         # Predict teacher embeddings from student embeddings
         v1_pred = self.student_predictor(v1_student)
@@ -249,8 +249,8 @@ class SelfGNN(AbstractSiameseBYOL):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
-        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
+        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
+        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
         return torch.cat([v1_student, v2_student], dim=1)#.detach()
 
     # Because of concat the output dim might change
@@ -480,8 +480,8 @@ class MERIT(AbstractSiameseBYOL):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.create_views(sub_sample = False)
 
         # Produce student embeddings
-        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
-        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
+        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
+        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
         return v1_student + v2_student
 
 

@@ -1,0 +1,96 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+DeepGraphInfomax_hparams = {}
+
+# GCN encoder
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+
+# GAT encoder
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+
+# GIN encoder
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+
+# APPNP encoder
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_task = @DeepGraphInfomax
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL.pretext_params = %DeepGraphInfomax_hparams
+
+

@@ -1,0 +1,98 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+GraphPartitioning_hparams = {
+    'n_partitions' : [8, 10, 12, 14, 16]
+}
+
+# GCN encoder
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+
+# GAT encoder
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+
+# GIN encoder
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+
+# APPNP encoder
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
+
+

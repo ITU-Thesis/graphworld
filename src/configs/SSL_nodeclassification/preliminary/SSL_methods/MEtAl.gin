@@ -1,0 +1,103 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+MEtAl_hparams = {
+    'partial_reconstruction': %PARTIAL_RECONSTRUCTION,
+    'feature_mask_ratio': %CORRUPTION_RATIO, 
+    'embedding_mask_ratio': %CORRUPTION_RATIO,
+    'ae_loss_weight': %PRETEXT_WEIGHT,
+    'fr_loss_weight': %PRETEXT_WEIGHT,
+    'er_loss_weight': %PRETEXT_WEIGHT,
+}
+
+# GCN encoder
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_MEtAl_JL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_MEtAl_PF/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_MEtAl_URL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+
+# GAT encoder
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_MEtAl_JL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_MEtAl_PF/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_MEtAl_URL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+
+# GIN encoder
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_MEtAl_JL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_MEtAl_PF/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_MEtAl_URL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+
+# APPNP encoder
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_MEtAl_JL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_MEtAl_PF/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.pretext_task = @MEtAl
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_MEtAl_URL/NNNodeBenchmarkSSL.pretext_params = %MEtAl_hparams
+
+

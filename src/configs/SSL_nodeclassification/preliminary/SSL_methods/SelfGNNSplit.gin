@@ -1,0 +1,96 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+SelfGNNSplit_hparams = {}
+
+# GCN encoder
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# GAT encoder
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# GIN encoder
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# APPNP encoder
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+

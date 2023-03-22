@@ -28,49 +28,49 @@ GCN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
 
 # GAT encoder (not possible because of edge weights)
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.model_class = @GAT
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.model_class = @GAT
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
 
-# GIN encoder (not possible because of edge weights)
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.model_class = @GIN
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# # GIN encoder (not possible because of edge weights)
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+# GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.model_class = @GIN
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+# GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.model_class = @GIN
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.model_class = @GIN
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNPPR
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+# GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNPPR_hparams
 
 
 # APPNP encoder

@@ -1,0 +1,6 @@
+include '/app/configs/SSL_nodeclassification/sbm/default_param_ranges.gin'
+
+NodeClassificationBeamHandlerSSL.generator_wrapper = @SbmGeneratorWrapper()
+SbmGeneratorWrapper.marginal = False
+SbmGeneratorWrapper.param_sampler_specs = %SBMSamplerSpec
+SbmGeneratorWrapper.normalize_features = True

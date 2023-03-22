@@ -1,0 +1,99 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+S2GRL_hparams = {
+    'shortest_path_classes' : [(5, 5), (5, 4), (5, 3), (5, 2),
+                                (4, 4), (4, 3), (4, 2),
+                                (2, 2), (2, 1), (1, 1)],
+    'sample_size': [0.1, 0.3]
+}
+
+# GCN encoder
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_S2GRL_JL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_S2GRL_PF/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_S2GRL_URL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+
+# GAT encoder
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_S2GRL_JL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_S2GRL_PF/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_S2GRL_URL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+
+# GIN encoder
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_S2GRL_JL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_S2GRL_PF/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_S2GRL_URL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+
+# APPNP encoder
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_S2GRL_JL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_S2GRL_PF/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams
+
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.pretext_task = @S2GRL
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_S2GRL_URL/NNNodeBenchmarkSSL.pretext_params = %S2GRL_hparams

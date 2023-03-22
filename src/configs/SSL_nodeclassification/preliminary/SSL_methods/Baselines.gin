@@ -1,0 +1,37 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+Baselines_hparams = {}
+
+# GCN encoder
+GCN_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GCN_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_Baselines_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
+
+# GAT encoder
+GAT_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GAT_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_Baselines_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
+
+# GIN encoder
+GIN_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GIN_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_Baselines_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
+
+# APPNP encoder
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
+
+

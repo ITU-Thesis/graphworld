@@ -1,0 +1,102 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+GCA_hparams = {
+    'tau' : %TAU, 
+    'edge_mask_ratio1' : %CORRUPTION_RATIO,
+    'edge_mask_ratio2' : %CORRUPTION_RATIO,
+    'feature_mask_ratio1' : %CORRUPTION_RATIO, 
+    'feature_mask_ratio2' : %CORRUPTION_RATIO,
+}
+
+# GCN encoder
+GCN_GCA_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GCN_GCA_JL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GCN_GCA_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GCN_GCA_PF/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GCN_GCA_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GCN_GCA_URL/NNNodeBenchmarkSSL.h_params = %GCN_HPARAMS
+GCN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+
+# GAT encoder
+GAT_GCA_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GAT_GCA_JL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GAT_GCA_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GAT_GCA_PF/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GAT_GCA_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GAT_GCA_URL/NNNodeBenchmarkSSL.h_params = %GAT_HPARAMS
+GAT_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+
+# GIN encoder
+GIN_GCA_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+GIN_GCA_JL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GIN_GCA_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+GIN_GCA_PF/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+GIN_GCA_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+GIN_GCA_URL/NNNodeBenchmarkSSL.h_params = %GIN_HPARAMS
+GIN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+
+# APPNP encoder
+APPNP_GCA_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+APPNP_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = %JL_BENCHMARK_PARAMS
+APPNP_GCA_JL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+APPNP_GCA_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+APPNP_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = %PF_BENCHMARK_PARAMS
+APPNP_GCA_PF/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+APPNP_GCA_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+APPNP_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = %URL_BENCHMARK_PARAMS
+APPNP_GCA_URL/NNNodeBenchmarkSSL.h_params = %APPNP_HPARAMS
+APPNP_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
+
+
