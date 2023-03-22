@@ -220,7 +220,7 @@ class NNNodeBenchmarkerSSL(NNNodeBenchmarker):
     best_val_metrics = None
     last_improvement = 0
     for _ in range(self._downstream_epochs):
-      if last_improvement == self._patience:
+      if last_improvement == self._patience or (tuning_metric == 'rocauc_ovr' and best_val_metric == 1.0):
         break
       downstream_train_losses.append(float(self.downstream_train_step(data)))
       val_metrics = self.test(data, test_on_val=True)

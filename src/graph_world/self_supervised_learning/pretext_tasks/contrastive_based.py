@@ -48,7 +48,6 @@ class GRACE(BasicPretextTask):
         out = self.encoder.out_channels
         self.fc1 = Linear(out, out)
         self.fc2 = Linear(out, out)
-        self.decoder = torch.nn.ModuleList([self.fc1, self.fc2])
 
     def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
         edge_index, _ = dropout_adj(self.data.edge_index, p=e_mask_ratio)
@@ -156,7 +155,6 @@ class AbstractSiameseBYOL(BasicPretextTask, ABC):
             Linear(out, out), torch.nn.PReLU(),
             Linear(out, out)
         )
-        self.decoder = self.student_predictor # Make predictor optimizable
 
     # Override this function to generate 2 views.
     # should return tuple of (features1, edge_index1, features2, edge_index2)
@@ -186,13 +184,13 @@ class AbstractSiameseBYOL(BasicPretextTask, ABC):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
-        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
 
         # Produce teacher embeddings
         with torch.no_grad():
-            v1_teacher = self.teacher_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
-            v2_teacher = self.teacher_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
+            v1_teacher = self.teacher_encoder(features1, edge_index1, edge_weights1)
+            v2_teacher = self.teacher_encoder(features2, edge_index2, edge_weights2)
 
         # Predict teacher embeddings from student embeddings
         v1_pred = self.student_predictor(v1_student)
@@ -249,8 +247,8 @@ class SelfGNN(AbstractSiameseBYOL):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.generate_views()
 
         # Produce student embeddings
-        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
-        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
         return torch.cat([v1_student, v2_student], dim=1)#.detach()
 
     # Because of concat the output dim might change
@@ -347,7 +345,6 @@ class GBT(BasicPretextTask):
         super().__init__(**kwargs)
         self.edge_mask_ratio =  edge_mask_ratio
         self.feature_mask_ratio = feature_mask_ratio
-        self.iteration = 0
    
    # EM and NFM (same as in GRACE)
     def generate_view(self, f_mask_ratio : float, e_mask_ratio : float) -> Tuple[Tensor, Tensor]:
@@ -380,7 +377,6 @@ class GBT(BasicPretextTask):
         return loss
     
     def make_loss(self, embeddings: Tensor):
-        self.iteration += 1
         # Generate the two views (same masking ratios)
         features1, edge_index1 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
         features2, edge_index2 = self.generate_view(self.feature_mask_ratio, self.edge_mask_ratio)
@@ -480,8 +476,8 @@ class MERIT(AbstractSiameseBYOL):
         features1, edge_index1, edge_weights1, features2, edge_index2, edge_weights2 = self.create_views(sub_sample = False)
 
         # Produce student embeddings
-        v1_student = self.student_encoder(x=features1, edge_index=edge_index1, edge_weight=edge_weights1)
-        v2_student = self.student_encoder(x=features2, edge_index=edge_index2, edge_weight=edge_weights2)
+        v1_student = self.student_encoder(features1, edge_index1, edge_weights1)
+        v2_student = self.student_encoder(features2, edge_index2, edge_weights2)
         return v1_student + v2_student
 
 
