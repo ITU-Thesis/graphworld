@@ -19,3 +19,6 @@ bin/
 
 # Output
 out/
+
+# shard files
+*.ndjson
