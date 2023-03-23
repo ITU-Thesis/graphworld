@@ -94,7 +94,7 @@ class GCA(GRACE):
         super().__init__(tau, edge_mask_ratio1, edge_mask_ratio2, 
                          feature_mask_ratio1, feature_mask_ratio2, **kwargs)
         
-        node_degrees = degree(self.data.edge_index[1])
+        node_degrees = degree(self.data.edge_index[1], num_nodes=self.data.num_nodes)
 
         # Edge masking weights
         deg_col = node_degrees[self.data.edge_index[1]].to(torch.float32)

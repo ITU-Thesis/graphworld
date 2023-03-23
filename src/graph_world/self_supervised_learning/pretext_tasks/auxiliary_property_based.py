@@ -85,7 +85,7 @@ class GraphPartitioning(BasicPretextTask):
     def __init__(self, n_partitions: int, **kwargs):
         super().__init__(**kwargs)
 
-        sparse_matrix = to_scipy_sparse_matrix(self.data.edge_index)
+        sparse_matrix = to_scipy_sparse_matrix(self.data.edge_index, num_nodes=self.data.num_nodes)
         node_num = sparse_matrix.shape[0]
         adj_list = [[] for _ in range(node_num)]
         for i, j in zip(sparse_matrix.row, sparse_matrix.col):

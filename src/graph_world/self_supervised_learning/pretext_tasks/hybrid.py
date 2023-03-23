@@ -213,9 +213,9 @@ class G_Zoom(BasicPretextTask):
         target_nodes, subgraph_nodes = self.__graph_samplig()
 
         G1_edge_index, *_ = subgraph(subset=subgraph_nodes,
-                                     edge_index=self.G.edge_index, relabel_nodes=False)
+                                     edge_index=self.G.edge_index, relabel_nodes=False, num_nodes = self.G.num_nodes)
         G2_edge_index, G2_weights = subgraph(
-            subset=subgraph_nodes, edge_index=self.G_tilde.edge_index, edge_attr=self.G_tilde.edge_weight, relabel_nodes=False)
+            subset=subgraph_nodes, edge_index=self.G_tilde.edge_index, edge_attr=self.G_tilde.edge_weight, relabel_nodes=False, num_nodes=self.G_tilde.num_nodes)
 
         H1 = self.encoder(x=self.data.x, edge_index=G1_edge_index)
         H2 = self.encoder(
