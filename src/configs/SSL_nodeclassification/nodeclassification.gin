@@ -12,6 +12,7 @@ GeneratorBeamHandlerWrapper.nsamples = 1
 
 NodeClassificationBeamHandlerSSL.num_tuning_rounds = 1
 NodeClassificationBeamHandlerSSL.save_tuning_results = False
+NodeClassificationBeamHandlerSSL.save_training_curves = False # Set to True to get all losses and tuning metric for each epoch
 NodeClassificationBeamHandlerSSL.tuning_metric = "rocauc_ovr"
 NodeClassificationBeamHandlerSSL.ktrain = 5
 NodeClassificationBeamHandlerSSL.ktuning = 5

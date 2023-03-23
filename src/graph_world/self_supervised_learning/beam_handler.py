@@ -13,9 +13,10 @@ from ..beam.benchmarker import BenchmarkGNNParDo
 
 class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
   def __init__(self, benchmarker_wrappers, num_tuning_rounds, tuning_metric,
-               tuning_metric_is_loss=False, save_tuning_results=False):
+               tuning_metric_is_loss=False, save_tuning_results=False, save_training_curves=False):
     super().__init__(benchmarker_wrappers, num_tuning_rounds, tuning_metric,
                tuning_metric_is_loss, save_tuning_results)
+    self._save_training_curves = save_training_curves
     self._pretext_task = [benchmarker_wrapper().GetPretextTask() for
                            benchmarker_wrapper in benchmarker_wrappers]
     self._pretext_params = [benchmarker_wrapper().GetPretextParams() for
@@ -198,10 +199,11 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_pretext_{key}'] = value
 
       output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_skipped'] = skipped
-      output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_pretext_losses'] = pretext_losses
-      output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_val_losses'] = downstream_val_losses
-      output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_train_losses'] = downstream_train_losses
-      output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_val_tuning_metrics'] = downstream_val_tuning_metrics
+      if self._save_training_curves:
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_pretext_losses'] = pretext_losses
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_val_losses'] = downstream_val_losses
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_train_losses'] = downstream_train_losses
+        output_data[f'{benchmarker.GetModelName()}_{benchmarker.GetPretextTaskName()}_{training_scheme}_downstream_val_tuning_metrics'] = downstream_val_tuning_metrics
 
     yield json.dumps(output_data)
 
@@ -216,7 +218,7 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
   def __init__(self, benchmarker_wrappers, generator_wrapper,
                num_tuning_rounds=1, tuning_metric='',
                tuning_metric_is_loss=False, ktrain=5, ktuning=5,
-               save_tuning_results=False):
+               save_tuning_results=False, save_training_curves=False):
     super().__init__(benchmarker_wrappers, generator_wrapper,
                num_tuning_rounds=num_tuning_rounds, tuning_metric=tuning_metric,
                tuning_metric_is_loss=tuning_metric_is_loss, ktrain=ktrain, ktuning=ktuning,
@@ -224,4 +226,4 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
 
     self._benchmark_par_do = BenchmarkGNNParDoSSL(
         benchmarker_wrappers, num_tuning_rounds, tuning_metric,
-        tuning_metric_is_loss, save_tuning_results)
+        tuning_metric_is_loss, save_tuning_results, save_training_curves)
