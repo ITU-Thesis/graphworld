@@ -20,5 +20,7 @@ bin/
 # Output
 out/
 
-# shard files
+# evaluation and results
 *.ndjson
+shards/
+raw/
