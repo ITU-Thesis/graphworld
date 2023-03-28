@@ -1,0 +1,233 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+CentralityScoreRanking_hparams = {}
+
+# GCN encoder
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+
+# GAT encoder
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+
+# GIN encoder
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+
+# APPNP encoder
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_task = @CentralityScoreRanking
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL.pretext_params = %CentralityScoreRanking_hparams
+
+

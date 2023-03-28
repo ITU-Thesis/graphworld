@@ -1,0 +1,238 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+BGRL_hparams = {
+    'edge_mask_ratio1' : %CORRUPTION_RATIO,
+    'edge_mask_ratio2' : %CORRUPTION_RATIO,
+    'feature_mask_ratio1' : %CORRUPTION_RATIO, 
+    'feature_mask_ratio2' : %CORRUPTION_RATIO,
+}
+
+# GCN encoder
+GCN_BGRL_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_BGRL_JL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GCN_BGRL_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_BGRL_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_BGRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_BGRL_JL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GCN_BGRL_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_BGRL_PF/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GCN_BGRL_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_BGRL_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_BGRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_BGRL_PF/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GCN_BGRL_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_BGRL_URL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GCN_BGRL_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_BGRL_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_BGRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_BGRL_URL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+
+# GAT encoder
+GAT_BGRL_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_BGRL_JL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GAT_BGRL_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_BGRL_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_BGRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_BGRL_JL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GAT_BGRL_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_BGRL_PF/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GAT_BGRL_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_BGRL_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_BGRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_BGRL_PF/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GAT_BGRL_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_BGRL_URL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GAT_BGRL_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_BGRL_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_BGRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_BGRL_URL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+
+# GIN encoder
+GIN_BGRL_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_BGRL_JL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GIN_BGRL_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_BGRL_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_BGRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_BGRL_JL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GIN_BGRL_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_BGRL_PF/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GIN_BGRL_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_BGRL_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_BGRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_BGRL_PF/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+GIN_BGRL_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_BGRL_URL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+GIN_BGRL_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_BGRL_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_BGRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_BGRL_URL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+
+# APPNP encoder
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_BGRL_JL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.pretext_task = @BGRL
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_BGRL_PF/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.pretext_task = @BGRL
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_BGRL_URL/NNNodeBenchmarkSSL.pretext_params = %BGRL_hparams
+
+

@@ -1,0 +1,174 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+ARGA_hparams = {
+    'discriminator_lr' : %DISCRIMINATOR_LR,
+    'discriminator_downstream_epochs' : %DISCRIMINATOR_EPOCHS
+}
+
+# GCN encoder
+GCN_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_ARGA_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+GCN_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_ARGA_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GCN_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GCN_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_ARGA_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+# GAT encoder
+GAT_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_ARGA_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GAT_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_ARGA_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GAT_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GAT_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_ARGA_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+
+# GIN encoder
+GIN_ARGA_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_JL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_ARGA_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_ARGA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_ARGA_JL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GIN_ARGA_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_PF/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_ARGA_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_ARGA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_ARGA_PF/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams
+
+GIN_ARGA_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_ARGA_URL/NNNodeBenchmarkSSL.pretext_task = @ARGA
+GIN_ARGA_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_ARGA_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_ARGA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_ARGA_URL/NNNodeBenchmarkSSL.pretext_params = %ARGA_hparams

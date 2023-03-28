@@ -1,0 +1,235 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+AttributeMask_hparams = {
+    'node_mask_ratio' : %CORRUPTION_RATIO
+}
+
+# GCN encoder
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+
+# GAT encoder
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+
+# GIN encoder
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+
+# APPNP encoder
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_AttributeMask_JL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_AttributeMask_PF/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_task = @AttributeMask
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_AttributeMask_URL/NNNodeBenchmarkSSL.pretext_params = %AttributeMask_hparams
+
+

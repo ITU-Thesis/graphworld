@@ -1,0 +1,233 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+SelfGNNSplit_hparams = {}
+
+# GCN encoder
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# GAT encoder
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# GIN encoder
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+
+# APPNP encoder
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_task = @SelfGNNSplit
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL.pretext_params = %SelfGNNSplit_hparams
+
+

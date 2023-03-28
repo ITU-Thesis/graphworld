@@ -1,0 +1,244 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+GZoom_hparams = {
+    'B_perc' : [0.1],   # Set to 200 for Cora in paper
+    'k': [4, 8],        # Set to 100 for Cora in paper
+    'P_perc': [1.1],
+    'alpha_beta_gamma_weights': [
+        (0.3, 0.3, 0.3),                                            # Zooms equal contribute
+        (0.0, 0.5, 0.5), (0.5, 0.0, 0.5), (0.5, 0.5, 0.0),          # Turn one zoom off
+        (0.1, 0.45, 0.45), (0.45, 0.1, 0.45), (0.45, 0.45, 0.1),    # Weight one zoom less
+        (0.7, 0.15, 0.15), (0.15, 0.7, 0.15), (0.15, 0.15, 0.7)     # Weight one zoom more
+    ],
+    'alpha': [0.15]
+}
+
+# GCN encoder
+GCN_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_GZoom_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GCN_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_GZoom_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GCN_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GCN_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_GZoom_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# GAT encoder
+GAT_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GAT_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_GZoom_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GAT_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GAT_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_GZoom_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GAT_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GAT_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_GZoom_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# GIN encoder
+GIN_GZoom_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GIN_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_GZoom_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GIN_GZoom_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GIN_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_GZoom_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+GIN_GZoom_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+GIN_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_GZoom_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+
+# APPNP encoder
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_GZoom_JL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_GZoom_PF/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.pretext_task = @G_Zoom
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_GZoom_URL/NNNodeBenchmarkSSL.pretext_params = %GZoom_hparams
+
+

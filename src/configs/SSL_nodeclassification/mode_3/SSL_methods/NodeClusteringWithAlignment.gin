@@ -1,0 +1,235 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+NodeClusteringWithAlignment_hparams = {
+    'cluster_ratio' : [0.02, 0.04, 0.08] # Set to always 200 in the authors code
+}
+
+# GCN encoder
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# GAT encoder
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# GIN encoder
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+
+# APPNP encoder
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_task = @NodeClusteringWithAlignment
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL.pretext_params = %NodeClusteringWithAlignment_hparams
+
+

@@ -1,0 +1,236 @@
+include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+
+SUBGCON_hparams = {
+    'alpha' : %ALPHA, 
+    'k' : [5,10,15,20]
+}
+
+# GCN encoder
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.model_class = @GCN
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+
+# GAT encoder
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.model_class = @GAT
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+    'heads' : %NUM_HEADS,
+}
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+
+# GIN encoder
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.model_class = @GIN
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'dropout' : %DROPOUT,
+}
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+
+# APPNP encoder
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.benchmark_params = {
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr': %DOWNSTREAM_LR,
+    'patience': %PATIENCE,
+    'pretext_weight': %PRETEXT_WEIGHT
+}
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+APPNP_SUBGCON_JL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+APPNP_SUBGCON_PF/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.model_class = @APPNP
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_task = @SUBGCON
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.benchmark_params = {
+    'pretext_epochs' : %PRETEXT_EPOCHS,
+    'pretext_lr' : %PRETEXT_LR,
+    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
+    'downstream_lr' : %DOWNSTREAM_LR,
+    'patience' : %PATIENCE
+}
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.h_params = {
+    'in_channels' : 16,
+    'hidden_channels' : %HIDDEN_CHANNELS,
+    'num_layers' : %NUM_LAYERS,
+    'alpha': %ALPHA,
+    'iterations': %ITERATIONS,
+    'dropout' : %DROPOUT,
+}
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+APPNP_SUBGCON_URL/NNNodeBenchmarkSSL.pretext_params = %SUBGCON_hparams
+
+
