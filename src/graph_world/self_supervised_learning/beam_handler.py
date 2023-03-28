@@ -27,7 +27,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
   def process(self, element):
     output_data = {}
     output_data.update(element['generator_config'])
-    output_data['marginal_param'] = element['marginal_param']
+    output_data['marginal_params'] = element['marginal_param']
     output_data['fixed_params'] = element['fixed_params']
     output_data.update(element['metrics'])
     output_data['skipped'] = element['skipped']

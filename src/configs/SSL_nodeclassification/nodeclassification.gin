@@ -5,7 +5,7 @@ import graph_world.self_supervised_learning.pretext_tasks.contrastive_based_diff
 import graph_world.self_supervised_learning.pretext_tasks.generation_based
 import graph_world.self_supervised_learning.pretext_tasks.hybrid
 import graph_world.self_supervised_learning.beam_handler
-import graph_world.nodeclassification.generator_wrappers
+import graph_world.self_supervised_learning.generator_wrappers
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
 GeneratorBeamHandlerWrapper.nsamples = 100
@@ -19,8 +19,14 @@ NodeClassificationBeamHandlerSSL.ktuning = 5
 
 NodeClassificationBeamHandlerSSL.benchmarker_wrappers = %BENCHMARKERS
 
-# Import the gin configurations for the mode or experiment you want to run
+# Import the hyperparameter configurations for the mode or experiment you want to run
 include '/app/configs/SSL_nodeclassification/mode_1/all.gin'
 
 # Import the appropriate generator setup file (marginalization or no marginalization)
-include '/app/configs/SSL_nodeclassification/sbm/default_setup_no_marg.gin'
+include '/app/configs/SSL_nodeclassification/sbm/default_setup_marg.gin'
+
+# If doing marginalization, then you can set the parameters to marginalize on (can choose multiple).
+# If no parameters are set, then one will be randomly sampled
+# Options are: avg_degree, cluster_size_slope, feature_center_distance, num_clusters,
+#              nvertex, p_to_q_ratio, power_exponent, min_degree
+SSLSbmGeneratorWrapper.marginal_params = ['avg_degree']

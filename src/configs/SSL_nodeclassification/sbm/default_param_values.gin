@@ -5,3 +5,4 @@ num_clusters/ParamSamplerSpec.default_val = 5
 nvertex/ParamSamplerSpec.default_val = 343
 p_to_q_ratio/ParamSamplerSpec.default_val = 3.9851426506883327
 power_exponent/ParamSamplerSpec.default_val = 0.9999998985285983
+min_deg/ParamSamplerSpec.default_val = 4
