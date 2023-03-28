@@ -9,14 +9,16 @@ import numpy as np
 from .hparam_utils import ComputeNumPossibleConfigs, SampleModelConfig, GetCartesianProduct
 from ..nodeclassification.beam_handler import NodeClassificationBeamHandler
 from ..beam.benchmarker import BenchmarkGNNParDo
-
+import random
 
 class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
   def __init__(self, benchmarker_wrappers, num_tuning_rounds, tuning_metric,
-               tuning_metric_is_loss=False, save_tuning_results=False, save_training_curves=False):
+               tuning_metric_is_loss=False, save_tuning_results=False, save_training_curves=False,
+               sample_pretext_without_replacement=False):
     super().__init__(benchmarker_wrappers, num_tuning_rounds, tuning_metric,
                tuning_metric_is_loss, save_tuning_results)
     self._save_training_curves = save_training_curves
+    self._sample_pretext_without_replacement = sample_pretext_without_replacement
     self._pretext_task = [benchmarker_wrapper().GetPretextTask() for
                            benchmarker_wrapper in benchmarker_wrappers]
     self._pretext_params = [benchmarker_wrapper().GetPretextParams() for
@@ -111,7 +113,14 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           if num_pretext_configs > 0:
             num_tuning_rounds *= num_pretext_configs
           full_product = True
+        elif self._sample_pretext_without_replacement:
+          benchmark_params_sample, h_params_sample, _ = SampleModelConfig(benchmark_params,
+                                                                         h_params, pretext_params)
+          pretext_params_product = list(GetCartesianProduct(pretext_params))
+          num_tuning_rounds = len(pretext_params_product)
+          random.shuffle(pretext_params_product)
         for i in range(num_tuning_rounds):
+          print(i)
           if full_product:
             if num_benchmark_configs > 0:
               benchmark_index = math.floor(i / (num_h_configs*num_pretext_configs))
@@ -124,10 +133,12 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
             else:
               h_params_sample = None
             if num_pretext_configs > 0:
-              p_index = i % pretext_params
+              p_index = i % num_pretext_configs
               pretext_params_sample = pretext_params_product[p_index]
             else:
               pretext_params_sample = None
+          elif self._sample_pretext_without_replacement:
+            pretext_params_sample = pretext_params_product[i]
           else:
             benchmark_params_sample, h_params_sample, pretext_params_sample = SampleModelConfig(benchmark_params,
                                                                          h_params, pretext_params)
@@ -150,6 +161,10 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
             downstream_train_losses_list.append(benchmarker_out['downstream_train_losses'])
             downstream_val_losses_list.append(benchmarker_out['downstream_val_losses'])
             downstream_val_tuning_metrics_list.append(benchmarker_out['downstream_val_tuning_metrics'])
+
+          if benchmarker_out['val_metrics'][self._tuning_metric] == 1.0 and not self._tuning_metric_is_loss:
+            print("stopped")
+            break # stop tuning if perfect evaluation metric has been achieved
 
         val_scores = [metrics[self._tuning_metric] for metrics in val_metrics_list]
         test_scores = [metrics[self._tuning_metric] for metrics in test_metrics_list]
@@ -218,7 +233,7 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
   def __init__(self, benchmarker_wrappers, generator_wrapper,
                num_tuning_rounds=1, tuning_metric='',
                tuning_metric_is_loss=False, ktrain=5, ktuning=5,
-               save_tuning_results=False, save_training_curves=False):
+               save_tuning_results=False, save_training_curves=False, sample_pretext_without_replacement = False):
     super().__init__(benchmarker_wrappers, generator_wrapper,
                num_tuning_rounds=num_tuning_rounds, tuning_metric=tuning_metric,
                tuning_metric_is_loss=tuning_metric_is_loss, ktrain=ktrain, ktuning=ktuning,
@@ -226,4 +241,4 @@ class NodeClassificationBeamHandlerSSL(NodeClassificationBeamHandler):
 
     self._benchmark_par_do = BenchmarkGNNParDoSSL(
         benchmarker_wrappers, num_tuning_rounds, tuning_metric,
-        tuning_metric_is_loss, save_tuning_results, save_training_curves)
+        tuning_metric_is_loss, save_tuning_results, save_training_curves, sample_pretext_without_replacement)
