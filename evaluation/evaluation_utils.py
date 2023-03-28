@@ -25,7 +25,7 @@ def read_processed_shards(PROCESSED_DIR, shard=None):
     print("concatenating")
     results_df = pd.concat(dfs)
     del dfs
-    return results_df
+    return results_df.reset_index(drop=True)
 
 
 
