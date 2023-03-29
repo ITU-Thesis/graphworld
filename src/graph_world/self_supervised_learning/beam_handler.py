@@ -29,7 +29,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
   def process(self, element):
     output_data = {}
     output_data.update(element['generator_config'])
-    output_data['marginal_params'] = element['marginal_param']
+    output_data['marginal_param'] = element['marginal_param']
     output_data['fixed_params'] = element['fixed_params']
     output_data.update(element['metrics'])
     output_data['skipped'] = element['skipped']
@@ -120,7 +120,6 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           num_tuning_rounds = len(pretext_params_product)
           random.shuffle(pretext_params_product)
         for i in range(num_tuning_rounds):
-          print(i)
           if full_product:
             if num_benchmark_configs > 0:
               benchmark_index = math.floor(i / (num_h_configs*num_pretext_configs))
@@ -163,7 +162,6 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
             downstream_val_tuning_metrics_list.append(benchmarker_out['downstream_val_tuning_metrics'])
 
           if benchmarker_out['val_metrics'][self._tuning_metric] == 1.0 and not self._tuning_metric_is_loss:
-            print("stopped")
             break # stop tuning if perfect evaluation metric has been achieved
 
         val_scores = [metrics[self._tuning_metric] for metrics in val_metrics_list]
