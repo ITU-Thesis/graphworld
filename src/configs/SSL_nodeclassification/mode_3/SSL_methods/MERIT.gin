@@ -1,8 +1,8 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 MERIT_hparams = {
     'edge_modification_ratio' : %CORRUPTION_RATIO,
-    'feature_mask_ratio' : %CORRUPTION_RATIO,
+    'feature_mask_ratio' : [0.1, 0.2, 0.3],
     'beta' : %BALANCE_FACTOR,
     'alpha' : %ALPHA
 }
@@ -10,229 +10,54 @@ MERIT_hparams = {
 # GCN encoder
 GCN_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
 GCN_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.3,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 100
 }
 GCN_MERIT_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
 
 GCN_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
 GCN_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GCN_MERIT_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GCN_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GCN_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
 
 GCN_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
+GCN_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
 GCN_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GCN_MERIT_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GCN_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GCN_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-
-# # GAT encoder (not possible because of edge weights)
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GAT
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
-}
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-# GAT_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GAT
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
-}
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-# GAT_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GAT
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
-}
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-# GAT_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-
-# # GIN encoder (not possible because of edge weights)
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.model_class = @GIN
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-}
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-# GIN_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.model_class = @GIN
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-}
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-# GIN_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.model_class = @GIN
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-}
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-# GIN_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-
-# APPNP encoder
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_MERIT_JL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.pretext_task = @MERIT
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-APPNP_MERIT_PF/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.pretext_task = @MERIT
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-APPNP_MERIT_URL/NNNodeBenchmarkSSL.pretext_params = %MERIT_hparams
-
 

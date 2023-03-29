@@ -1,80 +1,58 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 Baselines_hparams = {}
 
 # GCN encoder
 GCN_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GCN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
 GCN_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 100
 }
 GCN_Baselines_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
 
 # GAT encoder
 GAT_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GAT_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
 GAT_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 50
 }
 GAT_Baselines_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
+    'heads' : 2,
 }
-GAT_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
 
 # GIN encoder
 GIN_Baselines_JL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
+GIN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
 GIN_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 500
 }
 GIN_Baselines_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GIN_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
-
-# APPNP encoder
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.pretext_task = None
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_Baselines_JL/NNNodeBenchmarkSSL.pretext_params = %Baselines_hparams
-
-

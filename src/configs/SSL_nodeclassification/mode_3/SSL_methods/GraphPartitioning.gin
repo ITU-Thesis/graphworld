@@ -1,4 +1,4 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 GraphPartitioning_hparams = {
     'n_partitions' : [8, 10, 12, 14, 16]
@@ -7,229 +7,166 @@ GraphPartitioning_hparams = {
 # GCN encoder
 GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.8,
 }
-GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GCN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 
 # GAT encoder
 GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 1,
 }
-GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
+    'heads' : 2,
 }
-GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 
 # GIN encoder
 GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.8,
 }
-GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 
 GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
 GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
-
-
-# APPNP encoder
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
-
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
-
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_task = @GraphPartitioning
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL.pretext_params = %GraphPartitioning_hparams
-
-

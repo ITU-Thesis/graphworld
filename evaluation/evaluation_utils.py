@@ -33,7 +33,8 @@ def get_best_configuration_per_model(df, TEST_METRIC):
     best_configurations = {}
 
     # Common hparams
-    COMMON_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 'encoder_dropout']
+    COMMON_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 
+                     'encoder_dropout', 'train_downstream_lr', 'train_downstream_epochs', 'train_patience']
 
     # GAT hparams
     GAT_PARAMS =['encoder_heads']

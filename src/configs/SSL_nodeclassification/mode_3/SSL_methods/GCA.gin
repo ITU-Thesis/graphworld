@@ -1,239 +1,176 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 GCA_hparams = {
-    'tau' : %TAU, 
-    'edge_mask_ratio1' : %CORRUPTION_RATIO,
-    'edge_mask_ratio2' : %CORRUPTION_RATIO,
-    'feature_mask_ratio1' : %CORRUPTION_RATIO, 
-    'feature_mask_ratio2' : %CORRUPTION_RATIO,
+    'tau' : [0.1, 0.3, 0.5], 
+    'edge_mask_ratio1' : [0.1, 0.3, 0.5],
+    'edge_mask_ratio2' : [0.1, 0.3, 0.5],
+    'feature_mask_ratio1' : [0.1, 0.3, 0.5], 
+    'feature_mask_ratio2' : [0.1, 0.3, 0.5],
 }
 
 # GCN encoder
 GCN_GCA_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GCN_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.3,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 100
 }
 GCN_GCA_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GCN_GCA_PF/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GCN_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GCN_GCA_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GCN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GCN_GCA_URL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GCN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GCN_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GCN_GCA_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GCN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 
 # GAT encoder
 GAT_GCA_JL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GAT_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GAT_GCA_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GAT_GCA_PF/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GAT_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.003,
     'patience' : %PATIENCE
 }
 GAT_GCA_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GAT_GCA_URL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GAT_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GAT_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GAT_GCA_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 
 # GIN encoder
 GIN_GCA_JL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GIN_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GIN_GCA_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GIN_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GIN_GCA_PF/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GIN_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GIN_GCA_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GIN_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GIN_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 
 GIN_GCA_URL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
+GIN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
 GIN_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GIN_GCA_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GIN_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GIN_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
-
-
-# APPNP encoder
-APPNP_GCA_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GCA_JL/NNNodeBenchmarkSSL.pretext_task = @GCA
-APPNP_GCA_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_GCA_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GCA_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_GCA_JL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
-
-APPNP_GCA_PF/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GCA_PF/NNNodeBenchmarkSSL.pretext_task = @GCA
-APPNP_GCA_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_GCA_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GCA_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-APPNP_GCA_PF/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
-
-APPNP_GCA_URL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_GCA_URL/NNNodeBenchmarkSSL.pretext_task = @GCA
-APPNP_GCA_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_GCA_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_GCA_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-APPNP_GCA_URL/NNNodeBenchmarkSSL.pretext_params = %GCA_hparams
-
-

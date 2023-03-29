@@ -1,4 +1,4 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 PairwiseAttrSim_hparams = {
     'k_largest' : [3, 6, 9] # Set to 3 by the authors
@@ -7,227 +7,166 @@ PairwiseAttrSim_hparams = {
 # GCN encoder
 GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 5
 }
 GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GCN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GCN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 
 # GAT encoder
 GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
+    'heads' : 4,
 }
-GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 2,
 }
-GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
+    'heads' : 4,
 }
-GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 
 # GIN encoder
 GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 
 GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
+GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
 GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.01,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.0,
 }
-GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
-
-
-# APPNP encoder
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
-
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams
-
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_task = @PairwiseAttrSim
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL.pretext_params = %PairwiseAttrSim_hparams

@@ -1,4 +1,4 @@
-include '/app/configs/SSL_nodeclassification/mode_1/common_hparams.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/common_hparams.gin'
 
 CorruptedEmbeddingsReconstruction_hparams = {
     'embedding_mask_ratio' : %CORRUPTION_RATIO,
@@ -9,227 +9,166 @@ CorruptedEmbeddingsReconstruction_hparams = {
 # GCN encoder
 GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 5
 }
 GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.0001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GCN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.model_class = @GCN
 GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.0001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GCN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 
 # GAT encoder
 GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 2,
 }
-GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GAT_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 8,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GAT_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.model_class = @GAT
 GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.0001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
-    'heads' : %NUM_HEADS,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
+    'heads' : 4,
 }
-GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GAT_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 
 # GIN encoder
 GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
+GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.benchmark_params = {
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
+    'downstream_lr': 0.01,
     'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
+    'pretext_weight': 1
 }
 GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.5,
 }
-GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
+GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 100,
+    'pretext_lr' : 0.0001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.01,
     'patience' : %PATIENCE
 }
 GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.8,
 }
-GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 
 GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.model_class = @GIN
 GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
+GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
+GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
 GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
+    'pretext_epochs' : 50,
+    'pretext_lr' : 0.0001,
     'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
+    'downstream_lr' : 0.3,
     'patience' : %PATIENCE
 }
 GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.h_params = {
     'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'dropout' : %DROPOUT,
+    'hidden_channels' : 16,
+    'num_layers' : 1,
+    'dropout' : 0.3,
 }
-GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
-
-
-# APPNP encoder
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.benchmark_params = {
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr': %DOWNSTREAM_LR,
-    'patience': %PATIENCE,
-    'pretext_weight': %PRETEXT_WEIGHT
-}
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.training_scheme = "JL"
-APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
-
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.training_scheme = "PF"
-APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams
-
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.model_class = @APPNP
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_task = @CorruptedEmbeddingsReconstruction
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.benchmark_params = {
-    'pretext_epochs' : %PRETEXT_EPOCHS,
-    'pretext_lr' : %PRETEXT_LR,
-    'downstream_epochs' : %DOWNSTREAM_EPOCHS,
-    'downstream_lr' : %DOWNSTREAM_LR,
-    'patience' : %PATIENCE
-}
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.h_params = {
-    'in_channels' : 16,
-    'hidden_channels' : %HIDDEN_CHANNELS,
-    'num_layers' : %NUM_LAYERS,
-    'alpha': %ALPHA,
-    'iterations': %ITERATIONS,
-    'dropout' : %DROPOUT,
-}
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.training_scheme = "URL"
-APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL.pretext_params = %CorruptedEmbeddingsReconstruction_hparams

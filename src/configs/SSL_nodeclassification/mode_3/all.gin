@@ -3,7 +3,6 @@ BENCHMARKERS = [
   @GCN_Baselines_JL/NNNodeBenchmarkSSL,
   @GAT_Baselines_JL/NNNodeBenchmarkSSL,
   @GIN_Baselines_JL/NNNodeBenchmarkSSL,
-  # @APPNP_Baselines_JL/NNNodeBenchmarkSSL,
 
   # AttributeMask
   @GCN_AttributeMask_JL/NNNodeBenchmarkSSL,
@@ -15,9 +14,6 @@ BENCHMARKERS = [
   @GIN_AttributeMask_JL/NNNodeBenchmarkSSL,
   @GIN_AttributeMask_PF/NNNodeBenchmarkSSL,
   @GIN_AttributeMask_URL/NNNodeBenchmarkSSL,
-  # @APPNP_AttributeMask_JL/NNNodeBenchmarkSSL,
-  # @APPNP_AttributeMask_PF/NNNodeBenchmarkSSL,
-  # @APPNP_AttributeMask_URL/NNNodeBenchmarkSSL,
 
   # CorruptedFeatureReconstruction
   @GCN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
@@ -29,9 +25,6 @@ BENCHMARKERS = [
   @GIN_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
   @GIN_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
   @GIN_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedFeaturesReconstruction_JL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedFeaturesReconstruction_PF/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedFeaturesReconstruction_URL/NNNodeBenchmarkSSL,
 
   #CorruptedEmbeddingsReconstruction
   @GCN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
@@ -43,9 +36,6 @@ BENCHMARKERS = [
   @GIN_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
   @GIN_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
   @GIN_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedEmbeddingsReconstruction_JL/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedEmbeddingsReconstruction_PF/NNNodeBenchmarkSSL,
-  # @APPNP_CorruptedEmbeddingsReconstruction_URL/NNNodeBenchmarkSSL,
 
   #GAE
   @GCN_GAE_JL/NNNodeBenchmarkSSL,
@@ -57,9 +47,6 @@ BENCHMARKERS = [
   @GIN_GAE_JL/NNNodeBenchmarkSSL,
   @GIN_GAE_PF/NNNodeBenchmarkSSL,
   @GIN_GAE_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GAE_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GAE_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GAE_URL/NNNodeBenchmarkSSL,
 
   # EdgeMask
   @GCN_EdgeMask_JL/NNNodeBenchmarkSSL,
@@ -71,9 +58,6 @@ BENCHMARKERS = [
   @GIN_EdgeMask_JL/NNNodeBenchmarkSSL,
   @GIN_EdgeMask_PF/NNNodeBenchmarkSSL,
   @GIN_EdgeMask_URL/NNNodeBenchmarkSSL,
-  # @APPNP_EdgeMask_JL/NNNodeBenchmarkSSL,
-  # @APPNP_EdgeMask_PF/NNNodeBenchmarkSSL,
-  # @APPNP_EdgeMask_URL/NNNodeBenchmarkSSL,
 
   # NodeClusteringWithAlignment
   @GCN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
@@ -85,10 +69,7 @@ BENCHMARKERS = [
   @GIN_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
   @GIN_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
   @GIN_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-  # @APPNP_NodeClusteringWithAlignment_JL/NNNodeBenchmarkSSL,
-  # @APPNP_NodeClusteringWithAlignment_PF/NNNodeBenchmarkSSL,
-  # @APPNP_NodeClusteringWithAlignment_URL/NNNodeBenchmarkSSL,
-  
+
   # GraphPartitioning
   @GCN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
   @GCN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
@@ -99,9 +80,6 @@ BENCHMARKERS = [
   @GIN_GraphPartitioning_JL/NNNodeBenchmarkSSL,
   @GIN_GraphPartitioning_PF/NNNodeBenchmarkSSL,
   @GIN_GraphPartitioning_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GraphPartitioning_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GraphPartitioning_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GraphPartitioning_URL/NNNodeBenchmarkSSL,
 
   # S2GRL
   @GCN_S2GRL_JL/NNNodeBenchmarkSSL,
@@ -113,24 +91,6 @@ BENCHMARKERS = [
   @GIN_S2GRL_JL/NNNodeBenchmarkSSL,
   @GIN_S2GRL_PF/NNNodeBenchmarkSSL,
   @GIN_S2GRL_URL/NNNodeBenchmarkSSL,
-  # @APPNP_S2GRL_JL/NNNodeBenchmarkSSL,
-  # @APPNP_S2GRL_PF/NNNodeBenchmarkSSL,
-  # @APPNP_S2GRL_URL/NNNodeBenchmarkSSL,
-
-#   # CentralityScoreRanking
-#   @GCN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL, # Too slow for extensive experiments
-#   @GCN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GCN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GAT_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-#   @GIN_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-# #   # @APPNP_CentralityScoreRanking_JL/NNNodeBenchmarkSSL,
-# #   # @APPNP_CentralityScoreRanking_PF/NNNodeBenchmarkSSL,
-# #   # @APPNP_CentralityScoreRanking_URL/NNNodeBenchmarkSSL,
-
 
   # PairwiseAttrSim
   @GCN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL,
@@ -142,9 +102,6 @@ BENCHMARKERS = [
   @GIN_PairwiseAttrSim_JL/NNNodeBenchmarkSSL,
   @GIN_PairwiseAttrSim_PF/NNNodeBenchmarkSSL,
   @GIN_PairwiseAttrSim_URL/NNNodeBenchmarkSSL,
-  # @APPNP_PairwiseAttrSim_JL/NNNodeBenchmarkSSL,
-  # @APPNP_PairwiseAttrSim_PF/NNNodeBenchmarkSSL,
-  # @APPNP_PairwiseAttrSim_URL/NNNodeBenchmarkSSL,
 
   # GCA
   @GCN_GCA_JL/NNNodeBenchmarkSSL,
@@ -156,9 +113,6 @@ BENCHMARKERS = [
   @GIN_GCA_JL/NNNodeBenchmarkSSL,
   @GIN_GCA_PF/NNNodeBenchmarkSSL,
   @GIN_GCA_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GCA_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GCA_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GCA_URL/NNNodeBenchmarkSSL,
 
   # BGRL
   @GCN_BGRL_JL/NNNodeBenchmarkSSL,
@@ -170,9 +124,6 @@ BENCHMARKERS = [
   @GIN_BGRL_JL/NNNodeBenchmarkSSL,
   @GIN_BGRL_PF/NNNodeBenchmarkSSL,
   @GIN_BGRL_URL/NNNodeBenchmarkSSL,
-  # @APPNP_BGRL_JL/NNNodeBenchmarkSSL,
-  # @APPNP_BGRL_PF/NNNodeBenchmarkSSL,
-  # @APPNP_BGRL_URL/NNNodeBenchmarkSSL,
 
   # SelfGNNSplit
   @GCN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
@@ -184,23 +135,11 @@ BENCHMARKERS = [
   @GIN_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
   @GIN_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
   @GIN_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNSplit_JL/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNSplit_PF/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNSplit_URL/NNNodeBenchmarkSSL,
 
   # SelfGNNPPR
   @GCN_SelfGNNPPR_JL/NNNodeBenchmarkSSL,
   @GCN_SelfGNNPPR_PF/NNNodeBenchmarkSSL,
   @GCN_SelfGNNPPR_URL/NNNodeBenchmarkSSL,
-  # @GAT_SelfGNNPPR_JL/NNNodeBenchmarkSSL, # GAT not possible
-  # @GAT_SelfGNNPPR_PF/NNNodeBenchmarkSSL,
-  # @GAT_SelfGNNPPR_URL/NNNodeBenchmarkSSL,
-  # @GIN_SelfGNNPPR_JL/NNNodeBenchmarkSSL, # GIN not possible
-  # @GIN_SelfGNNPPR_PF/NNNodeBenchmarkSSL,
-  # @GIN_SelfGNNPPR_URL/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNPPR_JL/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNPPR_PF/NNNodeBenchmarkSSL,
-  # @APPNP_SelfGNNPPR_URL/NNNodeBenchmarkSSL,
 
   # GBT
   @GCN_GBT_JL/NNNodeBenchmarkSSL,
@@ -212,23 +151,11 @@ BENCHMARKERS = [
   @GIN_GBT_JL/NNNodeBenchmarkSSL,
   @GIN_GBT_PF/NNNodeBenchmarkSSL,
   @GIN_GBT_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GBT_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GBT_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GBT_URL/NNNodeBenchmarkSSL,
 
   # MERIT
   @GCN_MERIT_JL/NNNodeBenchmarkSSL,
   @GCN_MERIT_PF/NNNodeBenchmarkSSL,
   @GCN_MERIT_URL/NNNodeBenchmarkSSL,
-  # @GAT_MERIT_JL/NNNodeBenchmarkSSL, # GAT not possible
-  # @GAT_MERIT_PF/NNNodeBenchmarkSSL,
-  # @GAT_MERIT_URL/NNNodeBenchmarkSSL,
-  # @GIN_MERIT_JL/NNNodeBenchmarkSSL, # GIN not possible
-  # @GIN_MERIT_PF/NNNodeBenchmarkSSL,
-  # @GIN_MERIT_URL/NNNodeBenchmarkSSL,
-  # @APPNP_MERIT_JL/NNNodeBenchmarkSSL,
-  # @APPNP_MERIT_PF/NNNodeBenchmarkSSL,
-  # @APPNP_MERIT_URL/NNNodeBenchmarkSSL,
 
   # DeepGraphInfomax (GBI)
   @GCN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL,
@@ -240,9 +167,6 @@ BENCHMARKERS = [
   @GIN_DeepGraphInfomax_JL/NNNodeBenchmarkSSL,
   @GIN_DeepGraphInfomax_PF/NNNodeBenchmarkSSL,
   @GIN_DeepGraphInfomax_URL/NNNodeBenchmarkSSL,
-  # @APPNP_DeepGraphInfomax_JL/NNNodeBenchmarkSSL,
-  # @APPNP_DeepGraphInfomax_PF/NNNodeBenchmarkSSL,
-  # @APPNP_DeepGraphInfomax_URL/NNNodeBenchmarkSSL,
 
   # GraphInfoClust
   @GCN_GraphInfoClust_JL/NNNodeBenchmarkSSL,
@@ -254,9 +178,6 @@ BENCHMARKERS = [
   @GIN_GraphInfoClust_JL/NNNodeBenchmarkSSL,
   @GIN_GraphInfoClust_PF/NNNodeBenchmarkSSL,
   @GIN_GraphInfoClust_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GraphInfoClust_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GraphInfoClust_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GraphInfoClust_URL/NNNodeBenchmarkSSL,
 
   # SUBGCON
   @GCN_SUBGCON_JL/NNNodeBenchmarkSSL,
@@ -268,23 +189,11 @@ BENCHMARKERS = [
   @GIN_SUBGCON_JL/NNNodeBenchmarkSSL,
   @GIN_SUBGCON_PF/NNNodeBenchmarkSSL,
   @GIN_SUBGCON_URL/NNNodeBenchmarkSSL,
-  # @APPNP_SUBGCON_JL/NNNodeBenchmarkSSL,
-  # @APPNP_SUBGCON_PF/NNNodeBenchmarkSSL,
-  # @APPNP_SUBGCON_URL/NNNodeBenchmarkSSL,
 
   # G-Zoom
   @GCN_GZoom_JL/NNNodeBenchmarkSSL,
   @GCN_GZoom_PF/NNNodeBenchmarkSSL,
   @GCN_GZoom_URL/NNNodeBenchmarkSSL,
-  # @GAT_GZoom_JL/NNNodeBenchmarkSSL, # GAT not possible
-  # @GAT_GZoom_PF/NNNodeBenchmarkSSL,
-  # @GAT_GZoom_URL/NNNodeBenchmarkSSL,
-  # @GIN_GZoom_JL/NNNodeBenchmarkSSL, # GIN not possible
-  # @GIN_GZoom_PF/NNNodeBenchmarkSSL,
-  # @GIN_GZoom_URL/NNNodeBenchmarkSSL,
-  # @APPNP_GZoom_JL/NNNodeBenchmarkSSL,
-  # @APPNP_GZoom_PF/NNNodeBenchmarkSSL,
-  # @APPNP_GZoom_URL/NNNodeBenchmarkSSL,
 
   # MEtAl
   @GCN_MEtAl_JL/NNNodeBenchmarkSSL,
@@ -296,9 +205,6 @@ BENCHMARKERS = [
   @GIN_MEtAl_JL/NNNodeBenchmarkSSL,
   @GIN_MEtAl_PF/NNNodeBenchmarkSSL,
   @GIN_MEtAl_URL/NNNodeBenchmarkSSL,
-  # @APPNP_MEtAl_JL/NNNodeBenchmarkSSL,
-  # @APPNP_MEtAl_PF/NNNodeBenchmarkSSL,
-  # @APPNP_MEtAl_URL/NNNodeBenchmarkSSL,
 
   # MVMI-FT
   @GCN_MVMIFT_JL/NNNodeBenchmarkSSL,
@@ -310,34 +216,30 @@ BENCHMARKERS = [
   @GIN_MVMIFT_JL/NNNodeBenchmarkSSL,
   @GIN_MVMIFT_PF/NNNodeBenchmarkSSL,
   @GIN_MVMIFT_URL/NNNodeBenchmarkSSL,
-  # @APPNP_MVMIFT_JL/NNNodeBenchmarkSSL,
-  # @APPNP_MVMIFT_PF/NNNodeBenchmarkSSL,
-  # @APPNP_MVMIFT_URL/NNNodeBenchmarkSSL,
 ]
 
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/Baselines.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/AttributeMask.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/CorruptedFeaturesReconstruction.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/CorruptedEmbeddingsReconstruction.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GAE.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/ARGA.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/EdgeMask.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/EdgeMask.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/NodeClusteringWithAlignment.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GraphPartitioning.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/S2GRL.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/CentralityScoreRanking.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/PairwiseAttrSim.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GCA.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/BGRL.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/SelfGNNSplit.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/SelfGNNPPR.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GBT.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MERIT.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/DeepGraphInfomax.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GraphInfoClust.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/SUBGCON.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/GZoom.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MEtAl.gin'
-include '/app/configs/SSL_nodeclassification/mode_1/SSL_methods/MVMIFT.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/Baselines.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/AttributeMask.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/CorruptedFeaturesReconstruction.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/CorruptedEmbeddingsReconstruction.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GAE.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/EdgeMask.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/EdgeMask.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/NodeClusteringWithAlignment.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GraphPartitioning.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/S2GRL.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/CentralityScoreRanking.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/PairwiseAttrSim.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GCA.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/BGRL.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/SelfGNNSplit.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/SelfGNNPPR.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GBT.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/MERIT.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/DeepGraphInfomax.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GraphInfoClust.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/SUBGCON.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/GZoom.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/MEtAl.gin'
+include '/app/configs/SSL_nodeclassification/mode_3/SSL_methods/MVMIFT.gin'
 
