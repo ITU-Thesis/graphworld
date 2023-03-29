@@ -117,7 +117,7 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           benchmark_params_sample, h_params_sample, _ = SampleModelConfig(benchmark_params,
                                                                          h_params, pretext_params)
           pretext_params_product = list(GetCartesianProduct(pretext_params))
-          num_tuning_rounds = len(pretext_params_product)
+          num_tuning_rounds = min(len(pretext_params_product), num_tuning_rounds)
           random.shuffle(pretext_params_product)
         for i in range(num_tuning_rounds):
           if full_product:
@@ -177,10 +177,11 @@ class BenchmarkGNNParDoSSL(BenchmarkGNNParDo):
           output_data['%s_%s_%s_configs' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = configs
           output_data['%s_%s_%s_val_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = val_scores
           output_data['%s_%s_%s_test_scores' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = test_scores
-          output_data['%s_%s_%s_pretext_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = pretext_losses_list
-          output_data['%s_%s_%s_downstream_val_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_val_losses_list
-          output_data['%s_%s_%s_downstream_train_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_train_losses_list
-          output_data['%s_%s_%s_downstream_val_tuning_metrics' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_val_tuning_metrics_list
+          if self._save_training_curves:
+            output_data['%s_%s_%s_pretext_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = pretext_losses_list
+            output_data['%s_%s_%s_downstream_val_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_val_losses_list
+            output_data['%s_%s_%s_downstream_train_losses' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_train_losses_list
+            output_data['%s_%s_%s_downstream_val_tuning_metrics' % (benchmarker.GetModelName(), benchmarker.GetPretextTaskName(), training_scheme)] = downstream_val_tuning_metrics_list
 
 
         val_metrics = val_metrics_list[best_tuning_round]
