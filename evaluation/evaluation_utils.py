@@ -29,7 +29,7 @@ def read_processed_shards(PROCESSED_DIR, shard=None):
 
 
 
-def get_best_configuration_per_model(df, TEST_METRIC):
+def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
     best_configurations = {}
 
     # Common hparams
@@ -57,6 +57,8 @@ def get_best_configuration_per_model(df, TEST_METRIC):
         df_m = df[params + [test_metric]]
         groups = df_m.groupby(params)
         means = groups.mean()
-        best_configuration = means[test_metric].nlargest(1).reset_index()
+        if n_best == 0:
+            n_best = groups.ngroups
+        best_configuration = means[test_metric].nlargest(n_best).reset_index()
         best_configurations[model] = best_configuration
     return best_configurations
