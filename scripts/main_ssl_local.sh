@@ -20,6 +20,8 @@
 # This file is for testing the joint learning scheme for SSL methods
 #
 cd ..
+start=`date +%s`
+
 BUILD_NAME="graphworld"
 while getopts b: flag
 do
@@ -28,21 +30,34 @@ do
     esac
 done
 
-OUTPUT_PATH="/tmp/mwe"
+# OUTPUT_DIR="out_$1"
+OUTPUT_DIR="R3_direct2worker_inmemory_10samples"
+OUTPUT_PATH="/app/out/"${OUTPUT_DIR}
+
+exec > out/${OUTPUT_DIR}/log.txt 2>&1
 
 rm -rf "${OUTPUT_PATH}"
 mkdir -p ${OUTPUT_PATH}
 
 echo ${OPTARG}
 
-docker-compose run \
+docker compose run \
   --entrypoint "python3 /app/beam_benchmark_main.py \
   --output ${OUTPUT_PATH} \
   --gin_files /app/configs/SSL_nodeclassification/nodeclassification.gin \
   --runner DirectRunner \
-  --direct_num_workers 1 \
-  --direct_running_mode multi_processing"\
+  --direct_num_workers 2 \
+  --direct_running_mode in_memory"\
   ${BUILD_NAME}
+# docker compose run \
+#   --entrypoint "python3 /app/beam_benchmark_main.py \
+#   --output ${OUTPUT_PATH} \
+#   --gin_files /app/configs/SSL_nodeclassification/nodeclassification.gin \
+#   --runner PortableRunner \
+#   --job_endpoint localhost:8099 \
+#   --environment_type LOOPBACK"\
+#   ${BUILD_NAME}
 
-
-
+end=`date +%s`
+runtime=$((end-start))
+echo "runtime: ${runtime}"
