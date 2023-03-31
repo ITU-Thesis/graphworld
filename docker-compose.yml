@@ -19,6 +19,7 @@ services:
     build:
       context: .
     stdin_open: true
+    network_mode: "host"
     tty: true
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
