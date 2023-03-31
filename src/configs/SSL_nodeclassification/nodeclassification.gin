@@ -8,7 +8,7 @@ import graph_world.self_supervised_learning.beam_handler
 import graph_world.self_supervised_learning.generator_wrappers
 
 GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
-GeneratorBeamHandlerWrapper.nsamples = 5
+GeneratorBeamHandlerWrapper.nsamples = 15
 
 NodeClassificationBeamHandlerSSL.num_tuning_rounds = 50
 NodeClassificationBeamHandlerSSL.save_tuning_results = False
