@@ -1,11 +1,12 @@
 #!/bin/sh
 #SBATCH --array=1-100
-#SBATCH -o /home/data_shares/scara/graphworld/results/mode4/raw/node_classification_3/slurm_%a.out
+#SBATCH -o /home/data_shares/scara/graphworld/results/mode4/raw/node_classification_11/slurm_%a.out
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=1 
 #SBATCH --time=20:00:00         
 #SBATCH --partition=brown
 #SBATCH --mail-type=BEGIN,FAIL,END          # Send an email when the job finishes
+#SBATCH --begin=2023-04-02T15:00:00
 
 echo "Running on $(hostname):"
 start=`date +%s`
@@ -13,7 +14,7 @@ start=`date +%s`
 cd ..
 module load singularity
 
-outdir=/home/data_shares/scara/graphworld/results/mode4/raw/node_classification_3/$SLURM_ARRAY_TASK_ID
+outdir=/home/data_shares/scara/graphworld/results/mode4/raw/node_classification_11/$SLURM_ARRAY_TASK_ID
 mkdir -p ${outdir}
 
 singularity exec -B ${PWD}/src:/app,${outdir}:/app/out graphworld.sif python3 /app/beam_benchmark_main.py \
