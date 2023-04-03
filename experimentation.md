@@ -12,6 +12,6 @@
 
 
 # To run the processing
-Just change the `RAW_DIR` and `PROCESSED_DIR` in `evaluation/process_results.ipynb` to the correct [ID] which has been ran.
+Just change the `RAW_DIR` and `PROCESSED_DIR` in `evaluation/process_results.ipynb` to the correct [ID] which has been run.
 
 
