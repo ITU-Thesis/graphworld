@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import itertools
 
 def read_processed_shards(PROCESSED_DIR, shard=None):
     with open(f'{PROCESSED_DIR}/summary.json', 'r') as f:
@@ -26,8 +27,6 @@ def read_processed_shards(PROCESSED_DIR, shard=None):
     results_df = pd.concat(dfs)
     del dfs
     return results_df.reset_index(drop=True)
-
-
 
 def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
     best_configurations = {}
@@ -62,3 +61,40 @@ def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
         best_configuration = means[test_metric].nlargest(n_best).reset_index()
         best_configurations[model] = best_configuration
     return best_configurations
+
+
+def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes):
+    '''
+    Unpivot the results to a long format for all SSL methods. Each row corresponds to an experiment on graph.
+    '''
+    frames = []
+    for (ssl_model, encoder, scheme) in itertools.product(*[ssl_models, encoders, training_schemes]):
+        column = f'{encoder}_{ssl_model}_{scheme}_{suffix}'
+        pretext_weight_col = f'{encoder}_{ssl_model}_{scheme}_train_pretext_weight'
+        if not column in df.columns:
+            continue
+        df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
+        df_model['pretext_weight'] = df[pretext_weight_col] if pretext_weight_col in df.columns else None    
+        df_model['SSL_model'] = ssl_model
+        df_model['Encoder'] = encoder
+        df_model['Training_scheme'] = scheme
+        df_model['Graph_ID'] = df.index.values.tolist()
+
+        frames += [df_model]
+    return pd.concat(frames, ignore_index=True)
+
+def unpivot_bvaseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes):
+    '''
+    Unpivot the results to a long format for all baseline methods. Each row corresponds to an experiment on graph.
+    '''
+    frames = []
+    for baseline_model, training_scheme in itertools.product(*[baseline_models, training_schemes]):
+        column = f'{baseline_model}__{training_scheme}_{suffix}'
+        if not column in df.columns:
+            continue
+        df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
+        df_model['Baseline_model'] = baseline_model
+        df_model['Graph_ID'] = df.index.values.tolist()
+        
+        frames += [df_model]
+    return pd.concat(frames, ignore_index=True)
