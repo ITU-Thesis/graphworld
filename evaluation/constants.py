@@ -23,7 +23,7 @@ model_abbreviations = {
     'AttributeMask': 'AM', 'CorruptedEmbeddingsReconstruction': 'CER', 'CorruptedFeaturesReconstruction': 'CFR', 'EdgeMask': 'EM', 'GAE': 'GAE',
     'NodeClusteringWithAlignment': 'NC', 'S2GRL': 'S2GRL', 'PairwiseAttrSim': 'PAS', 'GraphPartitioning': 'GP',
     'BGRL': 'BGRL', 'GBT': 'G-BT', 'GCA': 'GCA', 'SelfGNNPPR': 'S-PPR', 'SelfGNNSplit': 'S-Split', 'MERIT': 'MERIT',
-    'DeepGraphInfomax': 'DGI', 'GraphInfoClust': 'GIC', 'SUBGCON': 'SUBGCON',
+    'DeepGraphInfomax': 'DGI', 'GraphInfoClust': 'GIC', 'SUBGCON': 'SUBG-CON',
     'G_Zoom': 'G-Zoom', 'MEtAl': 'MEtAl', 'MVMI_FT': 'MVMI-FT'
 }
 
