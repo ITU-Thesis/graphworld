@@ -15,8 +15,10 @@ CONTRAST_SAME_SCALE = ['BGRL', 'GBT', 'GCA', 'SelfGNNPPR', 'SelfGNNSplit', 'MERI
 CONTRAST_CROSS_SCALE = ['DeepGraphInfomax', 'GraphInfoClust', 'SUBGCON']
 CONTRAST_ALL = CONTRAST_SAME_SCALE + CONTRAST_CROSS_SCALE
 HYBRID_ALL = ['G_Zoom', 'MEtAl', 'MVMI_FT']
-ALL_MODELS = GENERATION_ALL + AUXILIARY_ALL + CONTRAST_ALL + HYBRID_ALL
-N_MODELS = len(ALL_MODELS)
+SSL_MODELS = GENERATION_ALL + AUXILIARY_ALL + CONTRAST_ALL + HYBRID_ALL
+
+# --------- BASELINES ---------
+BASELINES = ['GCN', 'GAT', 'GIN']
 
 # --------- MODELS ABBREVIATION ---------
 model_abbreviations = {
@@ -31,10 +33,7 @@ model_abbreviations = {
 ENCODERS = ['GCN', 'GAT', 'GIN']
 
 # --------- TRAINING SCHEMES ---------
-TRAINING_SCHEMES = ['JL', 'PF', 'URL']
-
-# --------- BASELINES ---------
-BASELINES = ['GCN', 'GAT', 'GIN']
+TRAINING_SCHEMES = ['PF', 'URL', 'JL']
 
 # --------- TEST METRIC ---------
 TEST_METRIC = 'test_rocauc_ovr'

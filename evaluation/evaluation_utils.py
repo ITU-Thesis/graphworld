@@ -98,3 +98,20 @@ def unpivot_bvaseline_model(df : pd.DataFrame, suffix : str, baseline_models, tr
         
         frames += [df_model]
     return pd.concat(frames, ignore_index=True)
+
+def to_latex_table(df):
+    for model, r in df.iterrows():
+        lines = ['\\texttt{' + model + '}']
+        lists = []
+        for train in ['PF', 'URL', 'JL']:
+            for enc in ['GCN', 'GAT', 'GIN']:
+                line = r[(train, enc)]
+                if pd.isna(line):
+                    lines += ['-']
+                    continue
+                line = line.replace('±', '\pm')
+                lines += [f' ${line}$']
+                lists += [enc + '-' + train]
+        print(' &'.join(lines))
+        print('\\\\')
+
