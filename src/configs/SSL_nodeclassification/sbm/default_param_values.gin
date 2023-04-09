@@ -1,8 +1,8 @@
-avg_degree/ParamSamplerSpec.default_val = 19.02
-cluster_size_slope/ParamSamplerSpec.default_val = 0.394
-feature_center_distance/ParamSamplerSpec.default_val = 0.34299999999999997
-num_clusters/ParamSamplerSpec.default_val = 4
-nvertex/ParamSamplerSpec.default_val = 393
-p_to_q_ratio/ParamSamplerSpec.default_val = 2.566
-power_exponent/ParamSamplerSpec.default_val = 0.795
-min_deg/ParamSamplerSpec.default_val = 6
+avg_degree/ParamSamplerSpec.default_val = 1.988
+cluster_size_slope/ParamSamplerSpec.default_val = 0.1525
+feature_center_distance/ParamSamplerSpec.default_val = 4.044499999999999
+num_clusters/ParamSamplerSpec.default_val = 5
+nvertex/ParamSamplerSpec.default_val = 389
+p_to_q_ratio/ParamSamplerSpec.default_val = 1.7974999999999999
+power_exponent/ParamSamplerSpec.default_val = 0.993
+min_deg/ParamSamplerSpec.default_val = 2

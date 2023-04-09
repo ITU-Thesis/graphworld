@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH --array=1-100
-#SBATCH -o /home/data_shares/scara/graphworld/results/mode4/raw/node_classification_13/slurm_%a.out
+#SBATCH -o /home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/feature_center_distance_1/slurm_%a.out
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=1 
 #SBATCH --time=20:00:00         
@@ -13,7 +13,7 @@ start=`date +%s`
 cd ..
 module load singularity
 
-outdir=/home/data_shares/scara/graphworld/results/mode4/raw/node_classification_13/$SLURM_ARRAY_TASK_ID
+outdir=/home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/feature_center_distance_1/$SLURM_ARRAY_TASK_ID
 mkdir -p ${outdir}
 
 singularity exec -B ${PWD}/src:/app,${outdir}:/app/out graphworld.sif python3 /app/beam_benchmark_main.py \
