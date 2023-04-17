@@ -24,3 +24,6 @@ out/
 *.ndjson
 shards/
 raw/
+
+# Wierd file
+.nfs000000620b1b042f000016e3
