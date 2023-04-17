@@ -2,8 +2,8 @@ from os.path import join
 
 # --------- DATA ---------
 RESULTS_ROOT = '/home/data_shares/scara/graphworld/results'
-MODE_1_PROCESSED_DIR = join(RESULTS_ROOT, 'mode1', 'processed')
-MODE_4_PROCESSED_DIR = join(RESULTS_ROOT, 'mode4', 'processed')
+MODE_1_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-1', 'processed')
+MODE_2_3_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-2-3', 'processed')
 
 
 # --------- MODELS ---------
