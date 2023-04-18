@@ -24,3 +24,4 @@ out/
 *.ndjson
 shards/
 raw/
+/results
