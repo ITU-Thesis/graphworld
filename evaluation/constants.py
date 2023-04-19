@@ -16,6 +16,7 @@ CONTRAST_CROSS_SCALE = ['DeepGraphInfomax', 'GraphInfoClust', 'SUBGCON']
 CONTRAST_ALL = CONTRAST_SAME_SCALE + CONTRAST_CROSS_SCALE
 HYBRID_ALL = ['G_Zoom', 'MEtAl', 'MVMI_FT']
 SSL_MODELS = GENERATION_ALL + AUXILIARY_ALL + CONTRAST_ALL + HYBRID_ALL
+SINGLE_ENCODER_MODELS = ['SelfGNNPPR', 'MERIT', 'G_Zoom'] # Should be filtered away when comparing encoders
 
 # --------- MODEL CATEGORIES ---------
 GENERATION_BASED_CATEGORY = 'Generation based'
@@ -43,5 +44,12 @@ TRAINING_SCHEMES = ['PF', 'URL', 'JL']
 
 # --------- TEST METRIC ---------
 TEST_METRIC = 'test_rocauc_ovr'
+
+
+# --------- PLOTTING  ---------
+ENCODER_COLORS = {'GCN': 'red', 'GAT':'green', 'GIN':'blue'}
+TRAINING_SCHEME_COLORS = {'PF':'teal', 'URL':'darkkhaki', 'JL':'mediumorchid'}
+SSL_CATEGORY_COLORS = {'Generation':'darkolivegreen', 'Auxiliary':'deepskyblue', 'Contrast':'indigo', 'Hybrid':'crimson'}
+FONT = 'DejaVu Sans'
 
 
