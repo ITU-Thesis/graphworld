@@ -75,8 +75,10 @@ def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
         groups = df_m.groupby(params)
         means = groups.mean()
         if n_best == 0:
-            n_best = groups.ngroups
-        best_configuration = means[test_metric].nlargest(n_best).reset_index()
+            n = groups.ngroups
+        else:
+            n = n_best
+        best_configuration = means[test_metric].nlargest(n).reset_index()
         best_configurations[model] = best_configuration
     return best_configurations
 
