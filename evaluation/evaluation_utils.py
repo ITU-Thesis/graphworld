@@ -1,6 +1,19 @@
 import json
 import pandas as pd
 import itertools
+from constants import AUXILIARY_ALL, HYBRID_ALL, CONTRAST_ALL, GENERATION_ALL, TEST_METRIC
+
+def ssl_method_to_category(method):
+    if method in AUXILIARY_ALL:
+        return 'Auxiliary-property based'
+    elif method in HYBRID_ALL:
+        return 'Hybrid'
+    elif method in CONTRAST_ALL:
+        return 'Contrast based'
+    elif method in GENERATION_ALL:
+        return 'Generation based'
+    else:
+        raise Exception('Unknown SSL method ' + method)
 
 def read_processed_shards(PROCESSED_DIR, shard=None):
     with open(f'{PROCESSED_DIR}/summary.json', 'r') as f:
@@ -96,6 +109,7 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
         df_model['pretext_weight'] = df[pretext_weight_col] if pretext_weight_col in df.columns else None    
         df_model['SSL_model'] = ssl_model
+        df_model['SSL_category'] = ssl_method_to_category(ssl_model)
         df_model['Encoder'] = encoder
         df_model['Training_scheme'] = scheme
         df_model['Graph_ID'] = df.index.values.tolist()
@@ -124,7 +138,7 @@ def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, tra
         frames += [df_model]
     return pd.concat(frames, ignore_index=True)
 
-def to_latex_table(df):
+def __deprecated_create_global_latex_table(df):
     for model, r in df.iterrows():
         lines = ['\\texttt{' + model + '}']
         lists = []
@@ -140,3 +154,11 @@ def to_latex_table(df):
         print(' &'.join(lines))
         print('\\\\')
 
+def create_encoder_latex_table(df_ssl_category_means, df_ssl_category_stds):
+    for training_Scheme in ['PF', 'URL', 'JL']:
+        for encoder in ['GCN', 'GAT', 'GIN']:
+            query = (df_ssl_category_means.Training_scheme == training_Scheme) & (df_ssl_category_means.Encoder == encoder)
+            mean = df_ssl_category_means.loc[TEST_METRIC, query]
+            std = df_ssl_category_stds.loc[TEST_METRIC, query]
+            print(f'${mean}\pm{std}$ ', end='')
+        print()

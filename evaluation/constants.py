@@ -18,6 +18,12 @@ HYBRID_ALL = ['G_Zoom', 'MEtAl', 'MVMI_FT']
 SSL_MODELS = GENERATION_ALL + AUXILIARY_ALL + CONTRAST_ALL + HYBRID_ALL
 SINGLE_ENCODER_MODELS = ['SelfGNNPPR', 'MERIT', 'G_Zoom'] # Should be filtered away when comparing encoders
 
+# --------- MODEL CATEGORIES ---------
+GENERATION_BASED_CATEGORY = 'Generation based'
+HYBRID_CATEGORY = 'Hybrid'
+CONTRAST_BASED = 'Contrast based'
+AUXILIARY_CATEGORY = 'Auxiliary-property based'
+
 # --------- BASELINES ---------
 BASELINES = ['GCN', 'GAT', 'GIN']
 
@@ -27,7 +33,8 @@ model_abbreviations = {
     'NodeClusteringWithAlignment': 'NC', 'S2GRL': 'S2GRL', 'PairwiseAttrSim': 'PAS', 'GraphPartitioning': 'GP',
     'BGRL': 'BGRL', 'GBT': 'G-BT', 'GCA': 'GCA', 'SelfGNNPPR': 'S-PPR', 'SelfGNNSplit': 'S-Split', 'MERIT': 'MERIT',
     'DeepGraphInfomax': 'DGI', 'GraphInfoClust': 'GIC', 'SUBGCON': 'SUBG-CON',
-    'G_Zoom': 'G-Zoom', 'MEtAl': 'MEtAl', 'MVMI_FT': 'MVMI-FT'
+    'G_Zoom': 'G-Zoom', 'MEtAl': 'MEtAl', 'MVMI_FT': 'MVMI-FT',
+    'GCN': 'GCN', 'GAT': 'GAT', 'GIN': 'GIN'
 }
 
 # --------- ENCODERS ---------
