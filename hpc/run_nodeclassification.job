@@ -1,12 +1,12 @@
 #!/bin/sh
-#SBATCH --array=1-100
-#SBATCH -o /home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/nvertex_2/slurm_%a.out
+#SBATCH --array=1-15
+#SBATCH -o /home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/power_exponent_2.1/slurm_%a.out
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks=1 
-#SBATCH --time=1-00:00:00         
+#SBATCH --ntasks=1
+#SBATCH --time=1-10:00:00      
 #SBATCH --partition=brown
 #SBATCH --mail-type=BEGIN,FAIL,END          # Send an email when the job finishes
-#SBATCH --begin=now+40hour
+#SBATCH --begin=now+16hour
 
 echo "Running on $(hostname):"
 start=`date +%s`
@@ -14,7 +14,7 @@ start=`date +%s`
 cd ..
 module load singularity
 
-outdir_all=/home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/nvertex_2/
+outdir_all=/home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/power_exponent_2.1/
 outdir=$outdir_all$SLURM_ARRAY_TASK_ID
 mkdir -p ${outdir}
 
