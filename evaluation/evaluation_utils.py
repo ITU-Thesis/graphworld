@@ -95,19 +95,29 @@ def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
         best_configurations[model] = best_configuration
     return best_configurations
 
-def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes):
+def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes, include_tuning_metric=False):
     '''
     Unpivot the results to a long format for all SSL methods. Each row corresponds to an experiment on graph.
     '''
+    BENCHMARK_PARAMS = ['train_downstream_lr', 'train_pretext_weight',
+               'train_pretext_epochs', 'train_pretext_lr']
+    ENCODER_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 'encoder_dropout', 'encoder_heads']
+    ALL_PARAMS = BENCHMARK_PARAMS + ENCODER_PARAMS
+
     frames = []
     for (ssl_model, encoder, scheme) in itertools.product(*[ssl_models, encoders, training_schemes]):
         column = f'{encoder}_{ssl_model}_{scheme}_{suffix}'
         pretext_weight_col = f'{encoder}_{ssl_model}_{scheme}_train_pretext_weight'
+        param_cols = [(param, f'{encoder}_{ssl_model}_{scheme}_{param}') for param in ALL_PARAMS]
         if not column in df.columns:
             continue
             
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
-        df_model['pretext_weight'] = df[pretext_weight_col] if pretext_weight_col in df.columns else None    
+        df_model['pretext_weight'] = df[pretext_weight_col] if pretext_weight_col in df.columns else None
+        for param, param_c in param_cols:
+            df_model[param] = df[param_c] if param_c in df.columns else None 
+        if include_tuning_metric:
+            df_model['downstream_val_tuning_metrics'] = df[f'{encoder}_{ssl_model}_{scheme}_downstream_val_tuning_metrics']
         df_model['SSL_model'] = ssl_model
         df_model['SSL_category'] = ssl_method_to_category(ssl_model)
         df_model['Encoder'] = encoder
