@@ -38,4 +38,4 @@ include '/app/configs/SSL_nodeclassification/sbm/default_setup_marg.gin'
 # num_clusters
  
 
-SSLSbmGeneratorWrapper.marginal_params = ['p_to_q_ratio']
+SSLSbmGeneratorWrapper.marginal_params = ['avg_degree']
