@@ -114,7 +114,6 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
             continue
             
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
-        df_model['pretext_weight'] = df[pretext_weight_col] if pretext_weight_col in df.columns else None
         for param, param_c in param_cols:
             df_model[param] = df[param_c] if param_c in df.columns else None 
         if include_tuning_metric:
