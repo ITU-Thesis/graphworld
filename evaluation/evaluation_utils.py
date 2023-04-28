@@ -1,17 +1,18 @@
 import json
 import pandas as pd
 import itertools
-from constants import AUXILIARY_ALL, HYBRID_ALL, CONTRAST_ALL, GENERATION_ALL, TEST_METRIC
+from constants import AUXILIARY_ALL, HYBRID_ALL, CONTRAST_ALL, GENERATION_ALL, TEST_METRIC,\
+    GENERATION_BASED_CATEGORY, HYBRID_CATEGORY, CONTRAST_BASED, AUXILIARY_CATEGORY
 
 def ssl_method_to_category(method):
     if method in AUXILIARY_ALL:
-        return 'Auxiliary-property based'
+        return AUXILIARY_CATEGORY
     elif method in HYBRID_ALL:
-        return 'Hybrid'
+        return HYBRID_CATEGORY
     elif method in CONTRAST_ALL:
-        return 'Contrast based'
+        return CONTRAST_BASED
     elif method in GENERATION_ALL:
-        return 'Generation based'
+        return GENERATION_BASED_CATEGORY
     else:
         raise Exception('Unknown SSL method ' + method)
 

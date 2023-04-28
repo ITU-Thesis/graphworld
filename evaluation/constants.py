@@ -4,6 +4,8 @@ from os.path import join
 RESULTS_ROOT = '/home/data_shares/scara/graphworld/results'
 MODE_1_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-1', 'processed')
 MODE_2_3_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-2-3', 'processed')
+MODE_2_3_MARG_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-2-3-marg', 'processed')
+MODE_2_3_MARG_2_PROCESSED_DIR = join(RESULTS_ROOT, 'mode-2-3-marg-2', 'processed')
 PRELIMINARY_DIR = join(RESULTS_ROOT, 'preliminary', 'processed')
 MODE_1_LEARNING_CURVES_DIR = join(RESULTS_ROOT, 'mode-1_learning_curves', 'processed')
 
