@@ -192,3 +192,4 @@ class SUBGCON(BasicPretextTask):
         loss_2 = self.loss(positives2, negatives2, ones)
 
         return loss_1 + loss_2
+
