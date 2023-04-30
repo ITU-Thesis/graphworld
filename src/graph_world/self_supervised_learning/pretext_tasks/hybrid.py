@@ -240,14 +240,6 @@ class G_Zoom(BasicPretextTask):
         return H1 + H2
 
 
-class ResNet(torch.nn.Module):
-    def __init__(self, module):
-        super().__init__()
-        self.module = module
-
-    def forward(self, inputs):
-        return self.module(inputs) + inputs
-
 @gin.configurable
 class MVMI_FT(BasicPretextTask):
     '''
