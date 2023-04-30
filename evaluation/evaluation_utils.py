@@ -172,3 +172,4 @@ def create_encoder_latex_table(df_ssl_category_means, df_ssl_category_stds):
             std = df_ssl_category_stds.loc[TEST_METRIC, query]
             print(f'${mean}\pm{std}$ ', end='')
         print()
+

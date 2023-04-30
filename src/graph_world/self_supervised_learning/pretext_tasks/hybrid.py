@@ -138,8 +138,6 @@ class G_Zoom(BasicPretextTask):
 
         # Step 2
         top_k_neighbors = set(self.R[target_nodes].flatten().detach().tolist())
-        # TODO: Remove when we have tested on a couple of graphs
-        assert top_k_neighbors.issubset(all_nodes), 'not subset'
 
         # Step 3
         nodes_not_a_neighbor = all_nodes - top_k_neighbors
