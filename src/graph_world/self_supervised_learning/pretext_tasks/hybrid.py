@@ -138,8 +138,6 @@ class G_Zoom(BasicPretextTask):
 
         # Step 2
         top_k_neighbors = set(self.R[target_nodes].flatten().detach().tolist())
-        # TODO: Remove when we have tested on a couple of graphs
-        assert top_k_neighbors.issubset(all_nodes), 'not subset'
 
         # Step 3
         nodes_not_a_neighbor = all_nodes - top_k_neighbors
@@ -241,14 +239,6 @@ class G_Zoom(BasicPretextTask):
                           edge_weight=self.G_tilde.edge_weight)
         return H1 + H2
 
-
-class ResNet(torch.nn.Module):
-    def __init__(self, module):
-        super().__init__()
-        self.module = module
-
-    def forward(self, inputs):
-        return self.module(inputs) + inputs
 
 @gin.configurable
 class MVMI_FT(BasicPretextTask):
