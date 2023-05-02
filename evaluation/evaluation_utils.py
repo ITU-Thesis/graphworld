@@ -130,16 +130,26 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
     return pd.concat(frames, ignore_index=True)
 
 
-def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes):
+def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes, include_tuning_metric=False):
     '''
     Unpivot the results to a long format for all baseline methods. Each row corresponds to an experiment on graph.
     '''
+    BENCHMARK_PARAMS = ['train_downstream_lr', 'train_pretext_weight',
+               'train_pretext_epochs', 'train_pretext_lr']
+    ENCODER_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 'encoder_dropout', 'encoder_heads']
+    ALL_PARAMS = BENCHMARK_PARAMS + ENCODER_PARAMS
+
     frames = []
     for baseline_model, training_scheme in itertools.product(*[baseline_models, training_schemes]):
         column = f'{baseline_model}__{training_scheme}_{suffix}'
+        param_cols = [(param, f'{baseline_model}__{training_scheme}_{param}') for param in ALL_PARAMS]
         if not column in df.columns:
             continue
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
+        for param, param_c in param_cols:
+            df_model[param] = df[param_c] if param_c in df.columns else None 
+        if include_tuning_metric:
+            df_model['downstream_val_tuning_metrics'] = df[f'{baseline_model}__{training_scheme}_downstream_val_tuning_metrics']
         df_model['Baseline_model'] = baseline_model
         df_model['Graph_ID'] = df.index.values.tolist()
         if 'Experiment' in df.columns:
