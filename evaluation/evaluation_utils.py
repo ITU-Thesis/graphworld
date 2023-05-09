@@ -96,7 +96,7 @@ def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
         best_configurations[model] = best_configuration
     return best_configurations
 
-def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes, include_tuning_metric=False):
+def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes, include_tuning_metric=False, include_graph_params=False):
     '''
     Unpivot the results to a long format for all SSL methods. Each row corresponds to an experiment on graph.
     '''
@@ -104,6 +104,10 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
                'train_pretext_epochs', 'train_pretext_lr']
     ENCODER_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 'encoder_dropout', 'encoder_heads']
     ALL_PARAMS = BENCHMARK_PARAMS + ENCODER_PARAMS
+
+    GRAPH_PARAMS = ['nvertex', 'avg_degree', 'feature_center_distance', 'feature_dim',
+       'edge_center_distance', 'edge_feature_dim', 'p_to_q_ratio',
+       'num_clusters', 'cluster_size_slope', 'power_exponent', 'min_deg', 'marginal_param']
 
     frames = []
     for (ssl_model, encoder, scheme) in itertools.product(*[ssl_models, encoders, training_schemes]):
@@ -116,6 +120,9 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
         for param, param_c in param_cols:
             df_model[param] = df[param_c] if param_c in df.columns else None 
+        if include_graph_params:
+            for param in GRAPH_PARAMS:
+                df_model[param] = df[param]
         if include_tuning_metric:
             df_model['downstream_val_tuning_metrics'] = df[f'{encoder}_{ssl_model}_{scheme}_downstream_val_tuning_metrics']
         df_model['SSL_model'] = ssl_model
@@ -130,7 +137,7 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
     return pd.concat(frames, ignore_index=True)
 
 
-def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes, include_tuning_metric=False):
+def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes, include_tuning_metric=False, include_graph_params=False):
     '''
     Unpivot the results to a long format for all baseline methods. Each row corresponds to an experiment on graph.
     '''
@@ -138,6 +145,10 @@ def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, tra
                'train_pretext_epochs', 'train_pretext_lr']
     ENCODER_PARAMS = ['encoder_in_channels', 'encoder_hidden_channels', 'encoder_num_layers', 'encoder_dropout', 'encoder_heads']
     ALL_PARAMS = BENCHMARK_PARAMS + ENCODER_PARAMS
+
+    GRAPH_PARAMS = ['nvertex', 'avg_degree', 'feature_center_distance', 'feature_dim',
+       'edge_center_distance', 'edge_feature_dim', 'p_to_q_ratio',
+       'num_clusters', 'cluster_size_slope', 'power_exponent', 'min_deg', 'marginal_param']
 
     frames = []
     for baseline_model, training_scheme in itertools.product(*[baseline_models, training_schemes]):
@@ -148,6 +159,9 @@ def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, tra
         df_model = df[[column]].rename(columns=lambda col: col.replace(column, suffix))
         for param, param_c in param_cols:
             df_model[param] = df[param_c] if param_c in df.columns else None 
+        if include_graph_params:
+            for param in GRAPH_PARAMS:
+                df_model[param] = df[param]
         if include_tuning_metric:
             df_model['downstream_val_tuning_metrics'] = df[f'{baseline_model}__{training_scheme}_downstream_val_tuning_metrics']
         df_model['Baseline_model'] = baseline_model
