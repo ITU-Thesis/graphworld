@@ -2,7 +2,8 @@ import json
 import pandas as pd
 import itertools
 from constants import AUXILIARY_ALL, HYBRID_ALL, CONTRAST_ALL, GENERATION_ALL, TEST_METRIC,\
-    GENERATION_BASED_CATEGORY, HYBRID_CATEGORY, CONTRAST_BASED, AUXILIARY_CATEGORY
+    GENERATION_BASED_CATEGORY, HYBRID_CATEGORY, CONTRAST_BASED, AUXILIARY_CATEGORY,\
+    SSL_MODELS, ENCODERS, TRAINING_SCHEMES, BASELINES
 
 def ssl_method_to_category(method):
     if method in AUXILIARY_ALL:
@@ -39,6 +40,18 @@ def read_processed_shards(PROCESSED_DIR, shard=None):
     # Construct df
     print("concatenating")
     results_df = pd.concat(dfs)
+    for (ssl_model, encoder, scheme) in itertools.product(*[SSL_MODELS, ENCODERS, TRAINING_SCHEMES]):
+        column = f'{encoder}_{ssl_model}_{scheme}_{TEST_METRIC}'
+        if not column in results_df.columns:
+            continue
+        results_df[column] *= 100
+
+    for baseline_model, training_scheme in itertools.product(*[BASELINES, TRAINING_SCHEMES]):
+        column = f'{baseline_model}__{training_scheme}_{TEST_METRIC}'
+        if not column in results_df.columns:
+            continue
+        results_df[column] *= 100
+    
     del dfs
     return results_df.reset_index(drop=True)
 
