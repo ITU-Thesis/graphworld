@@ -1,0 +1,41 @@
+import graph_world.models.basic_gnn
+import graph_world.self_supervised_learning.pretext_tasks.auxiliary_property_based
+import graph_world.self_supervised_learning.pretext_tasks.contrastive_based
+import graph_world.self_supervised_learning.pretext_tasks.contrastive_based_different_scale
+import graph_world.self_supervised_learning.pretext_tasks.generation_based
+import graph_world.self_supervised_learning.pretext_tasks.hybrid
+import graph_world.self_supervised_learning.beam_handler
+import graph_world.self_supervised_learning.generator_wrappers
+
+GeneratorBeamHandlerWrapper.handler = @NodeClassificationBeamHandlerSSL()
+GeneratorBeamHandlerWrapper.nsamples = 2
+
+NodeClassificationBeamHandlerSSL.num_tuning_rounds = 50
+NodeClassificationBeamHandlerSSL.save_tuning_results = False
+NodeClassificationBeamHandlerSSL.save_training_curves = False # Set to True to get all losses and tuning metric for each epoch
+NodeClassificationBeamHandlerSSL.sample_pretext_without_replacement = True # Set to true to ensure unique tuning parameter samples
+NodeClassificationBeamHandlerSSL.tuning_metric = "rocauc_ovr"
+NodeClassificationBeamHandlerSSL.ktrain = 5
+NodeClassificationBeamHandlerSSL.ktuning = 5
+
+NodeClassificationBeamHandlerSSL.benchmarker_wrappers = %BENCHMARKERS
+
+# Import the hyperparameter configurations for the mode or experiment you want to run
+include '/app/configs/SSL_nodeclassification/mode_3/all.gin'
+
+# Import the appropriate generator setup file (marginalization or no marginalization)
+include '/app/configs/SSL_nodeclassification/sbm/default_setup_marg.gin'
+
+# If doing marginalization, then you can uncomment the last line to set the parameters to marginalize on (can choose multiple).
+# If no parameters are set, then one will be randomly sampled
+# Options are: avg_degree, cluster_size_slope, feature_center_distance, num_clusters,
+#              nvertex, p_to_q_ratio, power_exponent, min_degree
+
+# === Interesting marginalization params:
+# avg_degree
+# p_to_q_ratio
+# feature_center_distance
+# num_clusters
+ 
+
+SSLSbmGeneratorWrapper.marginal_params = ['avg_degree']

@@ -24,9 +24,10 @@ SINGLE_ENCODER_MODELS = ['SelfGNNPPR', 'MERIT', 'G_Zoom'] # Should be filtered a
 
 # --------- MODEL CATEGORIES ---------
 GENERATION_BASED_CATEGORY = 'Generation based'
-HYBRID_CATEGORY = 'Hybrid'
-CONTRAST_BASED = 'Contrast based'
 AUXILIARY_CATEGORY = 'Auxiliary-property based'
+CONTRAST_BASED = 'Contrast based'
+HYBRID_CATEGORY = 'Hybrid'
+SSL_CATEGORIES = GENERATION_BASED_CATEGORY + AUXILIARY_CATEGORY + CONTRAST_BASED + HYBRID_CATEGORY
 
 # --------- BASELINES ---------
 BASELINES = ['GCN', 'GAT', 'GIN']

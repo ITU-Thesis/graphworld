@@ -275,18 +275,11 @@ class S2GRL(BasicPretextTask):
         source_nodes = torch.cat([self.k_hop_neighbors_source_indices[i] for i in source_node_indices])
         neighbor_nodes = torch.cat([self.k_hop_neighbors_target_indices[i] for i in source_node_indices])
         distances = torch.cat([self.k_hop_neighbors_distances[i] for i in source_node_indices])
-        # assert not torch.isnan(embeddings).any(), "embeddings contains NaN values"
-        # assert not torch.isinf(embeddings).any(), "embeddings contains infinite values"
-        # assert not torch.isnan(source_nodes).any(), "source_nodes contains NaN values"
-        # assert not torch.isnan(neighbor_nodes).any(), "neighbor_nodes contains NaN values"
-        # assert not torch.isnan(distances).any(), "distances contains NaN values"
 
         vi_embeddings = embeddings[source_nodes]
         neighbor_embeddings = embeddings[neighbor_nodes]
 
         predicted_distance = self.decoder((vi_embeddings - neighbor_embeddings).abs())
-        # assert not torch.isnan(predicted_distance).any(), "predicted_distance contains NaN values"
-        # assert not torch.isinf(predicted_distance).any(), "predicted_distance contains infinite values"
 
         loss = self.loss(input=predicted_distance, target=distances)
         return loss
