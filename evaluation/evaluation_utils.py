@@ -96,7 +96,8 @@ def get_best_configuration_per_model(df, TEST_METRIC, n_best=1):
         best_configurations[model] = best_configuration
     return best_configurations
 
-def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes, include_tuning_metric=False, include_graph_params=False):
+def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, training_schemes, 
+                      include_tuning_metric=False, include_graph_params=False, include_embeddings=False):
     '''
     Unpivot the results to a long format for all SSL methods. Each row corresponds to an experiment on graph.
     '''
@@ -125,6 +126,9 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
                 df_model[param] = df[param]
         if include_tuning_metric:
             df_model['downstream_val_tuning_metrics'] = df[f'{encoder}_{ssl_model}_{scheme}_downstream_val_tuning_metrics']
+        if include_embeddings:
+            df_model['embeddings'] = df[f'{encoder}_{ssl_model}_{scheme}_embeddings']
+            df_model['classes'] = df[f'{encoder}_{ssl_model}_{scheme}_classes']
         df_model['SSL_model'] = ssl_model
         df_model['SSL_category'] = ssl_method_to_category(ssl_model)
         df_model['Encoder'] = encoder
@@ -137,7 +141,8 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
     return pd.concat(frames, ignore_index=True)
 
 
-def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes, include_tuning_metric=False, include_graph_params=False):
+def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, training_schemes, 
+                           include_tuning_metric=False, include_graph_params=False, include_embeddings=False):
     '''
     Unpivot the results to a long format for all baseline methods. Each row corresponds to an experiment on graph.
     '''
@@ -164,6 +169,9 @@ def unpivot_baseline_model(df : pd.DataFrame, suffix : str, baseline_models, tra
                 df_model[param] = df[param]
         if include_tuning_metric:
             df_model['downstream_val_tuning_metrics'] = df[f'{baseline_model}__{training_scheme}_downstream_val_tuning_metrics']
+        if include_embeddings:
+            df_model['embeddings'] = df[f'{baseline_model}__{training_scheme}_embeddings']
+            df_model['classes'] = df[f'{baseline_model}__{training_scheme}_classes']
         df_model['Baseline_model'] = baseline_model
         df_model['Graph_ID'] = df.index.values.tolist()
         if 'Experiment' in df.columns:
