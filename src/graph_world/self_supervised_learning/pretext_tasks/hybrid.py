@@ -401,3 +401,4 @@ class MVMI_FT(BasicPretextTask):
     def get_downstream_embeddings(self):
         E = self.__compute_embeddings()
         return torch.stack([E['pos_z_f'], E['pos_z_t'], E['pos_z_cft']], dim=-1).mean(dim=-1)
+

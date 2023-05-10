@@ -168,8 +168,8 @@ def create_encoder_latex_table(df_ssl_category_means, df_ssl_category_stds):
     for training_Scheme in ['PF', 'URL', 'JL']:
         for encoder in ['GCN', 'GAT', 'GIN']:
             query = (df_ssl_category_means.Training_scheme == training_Scheme) & (df_ssl_category_means.Encoder == encoder)
-            mean = df_ssl_category_means.loc[TEST_METRIC, query]
-            std = df_ssl_category_stds.loc[TEST_METRIC, query]
+            mean = df_ssl_category_means.loc[query, TEST_METRIC].values[0]
+            std = df_ssl_category_stds.loc[query, TEST_METRIC].values[0]
             print(f'${mean}\pm{std}$ ', end='')
         print()
 
