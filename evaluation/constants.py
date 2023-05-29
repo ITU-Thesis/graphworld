@@ -1,4 +1,5 @@
 from os.path import join
+import seaborn as sns
 
 # --------- DATA ---------
 RESULTS_ROOT = '/home/data_shares/scara/graphworld/results'
@@ -53,7 +54,7 @@ TEST_METRIC = 'test_rocauc_ovr'
 
 
 # --------- PLOTTING  ---------
-ENCODER_COLORS = {'GCN': 'red', 'GAT':'green', 'GIN':'blue'}
+ENCODER_COLORS = {'GCN': sns.color_palette("colorblind")[0], 'GAT':sns.color_palette("colorblind")[1], 'GIN':sns.color_palette("colorblind")[2]}
 TRAINING_SCHEME_COLORS = {'PF':'teal', 'URL':'darkkhaki', 'JL':'mediumorchid'}
 SSL_CATEGORY_COLORS = {'Generation':'darkolivegreen', 'Auxiliary':'deepskyblue', 'Contrast':'indigo', 'Hybrid':'crimson'}
 FONT = 'DejaVu Sans'
