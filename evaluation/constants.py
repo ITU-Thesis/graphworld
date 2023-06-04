@@ -24,11 +24,11 @@ SSL_MODELS = GENERATION_ALL + AUXILIARY_ALL + CONTRAST_ALL + HYBRID_ALL
 SINGLE_ENCODER_MODELS = ['SelfGNNPPR', 'MERIT', 'G_Zoom'] # Should be filtered away when comparing encoders
 
 # --------- MODEL CATEGORIES ---------
-GENERATION_BASED_CATEGORY = 'Generation based'
-AUXILIARY_CATEGORY = 'Auxiliary-property based'
-CONTRAST_BASED = 'Contrast based'
+GENERATION_BASED_CATEGORY = 'Generation'
+AUXILIARY_CATEGORY = 'Auxiliary-property'
+CONTRAST_BASED = 'Contrast'
 HYBRID_CATEGORY = 'Hybrid'
-SSL_CATEGORIES = GENERATION_BASED_CATEGORY + AUXILIARY_CATEGORY + CONTRAST_BASED + HYBRID_CATEGORY
+SSL_CATEGORIES = [GENERATION_BASED_CATEGORY, AUXILIARY_CATEGORY, CONTRAST_BASED, HYBRID_CATEGORY]
 
 # --------- BASELINES ---------
 BASELINES = ['GCN', 'GAT', 'GIN']
@@ -42,6 +42,8 @@ model_abbreviations = {
     'G_Zoom': 'G-Zoom', 'MEtAl': 'MEtAl', 'MVMI_FT': 'MVMI-FT',
     'GCN': 'GCN', 'GAT': 'GAT', 'GIN': 'GIN'
 }
+model_abbreviations_inv = {v: k for k, v in model_abbreviations.items()}
+
 
 # --------- ENCODERS ---------
 ENCODERS = ['GCN', 'GAT', 'GIN']

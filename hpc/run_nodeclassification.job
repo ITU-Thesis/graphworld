@@ -1,9 +1,9 @@
 #!/bin/sh
-#SBATCH --array=1-100
-#SBATCH -o /home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/min_deg_1/slurm_%a.out
+#SBATCH --array=1-5
+#SBATCH -o /home/data_shares/scara/graphworld/results/mode-2-3-marg-2/raw/avg_degree-feature_center_distance_2.2/slurm_%a.out
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=1
-#SBATCH --time=1-10:00:00      
+#SBATCH --time=10:00:00      
 #SBATCH --partition=brown
 #SBATCH --mail-type=BEGIN,FAIL,END          # Send an email when the job finishes
 
@@ -13,12 +13,12 @@ start=`date +%s`
 cd ..
 module load singularity
 
-outdir_all=/home/data_shares/scara/graphworld/results/mode-2-3-marg/raw/min_deg_1/
+outdir_all=/home/data_shares/scara/graphworld/results/mode-2-3-marg-2/raw/avg_degree-feature_center_distance_2.2/
 outdir=$outdir_all$SLURM_ARRAY_TASK_ID
 mkdir -p ${outdir}
 
 singularity exec -B ${PWD}/src:/app,${outdir}:/app/out graphworld.sif python3 /app/beam_benchmark_main.py \
-        --gin_files /app/configs/SSL_nodeclassification/min_deg_1.gin \
+        --gin_files /app/configs/SSL_nodeclassification/avg_degree-feature_center_distance_2.2.gin \
         --runner DirectRunner \
         --output /app/out \
         --direct_num_workers 2

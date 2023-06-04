@@ -127,7 +127,7 @@ class AutoEncoding(BasicPretextTask):
 class GAE(BasicPretextTask):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.pygGAE = pyg_autoencoder.GAE(self.encoder) # Default decoder is InnerProduct
+        self.pygGAE = pyg_autoencoder.GAxE(self.encoder) # Default decoder is InnerProduct
 
     # Uses PyG implementation for loss, with negative sampling for non-edges
     def make_loss(self, embeddings : Tensor) -> float:

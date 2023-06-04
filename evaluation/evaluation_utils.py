@@ -126,8 +126,13 @@ def unpivot_ssl_model(df : pd.DataFrame, suffix : str, ssl_models, encoders, tra
     frames = []
     for (ssl_model, encoder, scheme) in itertools.product(*[ssl_models, encoders, training_schemes]):
         column = f'{encoder}_{ssl_model}_{scheme}_{suffix}'
-        pretext_weight_col = f'{encoder}_{ssl_model}_{scheme}_train_pretext_weight'
         param_cols = [(param, f'{encoder}_{ssl_model}_{scheme}_{param}') for param in ALL_PARAMS]
+        pretext_col = f'{encoder}_{ssl_model}_{scheme}_pretext_'
+        for col in df.columns:
+            if not pretext_col in col:
+                continue
+            param_cols += [(col.replace(pretext_col, ''), col)]
+
         if not column in df.columns:
             continue
             
