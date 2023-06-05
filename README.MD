@@ -11,7 +11,7 @@ We have forked this repository from the original [GraphWorld repository]([link-t
 
 ````bash
 .
-├── evaluation
+├── evaluation                          # Codes for all analyses / results evaluation
 │   ├── marg2_plots                     # Animations for varying two properties
 │   ├── results                         # Logging files for all results (git-ignored)
 │   └── ...                             # Files containing all analyses/plots
