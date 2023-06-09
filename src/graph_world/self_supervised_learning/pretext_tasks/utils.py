@@ -119,8 +119,8 @@ def get_exact_ppr_matrix(data : Data, alpha: float) -> torch.Tensor:
     assert alpha >= 0. and alpha <= 1.
     data.edge_attr = None
     R = GDC(
-        diffusion_kwargs={'alpha': 0.15, 'method': 'ppr'}, 
-        sparsification_kwargs={'method':'threshold', 'avg_degree': data.num_edges // data.num_nodes}
+        diffusion_kwargs={'alpha': alpha, 'method': 'ppr'}, 
+        sparsification_kwargs={'method':'threshold', 'avg_degree': 128 }
     )(data.clone())
     return to_dense_adj(edge_index=R.edge_index, edge_attr=R.edge_attr, max_num_nodes=data.num_nodes).squeeze()
     

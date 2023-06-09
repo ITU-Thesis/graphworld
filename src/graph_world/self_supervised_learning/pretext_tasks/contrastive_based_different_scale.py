@@ -140,17 +140,26 @@ class SUBGCON(BasicPretextTask):
 
 
         # Take the k most important neighbours
-        S_top_k = S.topk(k=k, dim=1).indices
-        S_top_k = torch.cat([
-            S_top_k, 
-            torch.arange(start=0, end=self.data.num_nodes, step=1).unsqueeze(dim=1)
-        ], dim=1)
+        # S_top_k = S.topk(k=k, dim=1).indices
+        # S_top_k = torch.cat([
+        #     S_top_k, 
+        #     torch.arange(start=0, end=self.data.num_nodes, step=1).unsqueeze(dim=1)
+        # ], dim=1)
+        top_k = []
+        S_top_k = S.topk(k=k, dim=1)
+        for target, (vals, idx) in enumerate(zip(*S_top_k)):
+            non_zero_mask = vals != 0
+            subgraph_nodes = idx[non_zero_mask].detach().tolist() + [target]
+            top_k += [subgraph_nodes]
 
         self.loss = torch.nn.MarginRankingLoss(margin=margin, reduction='mean')
 
         # Subgraphs for each node
-        ss =  [SubGraph(node_indices=S_top_k[i, :], data=self.data) for i in range(self.N)]
+        ss = []
+        for node_indices in top_k:
+            ss += [SubGraph(node_indices=node_indices, data=self.data)]
         self.subgraphs = SubGraphs(ss)
+
 
         # Used for the picking function
         self.central_node_indices = [None] * self.subgraphs.n_subgraphs
